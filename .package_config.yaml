@@ -1,0 +1,18 @@
+package:
+  name: 'nmraspecds'
+  author: 'Mirjam Schröder'
+  author_email: 'mirjam.schroeder@catalysis.de'
+  year: '2022'
+  description: 'ASpecD derived Package for recipe driven data analysis of NMR spectra'
+  urls:
+    main: ''
+    documentation: ''
+    source: ''
+  keywords: []
+  install_requires: []
+documentation:
+  logo: ''
+  favicon: ''
+options:
+  logging: false
+  git: True
