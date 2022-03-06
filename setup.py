@@ -16,10 +16,10 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     author='Mirjam Schröder',
     author_email='mirjam.schroeder@catalysis.de',
-    url='',
+    url='https://www.nmraspecds.de',
     project_urls={
-        "Documentation": '',
-        "Source": '',
+        "Documentation": 'https://docs.nmraspecds.de',
+        "Source": 'https://github.com/majrim-spc/nmraspecds',
     },
     packages=setuptools.find_packages(exclude=('tests', 'docs')),
     license='BSD',
