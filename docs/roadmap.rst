@@ -8,5 +8,9 @@ A few ideas how to develop the project further, currently a list as a reminder f
 For version 0.1
 ===============
 
-* ...
+* Defining (preliminary) structure for dataset
+  
+   * data: Raw FID or Fourier transformed data?
+   * metadata: Which information exactly?
+   * how to handle metadata?
 
