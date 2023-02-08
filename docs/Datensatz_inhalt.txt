@@ -1,0 +1,66 @@
+Dataset
+
+SAMPLE
+Name
+Rotor
+Title (in Annotations?)
+Formatting title in a standardized way?
+
+ROTOR:
+manufacturer:
+material:
+outer diameter
+cap
+
+MAS-UNIT:
+manufacturer:
+type
+software
+
+TEMPERATURE:
+controlled: True/False
+temperature
+
+EXPERIMENT:
+Pulssequence (Name and code?)
+Number of scans
+Number of Dummyscans
+observed nucleus
+
+PARAMETERS
+D1
+AQ mod (?)
+TD (FID size)
+AQ (acquisition time)
+
+PULSE-PARAMETERS
+Durations: {D6: 15s, D2: 54us}
+Nucleus 1:
+    Sweep width
+    O1 oder O1p
+    All pulselengths and energies (each in a list? Better dict) {P1: 2us, P31:4us}
+Nucleus 2:
+    Sweep width
+    O1 oder O1p
+    All pulselengths and energies (each in a list? Better dict) {P1: 2us, P31:4us}
+if pseudo-2D:
+    delay-list
+
+MAGNETIC FIELD
+current magnetic Field
+MAS-Frequency (only source is title)
+
+SIGNAL CHANNEL:
+current Frequency
+receiver gain
+
+PROBEHEAD
+maufacturer:
+type:
+current configuration
+
+Lock and Shims?
+
+* How to deal with 2D Experiments? All parameters are twice there, or completely different parameters exist, depending on the measurent type.
+
+* DNP-Parameters
