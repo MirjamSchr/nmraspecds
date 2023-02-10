@@ -2,9 +2,20 @@ Dataset
 
 SAMPLE
 Name
-Rotor
-Title (in Annotations?)
-Formatting title in a standardized way?
+ID
+Solvent
+Description
+Concentration
+Preparation
+loi
+Title (as Annotation? Formatting title in a standardized way?)
+
+
+REFERENCE
+Substance
+Measurement number
+
+
 
 ROTOR:
 manufacturer:
@@ -33,8 +44,9 @@ AQ mod (?)
 TD (FID size)
 AQ (acquisition time)
 
-PULSE-PARAMETERS
+PULSE-PARAMETERS (do we need this subsection?)
 Durations: {D6: 15s, D2: 54us}
+loop parameter
 Nucleus 1:
     Sweep width
     O1 oder O1p
@@ -59,8 +71,16 @@ maufacturer:
 type:
 current configuration
 
+PROCESSING-PARAMETERS
+Tdeff
+prediction
+
 Lock and Shims?
 
 * How to deal with 2D Experiments? All parameters are twice there, or completely different parameters exist, depending on the measurent type.
 
 * DNP-Parameters
+DNP
+mw frequency
+mw power
+mw on/off
