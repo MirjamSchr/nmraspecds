@@ -2,18 +2,9 @@ Dataset
 
 SAMPLE
 Name
-ID
-Solvent
-Description
-Concentration
-Preparation
-loi
-Title (as Annotation? Formatting title in a standardized way?)
-
-
-REFERENCE
-Substance
-Measurement number
+Rotor
+Title (in Annotations?)
+Formatting title in a standardized way?
 
 ROTOR:
 manufacturer:
@@ -21,7 +12,6 @@ material:
 outer diameter
 cap
 Plugs
-Inserts
 
 MAS-UNIT:
 manufacturer:
@@ -33,8 +23,7 @@ controlled: True/False
 temperature
 
 EXPERIMENT:
-MAS-Frequency (only source is title)
-Pulssequence (Name and code?)
+Pulssequence (Name and code?) --> falls code eventuell nur den Pfad zum Bruker file
 Number of scans
 Number of Dummyscans
 observed nucleus
@@ -45,9 +34,8 @@ AQ mod (?)
 TD (FID size)
 AQ (acquisition time)
 
-PULSE-PARAMETERS (do we need this subsection?)
-Durations: {D6: 15s, D2: 54us}
-loop parameter
+PULSE-PARAMETERS
+Durations: {D6: 15s, D2: 54us} --> alle wichtigen für das Experiment. Problem: die können sich unterscheiden von Pulsprogramm zu Pulsprogramm (file pulseprogram)
 Nucleus 1:
     Sweep width
     O1 oder O1p
@@ -57,11 +45,11 @@ Nucleus 2:
     O1 oder O1p
     All pulselengths and energies (each in a list? Better dict) {P1: 2us, P31:4us}
 if pseudo-2D:
-    delay-list --> hier beachten dass die Zeiten in der vdlist auch mit Kürzeln
-    am Ende sein können. Also für 8s kann in der vdlist auch 8000m drin stehen
+    delay-list --> hier beachten dass die Zeiten in der vdlist auch mit Kürzeln am Ende sein können. Also für 8s kann in der vdlist auch 8000m drin stehen
 
 MAGNETIC FIELD
 current magnetic Field
+MAS-Frequency (only source is title)
 
 SIGNAL CHANNEL:
 current Frequency
@@ -72,20 +60,14 @@ maufacturer:
 type:
 current configuration
 
-PROCESSING-PARAMETERS
-Tdeff
-prediction
-
 Lock and Shims?
 
 * How to deal with 2D Experiments? All parameters are twice there, or completely different parameters exist, depending on the measurent type.
 --> pseudo-2D wird von Bruker wie ein 2D behandelt
 --> nmrglue kann auch 2D exportieren (--> ser file). Hier ist die indirekte Dimension die Spaltenzahl, welche dann FFT werden muss
 
+
 * DNP-Parameters
-DNP (True / False)
-mw on/off
-mw frequency
-mw power (in volts)
 Beam Voltage
 Beam Current
+Microwave Power (in Volts)
