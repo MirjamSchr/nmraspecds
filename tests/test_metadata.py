@@ -1,5 +1,7 @@
 import unittest
 
+import aspecd.metadata
+
 from nmraspecds import metadata
 
 
@@ -43,6 +45,35 @@ class TestExperiment(unittest.TestCase):
 
     def setUp(self):
         self.experiment = metadata.Experiment()
+
+    def test_instantiate_class(self):
+        pass
+
+
+class TestNucleus(unittest.TestCase):
+    def setUp(self):
+        self.nucleus = metadata.Nucleus()
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_get_transmitter_frequency(self):
+        self.nucleus.base_frequency.from_string('400 MHz')
+        self.nucleus.offset_hz.from_string('500 Hz')
+        transmitter_freq = (400e6+500)/1e6
+        self.assertEqual(transmitter_freq,
+                         self.nucleus.transmitter_frequency.value)
+
+    def test_get_offset_ppm(self):
+        self.nucleus.base_frequency.from_string('400.5 MHz')
+        self.nucleus.offset_hz.from_string('2000 Hz')
+        offset_ppm = (2000 * 1e6) / 400.5e6
+        self.assertEqual(offset_ppm, self.nucleus.offset_ppm.value)
+
+
+class TestRotor(unittest.TestCase):
+    def setUp(self):
+        self.rotor = metadata.Rotor()
 
     def test_instantiate_class(self):
         pass

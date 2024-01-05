@@ -51,6 +51,7 @@ This program is free software: you can redistribute it and/or modify it under th
 
    audience
    usecases
+   dataset-structure
    installing
 
 .. toctree::

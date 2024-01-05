@@ -36,7 +36,12 @@ class ExperimentalDatasetMetadata(aspecd.metadata.ExperimentalDatasetMetadata):
 
     """
 
-    pass
+    def __init__(self):
+        self.spectrometer = Spectrometer()
+        self.probehead = Probehead()
+        self.experiment = Experiment()
+        self.rotor = Rotor()
+        super().__init__()
 
 
 class Sample(aspecd.metadata.Sample):
@@ -124,7 +129,7 @@ class Probehead(aspecd.metadata.Metadata):
         super().__init__(dict_=dict_)
 
 
-class Experiment:
+class Experiment(aspecd.metadata.Metadata):
     """Metadata corresponding to to the experiment.
 
     More description comes here...
@@ -137,8 +142,10 @@ class Experiment:
     runs : :class:`int`
         Number of recorded runs.
 
-    nucleus: :class:`str`
-        Nucleus on which it was measured.
+    nuclei: :class:`list`
+        List of involved nuclei.
+
+        Each nucleus is an object of type :class:`Nucleus`
 
     mas_frequency: :class:`int`
         Magic Angle Spinning Frequency of the experiment, given in Hz.
@@ -147,7 +154,104 @@ class Experiment:
     def __init__(self, dict_=None):
         self.type = ""
         self.runs = None
-        self.nucleus = None
+        self.nuclei = []
         self.mas_frequency = None
+        super().__init__(dict_=dict_)
+
+
+class Nucleus(aspecd.metadata.Metadata):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = Nucleus()
+        ...
+
+    
+
+    """
+
+    def __init__(self, dict_=None):
+        self.type = ''
+        self.base_frequency = aspecd.metadata.PhysicalQuantity()
+        self.offset_hz = aspecd.metadata.PhysicalQuantity()
+        super().__init__(dict_=dict_)
+
+    @property
+    def transmitter_frequency(self):
+        value = self.base_frequency.value + self.offset_hz.value / 1e6
+        quantity = aspecd.metadata.PhysicalQuantity()
+        quantity.value = value
+        quantity.unit = 'MHz'
+        return quantity
+
+    @property
+    def offset_ppm(self):
+        value = self.offset_hz.value * 1e6 / (self.base_frequency.value * 1e6)
+        quantity = aspecd.metadata.PhysicalQuantity()
+        quantity.value = value
+        quantity.unit = 'ppm'
+        return quantity
+
+
+class Rotor(aspecd.metadata.Metadata):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = Rotor()
+        ...
+
+    
+
+    """
+
+    def __init__(self, dict_=None):
+        self.manufacturer = ''
+        self.material = ''
+        self.diameter = aspecd.metadata.PhysicalQuantity()
+        self.cap_material = ''
+        self.plug = ''
+        self.insert = ''
         super().__init__(dict_=dict_)
 

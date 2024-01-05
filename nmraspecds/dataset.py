@@ -2,6 +2,7 @@
 dataset module of the nmraspecds package.
 """
 import aspecd.dataset
+import nmraspecds.metadata
 
 
 class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
@@ -36,7 +37,9 @@ class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
 
     """
 
-    pass
+    def __init__(self):
+        super().__init__()
+        self.metadata = nmraspecds.metadata.ExperimentalDatasetMetadata()
 
 
 class CalculatedDataset(aspecd.dataset.CalculatedDataset):

@@ -10,7 +10,6 @@ This is the definite source of information for developers, besides having a look
     nmraspecds.io
     nmraspecds.metadata
     nmraspecds.analysis
-    nmraspecds.analysis
     nmraspecds.plotting
     nmraspecds.processing
 

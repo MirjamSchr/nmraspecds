@@ -34,7 +34,7 @@ temperature
 
 EXPERIMENT:
 MAS-Frequency (only source is title)
-Pulssequence (Name and code?)
+Pulssequence (Name and code?) --> falls code eventuell nur den Pfad zum Bruker file
 Number of scans
 Number of Dummyscans
 observed nucleus
@@ -46,19 +46,22 @@ TD (FID size)
 AQ (acquisition time)
 
 PULSE-PARAMETERS (do we need this subsection?)
-Durations: {D6: 15s, D2: 54us}
+Durations: {D6: 15s, D2: 54us} --> alle wichtigen für das Experiment. Problem: die können sich unterscheiden von Pulsprogramm zu Pulsprogramm (file pulseprogram)
 loop parameter
-Nucleus 1:
+Nucleus 1: (implementiert als Liste von Kern-Objekten)
+    Type
+    Frequency (Basisfrequenz)
+    Transmitter frequency (abgeleiteter Wert, nur getter, nicht setter)
     Sweep width
     O1 oder O1p
     All pulselengths and energies (each in a list? Better dict) {P1: 2us, P31:4us}
 Nucleus 2:
+    Frequency
     Sweep width
     O1 oder O1p
     All pulselengths and energies (each in a list? Better dict) {P1: 2us, P31:4us}
 if pseudo-2D:
-    delay-list --> hier beachten dass die Zeiten in der vdlist auch mit Kürzeln
-    am Ende sein können. Also für 8s kann in der vdlist auch 8000m drin stehen
+    delay-list --> hier beachten dass die Zeiten in der vdlist auch mit Kürzeln am Ende sein können. Also für 8s kann in der vdlist auch 8000m drin stehen
 
 MAGNETIC FIELD
 current magnetic Field
