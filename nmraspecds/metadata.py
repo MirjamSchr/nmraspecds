@@ -13,8 +13,17 @@ class ExperimentalDatasetMetadata(aspecd.metadata.ExperimentalDatasetMetadata):
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
+    spectrometer : :class:`Spectrometer`
+        Hardware configuration and details of the setup.
+
+    probehead : :class:`Probehead`
+        Details on the probehead used in the experiment
+
+    experiment : :class:`Experiment`
+        Experimental details, such as MAS frequency and pulse sequence.
+
+    rotor : :class:`Rotor`
+        Rotor size, material, cap and inserts
 
     Raises
     ------
@@ -95,7 +104,7 @@ class Spectrometer(aspecd.metadata.Metadata):
         Model of the spectrometer used.
 
     software : :class:`str`
-        Name and version of the software used.
+        Name and version of the measurement software.
 
     """
 
@@ -122,15 +131,20 @@ class Probehead(aspecd.metadata.Metadata):
         Commercial probeheads come with a distinct model that goes in here.
         In all other cases, use a short, memorisable, and unique name.
 
+    configuration : :class:`str`
+        Listing of additional coils and capacitors to change the probes'
+        frequency.
+
     """
 
     def __init__(self, dict_=None):
         self.model = ""
+        self.configuration = ""
         super().__init__(dict_=dict_)
 
 
 class Experiment(aspecd.metadata.Metadata):
-    """Metadata corresponding to to the experiment.
+    """Metadata corresponding to the experiment.
 
     More description comes here...
 
@@ -168,8 +182,14 @@ class Nucleus(aspecd.metadata.Metadata):
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
+    type : :class:`str`
+        Nucleus that is measured, such as 1H or 29Si.
+
+    base_frequency : :class:`aspecd.metadata.PhysicalQuantity`
+        Current base frequency of that nucleus.
+
+    offset_hz : :class:`aspecd.metadata.PhysicalQuantity`
+        Offset of the nucleus, given in Hz. (O1 in Buker's Topspin)
 
     Raises
     ------
@@ -199,6 +219,12 @@ class Nucleus(aspecd.metadata.Metadata):
 
     @property
     def transmitter_frequency(self):
+        """ Actual frequency of the pulses of the given nucleus.
+
+        Returns
+        -------
+        transmitter_frequency : :class:`aspecd.metadata.PhysicalQuantity`
+        """
         value = self.base_frequency.value + self.offset_hz.value / 1e6
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value
@@ -207,6 +233,12 @@ class Nucleus(aspecd.metadata.Metadata):
 
     @property
     def offset_ppm(self):
+        """ Offset of the pulse in ppm (O1p in Bruker's Topspin)
+
+        Returns
+        -------
+        offset_ppm : :class:`aspecd.metadata.PhysicalQuantity`
+        """
         value = self.offset_hz.value * 1e6 / (self.base_frequency.value * 1e6)
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value
@@ -223,8 +255,23 @@ class Rotor(aspecd.metadata.Metadata):
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
+    manufacturer : :class:`str`
+        Manufacturer of the rotor
+
+    material : :class:`str`
+        material, e.g. ZrO2, sapphire, diamond
+
+    diameter : :class:`aspecd:metadata:PhysicalQuantity`
+        Outer diameter of the rotor in mm
+
+    cap_material : :class:`str`
+        Material of the sealing cap e.g. ZrO2, Kel-F, Vespel
+
+    plug : :class:`str`
+        Declares if plug was used and if yes, which one.
+
+    insert : :class:`str`
+        Describes insert if one was used,
 
     Raises
     ------
