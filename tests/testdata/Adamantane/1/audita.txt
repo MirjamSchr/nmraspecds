@@ -1,0 +1,18 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 6
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ C:/Users/nmr/TopSpin_Data_Corzilius/Mirjam/231106_Adamantane_Ref_4mm/1/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2023-11-06 14:45:19.712 +0100>,<nmr>,<Solid-NMR>,<go4>,<TopSpin 3.5.6>,
+      <created by zg
+	started at 2023-11-06 14:43:54.672 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       B7 B8 70 9E 07 77 3C 80 2A 18 C0 7C 59 63 84 52
+       data hash MD5: 2K
+       27 CC 4A 2A 53 F0 B8 12 CE 4E 73 18 09 8B 29 95>)
+##END=
+
+$$ hash MD5
+$$ 1F 68 EF FC 2D A5 D9 BC 80 58 46 A6 07 4C 0B D9

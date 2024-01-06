@@ -1,0 +1,53 @@
+# Mon Nov 06 14:45:19 2023
+#$$PROBEIDENTIFIER=H8917_0002
+#$$PROBENAME=PH MAS 400W1 BL4 X/Y/H WVT
+#$$SHIMID=312532
+#
+# Active Shim Gradients
+#
+Z           		1800            
+Z2          		10000           
+Z3          		0               
+Z4          		0               
+Z5          		0               
+X           		500             
+XZ          		0               
+XZ2         		0               
+Y           		-6000           
+YZ          		-1000           
+YZ2         		0               
+XY          		-200            
+XYZ         		0               
+(X2-Y2)     		1000            
+(X2-Y2)Z    		0               
+X3          		0               
+Y3          		0               
+#
+# Lock Parameter
+#
+FIELD		-1568.000
+#
+IEEE64_VERSION_CODE 1
+#
+# Shim currents 
+#
+SHIM_SETTING [1 ]  873.00000000    
+SHIM_SETTING [2 ]  4950.00000000   
+SHIM_SETTING [3 ]  0.00000000      
+SHIM_SETTING [4 ]  0.00000000      
+SHIM_SETTING [5 ]  0.00000000      
+SHIM_SETTING [6 ]  263.00000000    
+SHIM_SETTING [7 ]  -0.00000000     
+SHIM_SETTING [8 ]  0.00000000      
+SHIM_SETTING [9 ]  526.00000000    
+SHIM_SETTING [10]  -105.20000000   
+SHIM_SETTING [11]  -3156.00000000  
+SHIM_SETTING [12]  -526.00000000   
+SHIM_SETTING [13]  0.00000000      
+SHIM_SETTING [14]  0.00000000      
+SHIM_SETTING [15]  0.00000000      
+SHIM_SETTING [16]  0.00000000      
+SHIM_SETTING [17]  0.00000000      
+SHIM_SETTING [18]  0.00000000      
+SHIM_SETTING [19]  0.00000000      
+SHIM_SETTING [20]  0.00000000      
