@@ -1,6 +1,8 @@
 """
 io module of the nmraspecds package.
 """
+import os.path
+
 import aspecd.io
 import nmrglue
 
@@ -37,13 +39,32 @@ class BrukerImporter(aspecd.io.DatasetImporter):
 
     """
 
-    def _import(self):
-        if 'pdata' in self.source:
-            parameters, data = nmrglue.bruker.read_pdata(self.source)
-            self.dataset.data.data = data
-        else:
-            self.read_raw_data()
+    def __init__(self, source=None):
+        super().__init__(source=source)
+        self.parameters['type'] = 'proc'
+        self._parameters = None
+        self._data = None
 
-    def read_raw_data(self):
-        parameters, data = nmrglue.bruker.read(self.source)
-        self.dataset.data.data = data
+    def _import(self):
+        self._check_for_type()
+        self._read_data()
+        self._create_axis()
+
+    def _create_axis(self):
+        unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
+        unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
+        self.dataset.data.axes[0].values = unit_converter.ppm_scale()
+
+    def _read_data(self):
+        if 'pdata' in self.source:
+            self._parameters, self._data = nmrglue.bruker.read_pdata(
+                self.source)
+        else:
+            self._parameters, self._data = nmrglue.bruker.read(self.source)
+        self.dataset.data.data = self._data
+
+    def _check_for_type(self):
+        if ('type' in self.parameters and
+                self.parameters['type'].startswith('proc') and
+                'pdata' not in self.source):
+            self.source = os.path.join(self.source, 'pdata', '1')
