@@ -14,3 +14,6 @@ For version 0.1
    * metadata: Which information exactly?
    * how to handle metadata?
 
+* Create pseudo-processing steps that put all previously performed processing steps in the history.
+
+
