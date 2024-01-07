@@ -63,14 +63,14 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue(self.is_processed(self.dataset.data.data))
 
-    def test_data_is_not_fid(self):
+    def test_processed_data_is_not_fid(self):
         self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
         self.bruker_importer.parameters['type'] = 'fid'
         self.dataset.import_from(self.bruker_importer)
         self.assertFalse(self.is_fid(self.dataset.data.data))
 
     def test_with_importer_parameter_imports_processed_data(self):
-        for type_ in ('processed','proc'):
+        for type_ in ('processed', 'proc'):
             with self.subTest(type_=type_):
                 self.bruker_importer.source = 'testdata/Adamantane/1'
                 self.bruker_importer.parameters['type'] = type_
@@ -90,6 +90,12 @@ class TestBrukerImporter(unittest.TestCase):
                 self.assertFalse(self.is_processed(self.dataset.data.data))
                 self.assertTrue(self.is_fid(self.dataset.data.data))
 
+    def test_proc_no_can_be_chosen(self):
+        self.bruker_importer.source = 'testdata/Adamantane/1'
+        self.bruker_importer.parameters['processing_number'] = 2
+        self.dataset.import_from(self.bruker_importer)
+        self.assertTrue('pdata/2' in self.bruker_importer.source)
+
     def test_get_ppm_axis(self):
         self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
         self.dataset.import_from(self.bruker_importer)
@@ -106,8 +112,6 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(self.dataset.data.axes[0].quantity, 'chemical shift')
         self.assertEqual(self.dataset.data.axes[1].quantity, 'intensity')
-
-
 
 
 class TestDatasetImporterFactory(unittest.TestCase):

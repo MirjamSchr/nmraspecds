@@ -28,6 +28,8 @@ tasks:
       properties:
         figure:
           dpi: 600
+        axes:
+          xlim: [100, -100]
       parameters:
         offset: 1
       filename: BothSpectra.png

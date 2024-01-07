@@ -7,6 +7,42 @@ import aspecd.io
 import nmrglue
 
 
+class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = DatasetImporterFactory()
+        ...
+
+
+
+    """
+
+    def _get_importer(self):
+        return BrukerImporter(source=self.source)
+
+
 class BrukerImporter(aspecd.io.DatasetImporter):
     """
     One sentence (on one line) describing the class.
@@ -42,6 +78,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
     def __init__(self, source=None):
         super().__init__(source=source)
         self.parameters['type'] = 'proc'
+        self.parameters['processing_number'] = 1
         self._parameters = None
         self._data = None
 
@@ -71,40 +108,6 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         if ('type' in self.parameters and
                 self.parameters['type'].startswith('proc') and
                 'pdata' not in self.source):
-            self.source = os.path.join(self.source, 'pdata', '1')
-
-
-class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
-    """
-    One sentence (on one line) describing the class.
-
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = DatasetImporterFactory()
-        ...
-
-    
-
-    """
-
-    def _get_importer(self):
-        return BrukerImporter(source=self.source)
+            self.source = os.path.join(self.source, 'pdata',
+                                       str(self.parameters[
+                                               'processing_number']))
