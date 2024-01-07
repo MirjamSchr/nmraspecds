@@ -38,5 +38,12 @@ class BrukerImporter(aspecd.io.DatasetImporter):
     """
 
     def _import(self):
+        if 'pdata' in self.source:
+            parameters, data = nmrglue.bruker.read_pdata(self.source)
+            self.dataset.data.data = data
+        else:
+            self.read_raw_data()
+
+    def read_raw_data(self):
         parameters, data = nmrglue.bruker.read(self.source)
         self.dataset.data.data = data
