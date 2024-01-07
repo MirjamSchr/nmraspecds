@@ -48,12 +48,16 @@ class BrukerImporter(aspecd.io.DatasetImporter):
     def _import(self):
         self._check_for_type()
         self._read_data()
-        self._create_axis()
+        self._create_axes()
 
-    def _create_axis(self):
+    def _create_axes(self):
         unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
         unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
         self.dataset.data.axes[0].values = unit_converter.ppm_scale()
+
+        self.dataset.data.axes[0].unit = 'ppm'
+        self.dataset.data.axes[0].quantity = 'chemical shift'
+        self.dataset.data.axes[1].quantity = 'intensity'
 
     def _read_data(self):
         if 'pdata' in self.source:
@@ -68,3 +72,39 @@ class BrukerImporter(aspecd.io.DatasetImporter):
                 self.parameters['type'].startswith('proc') and
                 'pdata' not in self.source):
             self.source = os.path.join(self.source, 'pdata', '1')
+
+
+class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = DatasetImporterFactory()
+        ...
+
+    
+
+    """
+
+    def _get_importer(self):
+        return BrukerImporter(source=self.source)

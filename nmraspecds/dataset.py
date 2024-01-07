@@ -3,6 +3,7 @@ dataset module of the nmraspecds package.
 """
 import aspecd.dataset
 import nmraspecds.metadata
+import nmraspecds.io
 
 
 class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
@@ -109,4 +110,26 @@ class DatasetFactory(aspecd.dataset.DatasetFactory):
 
     """
 
-    pass
+    def __init__(self):
+        super().__init__()
+        self.importer_factory = nmraspecds.io.DatasetImporterFactory()
+
+    @staticmethod
+    def _create_dataset(source=''):
+        """Return cwepr dataset.
+
+        Parameters
+        ----------
+        source : :class:`str`
+            string describing the source of the dataset
+
+            Could be a filename or path, a URL/URI, a LOI, or similar
+
+        Returns
+        -------
+        dataset : :class:`cwepr.dataset.ExperimentalDataset`
+            Dataset object for cwepr package
+
+        """
+        return nmraspecds.dataset.ExperimentalDataset()
+

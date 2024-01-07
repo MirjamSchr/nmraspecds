@@ -1,0 +1,36 @@
+format:
+  type: ASpecD recipe
+  version: '0.2'
+settings:
+  default_package: nmraspecds
+directories:
+  datasets_source: ../../tests/testdata/
+datasets:
+- source: Adamantane/1
+  id: 1H
+- source: Adamantane/2
+  id: 13C
+tasks:
+  - kind: singleplot
+    type: SinglePlotter1D
+    properties:
+      properties:
+        figure:
+          dpi: 600
+      filename:
+        - ProtonSpectrum.png
+        - CarbonSpectrum.png
+  - kind: processing
+    type: Normalisation
+  - kind: multiplot
+    type: MultiPlotter1D
+    properties:
+      properties:
+        figure:
+          dpi: 600
+      parameters:
+        offset: 1
+      filename: BothSpectra.png
+    apply_to:
+      - 13C
+      - 1H

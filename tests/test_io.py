@@ -91,6 +91,40 @@ class TestBrukerImporter(unittest.TestCase):
                 self.assertTrue(self.is_fid(self.dataset.data.data))
 
     def test_get_ppm_axis(self):
-        self.bruker_importer.source = 'testdata/Adamantane/2/pdata/1'
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
         self.dataset.import_from(self.bruker_importer)
         self.assertGreater(self.dataset.data.axes[0].values[0], 0)
+
+    def test_set_axis_unit(self):
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
+        unit = self.dataset.data.axes[0].unit
+        self.assertEqual(unit, 'ppm')
+
+    def test_set_axis_quantity(self):
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(self.dataset.data.axes[0].quantity, 'chemical shift')
+        self.assertEqual(self.dataset.data.axes[1].quantity, 'intensity')
+
+
+
+
+class TestDatasetImporterFactory(unittest.TestCase):
+    def setUp(self):
+        self.dataset_importer_factory = io.DatasetImporterFactory()
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_returns_bruker_importer(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.assertIsInstance(importer, io.BrukerImporter)
+
+    def test_returned_importer_has_source_set(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.assertIn(source, importer.source)
