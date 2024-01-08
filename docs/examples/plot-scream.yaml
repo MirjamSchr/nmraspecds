@@ -1,0 +1,21 @@
+format:
+  type: ASpecD recipe
+  version: '0.2'
+settings:
+  default_package: nmraspecds
+directories:
+  datasets_source: ../../tests/testdata/
+datasets:
+- source: Scream/22
+  id: scream
+  importer_parameter:
+    number_of_experiments: 11
+tasks:
+  - kind: singleplot
+    type: SinglePlotter2D
+    properties:
+      properties:
+        figure:
+          dpi: 600
+      filename:
+        - ScreamSpectrum.png
