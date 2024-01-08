@@ -23,6 +23,12 @@ cap
 Plugs
 Inserts
 
+SPECTROMETER:
+parts: ???
+  - MAS
+  - Console
+
+
 MAS-UNIT:
 manufacturer:
 type

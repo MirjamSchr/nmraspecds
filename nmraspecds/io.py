@@ -142,8 +142,6 @@ class ScreamImporter(aspecd.io.DatasetImporter):
         obj = ScreamImporter()
         ...
 
-    
-
     """
 
     def __init__(self, source=None):
@@ -153,10 +151,9 @@ class ScreamImporter(aspecd.io.DatasetImporter):
 
     def _import(self):
         base_path, last_element = os.path.split(self.source)
-        for count, variable_element in enumerate(np.arange(int(last_element),
-                                                           int(last_element) +
-                                                           self.parameters[
-                                                               'number_of_experiments'])):
+        for count, variable_element in (
+                enumerate(np.arange(int(last_element), int(last_element) +
+                                    self.parameters['number_of_experiments']))):
             self.source = os.path.join(base_path, str(variable_element),
                                        'pdata', '103')
             self._parameters, self._data = \
