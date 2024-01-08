@@ -1,16 +1,16 @@
-##TITLE= Parameter file, TopSpin 3.5 pl 6
+##TITLE= Parameter file, TopSpin 4.1.4
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
 ##NPOINTS= 9	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= nmr
-$$ 2023-06-21 12:19:37.274 +0200  nmr@Solid-NMR
-$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20220620_100mM_H2N-PG-OH_10mM_AMUPOL_1p3mm_15kHz_DNP/31/pdata/103/procs
-$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
-##$ABSF1= 0
-##$ABSF2= 0
-##$ABSG= 0
-##$ABSL= 0
+##OWNER= Florian Taube
+$$ 2023-12-20 14:10:05.378 +0100  Florian Taube@Siavash
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/31/pdata/103/procs
+$$ process C:\Bruker\TopSpin4.1.4\prog\mod\proc1d.exe
+##$ABSF1= 248.7906
+##$ABSF2= -164.9717
+##$ABSG= 5
+##$ABSL= 3
 ##$ALPHA= 0
 ##$AQORDER= 0
 ##$ASSFAC= 0
@@ -38,7 +38,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$ERETIC= no
 ##$F1P= 276.256829231153
 ##$F2P= -106.692292668583
-##$FCOR= 0.5
+##$FCOR= 1
 ##$FTSIZE= 16384
 ##$FT_mod= 5
 ##$GAMMA= 0
@@ -78,17 +78,17 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$Mdd_LrZF= 0
 ##$Mdd_mod= 0
 ##$NCOEF= 0
-##$NC_proc= -15
+##$NC_proc= 0
 ##$NLEV= 6
 ##$NOISF1= 5
 ##$NOISF2= -5
 ##$NSP= 0
 ##$NTH_PI= 0
 ##$NZP= 0
-##$OFFSET= 246.8751
+##$OFFSET= 248.7906
 ##$PC= 0.2
-##$PHC0= 177.9019
-##$PHC1= -58.96914
+##$PHC0= -62.305
+##$PHC1= -80.58
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 0
@@ -105,7 +105,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$RDINT= 0
 ##$RDPOS= 0
 ##$REVERSE= no
-##$SF= 100.704893
+##$SF= 100.701934720001
 ##$SI= 16384
 ##$SIGF1= 0
 ##$SIGF2= 0
@@ -119,7 +119,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$STSR= 0
 ##$SW_p= 41666.6666666667
 ##$SYMM= 0
-##$S_DEV= 1.401011e+007
+##$S_DEV= 0
 ##$TDeff= 2048
 ##$TDoff= 0
 ##$TI= <>
@@ -128,12 +128,17 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$TM2= 0
 ##$TOPLEV= 0
 ##$USERP1= <>
+##$USERP10= <>
 ##$USERP2= <>
 ##$USERP3= <>
 ##$USERP4= <>
 ##$USERP5= <>
+##$USERP6= <>
+##$USERP7= <>
+##$USERP8= <>
+##$USERP9= <>
 ##$WDW= 1
-##$XDIM= 512
-##$YMAX_p= 60062761
-##$YMIN_p= -1459185814
+##$XDIM= 0
+##$YMAX_p= 1060
+##$YMIN_p= -36871
 ##END=

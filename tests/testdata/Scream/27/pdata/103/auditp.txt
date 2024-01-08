@@ -1,24 +1,20 @@
-##TITLE= Audit trail, TopSpin 3.5 pl 6
+##TITLE= Audit trail, TopSpin 4.1.4
 ##JCAMPDX= 5.01
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= nmr
-$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20220706_100mM_HN-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP/27/pdata/103/auditp.txt
+##OWNER= Florian Taube
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/27/pdata/103/auditp.txt
 ##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
-(   1,<2023-07-07 14:53:11.159 +0200>,<nmr>,<Solid-NMR>,<mvrow>,<TopSpin 3.5.6>,
+(   1,<2023-12-20 14:09:53.094 +0100>,<Florian Taube>,<Siavash>,<mvrow>,<TopSpin 4.1.4>,
       <rsr 1 from
-       1 27 "20220706_100mM_HN-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP" "C:/Users/nmr/TopSpin_Data_Corzilius/Max"
+       1 27 "20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K" "F:/NMR/Max"
        data hash MD5: 16K
-       F1 E6 22 2B 93 46 07 C8 4D 7F 5A F2 DC D9 E4 20>)
-(   2,<2023-07-07 14:53:12.177 +0200>,<nmr>,<Solid-NMR>,<proc1d>,<TopSpin 3.5.6>,
+       E7 9B DD 8A 9F 5D C2 EF 61 F9 4D 51 D5 89 15 69>)
+(   2,<2023-12-20 14:09:54.136 +0100>,<Florian Taube>,<Siavash>,<proc1d>,<TopSpin 4.1.4>,
       <Unknown data manipulation detected
-       apk 
+       abs ABSG = 5 
        data hash MD5: 16K
-       9B BC 34 12 6F D7 E8 F8 D4 C1 08 E9 09 B2 3E 39>)
-(   3,<2023-07-07 14:53:12.249 +0200>,<nmr>,<Solid-NMR>,<proc1d>,<TopSpin 3.5.6>,
-      <nm 
-       data hash MD5: 16K
-       95 20 81 1A E4 DA 24 94 5C 74 CB D7 D7 05 85 40>)
+       B2 5E A0 92 B3 07 3E D1 7A 3B 32 1C 63 8B BA 6F>)
 ##END=
 
 $$ hash MD5
-$$ FB 6E 20 3E A6 23 85 76 4E 34 C9 C8 C3 0A B1 9F
+$$ 82 76 FA AB A7 B3 CC EE 66 E1 36 FB A8 90 B6 3A

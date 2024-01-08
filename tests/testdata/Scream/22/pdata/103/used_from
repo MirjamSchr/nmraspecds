@@ -1,16 +1,16 @@
-##TITLE= Parameter file, TopSpin 3.5 pl 6
+##TITLE= Parameter file, TopSpin 4.1.4
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= nmr
-$$ 2023-08-17 17:30:55.925 +0200  nmr@Solid-NMR
-$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/22/pdata/103/used_from
-$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\mvrow.exe
+##OWNER= Florian Taube
+$$ 2023-12-20 14:09:38.197 +0100  Florian Taube@Siavash
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/22/pdata/103/used_from
+$$ process C:\Bruker\TopSpin4.1.4\prog\mod\mvrow.exe
 ##$CUREXP= <row>
-##$DATPATH= <C:/Users/nmr/TopSpin_Data_Corzilius/Max>
+##$DATPATH= <F:/NMR/Max>
 ##$EXPNO= 22
-##$NAME= <20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K>
+##$NAME= <20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K>
 ##$PROCNO= 1
 ##$PROCNO2= 1
 ##END=

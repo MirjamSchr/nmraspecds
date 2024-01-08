@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TopSpin 3.5 pl 6
+##TITLE= Parameter file, TopSpin 4.1.4
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
 ##NPOINTS= 2	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
-##OWNER= nmr
-$$ 2023-08-17 17:30:57.140 +0200  nmr@Solid-NMR
-$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/22/pdata/103/proc
-$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
+##OWNER= Florian Taube
+$$ 2023-12-20 14:09:39.427 +0100  Florian Taube@Siavash
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/22/pdata/103/proc
+$$ process C:\Bruker\TopSpin4.1.4\prog\mod\dataserver.exe
 ##$ABSF1= 295.4159
 ##$ABSF2= -125.8202
 ##$ABSG= 5
@@ -85,10 +85,10 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$NSP= 2
 ##$NTH_PI= 0
 ##$NZP= 1
-##$OFFSET= 296.8751
+##$OFFSET= 248.7906
 ##$PC= 0.2
-##$PHC0= 294.6559
-##$PHC1= -133.8203
+##$PHC0= -62.305
+##$PHC1= -80.58
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 0
@@ -105,7 +105,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$RDINT= 0
 ##$RDPOS= 0
 ##$REVERSE= no
-##$SF= 100.704893
+##$SF= 100.701934720001
 ##$SI= 16384
 ##$SIGF1= 40
 ##$SIGF2= 20
@@ -128,10 +128,15 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\proc1d.exe
 ##$TM2= 0.9
 ##$TOPLEV= 0
 ##$USERP1= <>
+##$USERP10= <>
 ##$USERP2= <>
 ##$USERP3= <>
 ##$USERP4= <>
 ##$USERP5= <>
+##$USERP6= <>
+##$USERP7= <>
+##$USERP8= <>
+##$USERP9= <>
 ##$WDW= 1
 ##$XDIM= 0
 ##$YMAX_p= 0

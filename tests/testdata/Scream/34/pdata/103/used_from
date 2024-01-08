@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.1.4
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= Florian Taube
+$$ 2023-12-20 14:10:11.966 +0100  Florian Taube@Siavash
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/34/pdata/103/used_from
+$$ process C:\Bruker\TopSpin4.1.4\prog\mod\mvrow.exe
+##$CUREXP= <row>
+##$DATPATH= <F:/NMR/Max>
+##$EXPNO= 34
+##$NAME= <20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K>
+##$PROCNO= 1
+##$PROCNO2= 1
+##END=

@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TopSpin 3.5 pl 6
+##TITLE= Parameter file, TopSpin 4.1.4
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 29	$$ modification sequence number
+##NPOINTS= 37	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2023-12-19 00:56:50.035 +0100  nmr@Solid-NMR
-$$ C:/Users/nmr/TopSpin_Data_Corzilius/Maxneu/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/31/acqus
-$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
+$$ 2023-12-20 14:10:02.677 +0100  Florian Taube@Siavash
+$$ F:/NMR/Max/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_125K/31/acqus
+$$ process C:\Bruker\TopSpin4.1.4\prog\mod\dataserver.exe
 ##$ACQT0= 1000000
 ##$AMP= (0..31)
 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
@@ -42,7 +42,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
 0 0.1 0 0 0.005 0 0.0001 9.45e-005 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0
-##$DATE= 1702943808
+##$DATE= 1703012363
 ##$DE= 15.72501
 ##$DECBNUC= <off>
 ##$DECIM= 480
@@ -267,7 +267,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
 ##$SW= 413.74498541291
 ##$SWIBOX= (0..19)
 0 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$SW_h= 41666.6666666667
+##$SW_h= 41666.668
 ##$SWfinal= 0
 ##$SigLockShift= 0
 ##$TD= 2048
@@ -275,7 +275,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
 ##$TD_INDIRECT= (0..7)
 0 2 0 0 0 0 0 0
 ##$TDav= 1
-##$TE= 91.8
+##$TE= 135
 ##$TE1= 179.0031
 ##$TE2= 0
 ##$TE3= 0
@@ -309,8 +309,8 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
 670 0 0 0
 ##$XL= 0
 ##$YL= 0
-##$YMAX_a= 107813
-##$YMIN_a= -182896
+##$YMAX_a= 51546
+##$YMIN_a= -99792
 ##$ZGOPTNS= <>
 ##$ZL1= 120
 ##$ZL2= 120
