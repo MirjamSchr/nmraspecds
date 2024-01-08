@@ -5,6 +5,7 @@ import os.path
 
 import aspecd.io
 import nmrglue
+import numpy as np
 
 
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
@@ -111,3 +112,57 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             self.source = os.path.join(self.source, 'pdata',
                                        str(self.parameters[
                                                'processing_number']))
+
+
+class ScreamImporter(aspecd.io.DatasetImporter):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = ScreamImporter()
+        ...
+
+    
+
+    """
+
+    def __init__(self, source=None):
+        super().__init__(source=source)
+        self.parameters['number_of_experiments'] = 1
+        self._tmp_data = None
+
+    def _import(self):
+        base_path, last_element = os.path.split(self.source)
+        for count, variable_element in enumerate(np.arange(int(last_element),
+                                                           int(last_element) +
+                                                           self.parameters[
+                                                               'number_of_experiments'])):
+            self.source = os.path.join(base_path, str(variable_element),
+                                       'pdata', '103')
+            self._parameters, self._data = \
+                nmrglue.bruker.read_pdata(self.source)
+            if self._tmp_data is None:
+                self._tmp_data = np.ndarray((len(self._data), self.parameters[
+                    'number_of_experiments']))
+            self._tmp_data[:, count] = self._data
+        self.dataset.data.data = self._tmp_data

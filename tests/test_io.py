@@ -92,7 +92,7 @@ class TestBrukerImporter(unittest.TestCase):
 
     def test_proc_no_can_be_chosen(self):
         self.bruker_importer.source = 'testdata/Adamantane/1'
-        self.bruker_importer.parameters['processing_number'] = 2
+        self.bruker_importer.parameters['processing_number'] =  2
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue('pdata/2' in self.bruker_importer.source)
 
@@ -132,3 +132,36 @@ class TestDatasetImporterFactory(unittest.TestCase):
         importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
         importer = importer_factory.get_importer(source=source)
         self.assertIn(source, importer.source)
+
+
+class TestScreamImporter(unittest.TestCase):
+
+    def setUp(self):
+        self.scream_importer = io.ScreamImporter()
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_import_data_to_dataset(self):
+        self.scream_importer.source = 'testdata/Scream/22'
+        self.dataset.import_from(self.scream_importer)
+        self.assertTrue(self.dataset.data.data.any())
+
+    def test_is_2d(self):
+        self.scream_importer.source = 'testdata/Scream/22'
+        self.scream_importer.parameters['number_of_experiments'] = 11
+        self.dataset.import_from(self.scream_importer)
+        self.assertEqual(self.scream_importer._tmp_data.ndim, 2)
+
+    def test_dataset_contains_2d_data(self):
+        self.scream_importer.source = 'testdata/Scream/22'
+        self.scream_importer.parameters['number_of_experiments'] = 11
+        self.dataset.import_from(self.scream_importer)
+        self.assertEqual(self.dataset.data.data.shape, (16384, 11))
+
+    def test_axes_have_correct_size(self):
+        self.scream_importer.source = 'testdata/Scream/22'
+        self.scream_importer.parameters['number_of_experiments'] = 11
+        self.dataset.import_from(self.scream_importer)
+        self.assertEqual(len(self.dataset.data.axes[1].values), 11)

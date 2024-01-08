@@ -8,6 +8,8 @@ directories:
 datasets:
 - source: Adamantane/1
   id: 1H
+  importer_parameter:
+    processing_number: 2
 - source: Adamantane/2
   id: 13C
 tasks:

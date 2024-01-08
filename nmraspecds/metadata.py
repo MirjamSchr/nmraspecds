@@ -183,7 +183,7 @@ class Nucleus(aspecd.metadata.Metadata):
     Attributes
     ----------
     type : :class:`str`
-        Nucleus that is measured, such as 1H or 29Si.
+        Nucleus that is measured, such as 1H or 29Si or 195Pt.
 
     base_frequency : :class:`aspecd.metadata.PhysicalQuantity`
         Current base frequency of that nucleus.
