@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 3.5 pl 6
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ 2023-08-17 17:30:55.857 +0200  nmr@Solid-NMR
+$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/22/pdata/103/outd
+$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\mvrow.exe
+##$CURPLOT= <A4>
+##$CURPRIN= <$1#1#0#1#1#1#1#1#0#-1#-1#1#-1>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/layouts.ATP/1D.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

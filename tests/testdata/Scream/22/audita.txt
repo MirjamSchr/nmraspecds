@@ -1,0 +1,18 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 6
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ C:/Users/nmr/TopSpin_Data_Corzilius/Maxneu/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/22/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2023-12-18 16:50:09.154 +0100>,<nmr>,<Solid-NMR>,<go4>,<TopSpin 3.5.6>,
+      <created by zg
+	started at 2023-12-18 16:44:00.734 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       13 DD 02 89 6D D2 58 2A A6 F9 F0 FF 15 4B 90 18
+       data hash MD5: 2K * 2
+       FC 60 E2 04 A5 22 15 B5 A8 72 A3 A1 EE 57 68 61>)
+##END=
+
+$$ hash MD5
+$$ 45 DF 69 98 1F 50 BC 01 B7 C6 C0 BA 18 F6 78 07

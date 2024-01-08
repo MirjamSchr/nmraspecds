@@ -1,0 +1,25 @@
+
+Report of AU program poptau
+# Start time: 2022-05-16 18:17:28.050 +0200
+
+F1P=276.257ppm F2P=-106.692ppm
+PH_mode=1  FT_mod=6
+
+
+PROCNO=998
+
+Linear optimization of PLW 12 in 6 steps, as Step: Group 0
+starting at 15.000000000  endval= 40.000000000 
+OPTIMUM= ZERO
+VARMOD= LIN
+
+Experiment     PLW 12         Maximum point   Minimum point       Integral
+     1      15.000000000000       303921088        -7626568       7911794.504616
+     2      20.000000000000       263966867        -5948164       7081925.874703
+     3      25.000000000000       229228697        -5460539       6264524.506726
+     4      30.000000000000       186640987        -6450091       4610674.494197
+     5      35.000000000000       139520275        -5301098       3652724.307439
+     6      40.000000000000        87276384        -9353828       2195414.650620
+poptau for PLW 12 finished.
+ZERO : No zero crossing found.  
+

@@ -1,0 +1,24 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 6
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ C:/Users/nmr/TopSpin_Data_Corzilius/Max/20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/22/pdata/103/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2023-08-17 17:30:55.914 +0200>,<nmr>,<Solid-NMR>,<mvrow>,<TopSpin 3.5.6>,
+      <rsr 1 from
+       1 22 "20230817_100mM_HN-PA-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K" "C:/Users/nmr/TopSpin_Data_Corzilius/Max"
+       data hash MD5: 16K
+       6E 56 45 E9 5C 6A 26 96 1F 05 61 F9 2D 2C 8A 4E>)
+(   2,<2023-08-17 17:30:57.185 +0200>,<nmr>,<Solid-NMR>,<proc1d>,<TopSpin 3.5.6>,
+      <Unknown data manipulation detected
+       apk 
+       data hash MD5: 16K
+       51 E3 AD E0 7C 81 89 FE F5 1F 6C 4A 6B 5B BC 3F>)
+(   3,<2023-08-17 17:30:57.417 +0200>,<nmr>,<Solid-NMR>,<proc1d>,<TopSpin 3.5.6>,
+      <nm 
+       data hash MD5: 16K
+       76 0F 2B 50 E2 DB 19 F7 7E FB 18 EA 3F 68 78 01>)
+##END=
+
+$$ hash MD5
+$$ E0 BE 96 D7 66 90 C7 5C B0 AB F6 A1 3D 9A 8A D6

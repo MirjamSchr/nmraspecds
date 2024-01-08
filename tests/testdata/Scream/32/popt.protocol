@@ -1,0 +1,89 @@
+
+Report of AU program poptau
+# Start time: 2021-03-10 17:22:58.381 +0100
+
+Number of experiments: 6
+total experiment time will be:  4 min  0 sec
+
+F1P=668.507ppm F2P=-699.881ppm
+PH_mode=2  FT_mod=6
+
+
+PROCNO=999
+
+Linear optimization of PLW 1 in 6 steps, as Step: Group 0
+starting at 15.000000000  endval= 40.000000000 
+OPTIMUM= POSMAX
+VARMOD= LIN
+
+Experiment      PLW 1         Maximum point   Minimum point       Integral
+     1      15.000000000000        77447789         5696043      39790320.697337
+     2      20.000000000000        85297201         2147274      45054122.784504
+     3      25.000000000000        22064959          320979       7165104.295400
+     4      30.000000000000       108273858         6249424      55810996.462470
+     5      35.000000000000       309298321       128262242     209202899.881356
+     6      40.000000000000       124179018         2931049      57550810.145278
+poptau for PLW 1 finished.
+POSMAX at experiment 5:  PLW 1 = 35.000000  
+
+
+Report of AU program poptau
+# Start time: 2022-05-16 18:01:01.592 +0200
+
+Number of experiments: 4
+total experiment time will be:  1 min 36 sec
+
+
+Report of AU program poptau
+# Start time: 2022-05-16 18:01:35.652 +0200
+
+Number of experiments: 4
+total experiment time will be:  1 min 36 sec
+
+F1P=217.830ppm F2P=-2.540ppm
+PH_mode=1  FT_mod=6
+
+
+PROCNO=999
+
+Linear optimization of PLW 12 in 4 steps, as Step: Group 0
+starting at 25.000000000  endval= 40.000000000 
+OPTIMUM= ZERO
+VARMOD= LIN
+
+Experiment     PLW 12         Maximum point   Minimum point       Integral
+     1      25.000000000000       380726623       -12822460      18045951.269769
+     2      30.000000000000       191717799       -14485237       8003696.857896
+     3      35.000000000000        27081989       -11236280        564648.875315
+     4      40.000000000000        12753330      -149428890      -6452790.617007
+poptau for PLW 12 finished.
+ZERO at experiment 3.15:  PLW 12 = 35.767148  
+
+
+Report of AU program poptau
+# Start time: 2022-05-16 18:17:25.550 +0200
+
+Number of experiments: 6
+total experiment time will be:  2 min 24 sec
+
+F1P=276.257ppm F2P=-106.692ppm
+PH_mode=1  FT_mod=6
+
+
+PROCNO=998
+
+Linear optimization of PLW 12 in 6 steps, as Step: Group 0
+starting at 15.000000000  endval= 40.000000000 
+OPTIMUM= ZERO
+VARMOD= LIN
+
+Experiment     PLW 12         Maximum point   Minimum point       Integral
+     1      15.000000000000       303921088        -7626568       7911794.504616
+     2      20.000000000000       263966867        -5948164       7081925.874703
+     3      25.000000000000       229228697        -5460539       6264524.506726
+     4      30.000000000000       186640987        -6450091       4610674.494197
+     5      35.000000000000       139520275        -5301098       3652724.307439
+     6      40.000000000000        87276384        -9353828       2195414.650620
+poptau for PLW 12 finished.
+ZERO : No zero crossing found.  
+

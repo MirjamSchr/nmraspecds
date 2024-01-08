@@ -1,0 +1,9 @@
+VTC_REG_PID_SET_CH1=\
+<pid_settings type="probehead">
+   <standard_pid proportional="2.602" integral="40.815" differential="6.802" />
+   <temperature selftune="300.000" min="250.000" max="350.000" />
+   <vta type="2" sensor="2" connected_sensors="2" />
+   <gasflow selftune="-100.000" min="-150.000" max="-50.000" />
+   <pics checksum="" name=" PH MAS 400W1 BL4 X/Y/H WVT" />
+   <checksum value="5D8F6E97" />
+</pid_settings>

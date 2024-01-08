@@ -1,0 +1,345 @@
+#*******************************************************************
+#
+# $Source: /sc/CvsTree/sc/gen/src/form/ased_acqu.form,v $
+#
+# Copyright (c) 1995 - 2008
+# BRUKER BioSpin GmbH
+# D-76287 Rheinstetten, Germany
+#
+# All Rights Reserved
+#
+#
+# $Id: ased_acqu.form,v 1.27.2.3 2014/05/05 13:10:49 nipo Exp $
+#*******************************************************************
+EDIT_PAR COMMAND FILE
+
+DI_MODE         LONG
+ED_ENTRY        ACQU
+ORDER           FILE
+
+
+HEADER		"====== General ======"
+NAME		PULPROG
+END
+NAME		TD
+END
+NAME		SW
+END
+T_NAME		SWH
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"SWH=SW*SFO1"
+		INV_REL "SW=SWH/SFO1"
+		UNIT	"Hz"
+		FORMAT	"%14.2f Hz"
+		TEXT	"sweep width"
+END
+T_NAME          AQ
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"AQ=aqcalc(SW,SFO1,TD,DIGTYP)"
+		INV_REL	"TD=tdcalc(SW,SFO1,1.0e6*AQ,DIGTYP)"
+		UNIT	"sec"
+		FORMAT	"%14.7f sec"
+                TEXT	"acquisition time"
+END
+NAME		RG
+END
+T_NAME          DW
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"DW=1/(2*SW*SFO1)"
+		INV_REL	"SW=1000000/(2*(0.005+DW)*SFO1)"
+		UNIT	"usec"
+		FORMAT	"%14.3f usec"
+		TEXT	"dwell time "
+END
+NAME		DE
+		FORMAT	"%14.2f usec"
+END
+T_NAME		D1
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"D1=D[1]"
+		INV_REL	"D[1]=D1"
+		UNIT	"sec"
+		FORMAT	"%14.9f sec"
+		TEXT		"recycle delay, set to 0.1s if duty cycle allows"
+END
+T_NAME		D4
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"D4=D[4]"
+		INV_REL	"D[4]=D4"
+		UNIT	"sec"
+		FORMAT	"%14.9f sec"
+		TEXT		"dinterpulse delay of initial saturation train"
+END
+T_NAME		D20
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"D20=D[20]"
+		INV_REL	"D[20]=D20"
+		UNIT	"sec"
+		FORMAT	"%14.9f sec"
+		TEXT		"interpulse delay for 1H saturation during buildup, set to 250ms"
+END
+NAME		DS
+		TEXT	"number of dummy scans"
+END
+T_NAME		L4
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"L4=L[4]"
+		INV_REL	"L[4]=L4"
+		FORMAT	"%14.0f"
+		TEXT		"nr of saturation pulses for initial saturation"
+END
+T_NAME		L20
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1e38
+		REL	"L20=L[20]"
+		INV_REL	"L[20]=L20"
+		FORMAT	"%14.0f"
+		TEXT		"nr of saturation pulses during buildup"
+END
+NAME		NBL
+END
+NAME		NS
+		TEXT	"scans to execute"
+END
+T_NAME		tbup
+		TYPE	R32
+		SUBRANGE 0.0 1e8
+		CLASS	ACQU
+		REL	"tbup=l20*d20"
+		INV_REL	"D[0]=tbup"
+		UNIT	"sec"
+		TEXT		"= l20*d20, SCREAM buildup time"
+		FORMAT	"%14.8f sec"
+		NONEDIT
+END
+HEADER		"======== CHANNEL f1 ========"
+NAME		SFO1
+		FORMAT	"%14.7f MHz"
+		TEXT	"frequency of ch. 1"
+END
+NAME		O1
+		FORMAT	"%14.2f Hz"
+		TEXT	"frequency of ch. 1"
+END
+T_NAME		O1P
+		TYPE	R64
+		CLASS	ACQU
+		SUBRANGE -1e38 1e38
+		REL	"O1P=O1/BF1"
+		INV_REL	"O1=O1P*BF1"
+		UNIT	"ppm"
+		FORMAT	"%14.3f ppm"
+		TEXT	"frequency of ch. 1"
+END
+NAME		NUC1
+		NONEDIT
+		TEXT	"nucleus for channel 1"
+END
+T_NAME		P1
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1.0e10
+		REL	"P1=P[1]"
+		INV_REL	"P[1]=P1"
+		UNIT	"usec"
+		FORMAT	"%14.3f usec"
+		TEXT		"carbon 90 at PLW1"
+END
+T_NAME		PLW1
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0 436.1
+		REL	"PLW1=PLW[1]"
+		INV_REL	"PLW[1]=PLW1"
+		UNIT	"W"
+		FORMAT	"%14.5g W"
+		TEXT		"carbon 90 hard pulse power"
+END
+T_NAME		PLdB1
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE -26.4959 1000
+		REL	"if(PLW[1]>0)PLdB1=-10*log(PLW[1])/LN10;else PLdB1=1000;"
+		INV_REL	"PLW[1]=0;if(PLdB1<1000)PLW[1]=pow(10.0,(-PLdB1)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL1 in dB"
+END
+HEADER		"======== CHANNEL f2 ========"
+NAME		SFO2
+		FORMAT	"%14.7f MHz"
+		TEXT	"frequency of ch. 2"
+END
+NAME		O2
+		FORMAT	"%14.2f Hz"
+		TEXT	"frequency of ch. 2"
+END
+T_NAME		O2P
+		TYPE	R64
+		CLASS	ACQU
+		SUBRANGE -1e38 1e38
+		REL	"O2P=O2/BF2"
+		INV_REL	"O2=O2P*BF2"
+		UNIT	"ppm"
+		FORMAT	"%14.3f ppm"
+		TEXT	"frequency of ch. 2"
+END
+NAME		NUC2
+		NONEDIT
+		TEXT	"nucleus for channel 2"
+END
+NAME		CPDPRG[2]
+		TEXT	"file name for cpd2"
+END
+T_NAME		P4
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0.0 1.0e10
+		REL	"P4=P[4]"
+		INV_REL	"P[4]=P4"
+		UNIT	"usec"
+		FORMAT	"%14.3f usec"
+		TEXT		"proton 90 at power level PLW3"
+END
+T_NAME		p20
+		TYPE	R32
+		SUBRANGE -1e38 1e38
+		CLASS	ACQU
+		REL	"p20=p4*2"
+		INV_REL	"D[0]=p20"
+		UNIT	"usec"
+		TEXT	"p20=p4*2"
+		FORMAT	"%14.2f usec"
+		NONEDIT
+END
+T_NAME		PCPD2
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0 1e38
+		REL	"PCPD2=PCPD[2]"
+		INV_REL	"PCPD[2]=PCPD2"
+		UNIT	"usec"
+		FORMAT	"%14.2f usec"
+		TEXT		"set to (180 deg - 0.2 us) if not determined"
+END
+T_NAME		plw2
+		TYPE	R32
+		SUBRANGE 0 262.9
+		CLASS	ACQU
+		REL	"plw2=0"
+		INV_REL	"D[0]=plw2"
+		UNIT	"dB"
+		TEXT	"plw2=0"
+		FORMAT	"%14.5g W"
+		NONEDIT
+END
+T_NAME		PLdB2
+		TYPE	R32
+		CLASS	ACQU
+		NONEDIT
+		SUBRANGE -24.2979 1000
+		REL	"if(plw2>0)PLdB2=-10*log(plw2)/LN10;else PLdB2=1000;"
+		INV_REL	"PLW[2]=0;if(PLdB2<1000)PLW[2]=pow(10.0,(-PLdB2)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL2 in dB"
+END
+T_NAME		PLW3
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0 262.9
+		REL	"PLW3=PLW[3]"
+		INV_REL	"PLW[3]=PLW3"
+		UNIT	"W"
+		FORMAT	"%14.5g W"
+		TEXT		"proton 90 hard pulse power"
+END
+T_NAME		PLdB3
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE -24.2979 1000
+		REL	"if(PLW[3]>0)PLdB3=-10*log(PLW[3])/LN10;else PLdB3=1000;"
+		INV_REL	"PLW[3]=0;if(PLdB3<1000)PLW[3]=pow(10.0,(-PLdB3)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL3 in dB"
+END
+T_NAME		PLW12
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE 0 262.9
+		REL	"PLW12=PLW[12]"
+		INV_REL	"PLW[12]=PLW12"
+		UNIT	"W"
+		FORMAT	"%14.5g W"
+		TEXT		"proton power for decoupling"
+END
+T_NAME		PLdB12
+		TYPE	R32
+		CLASS	ACQU
+		SUBRANGE -24.2979 1000
+		REL	"if(PLW[12]>0)PLdB12=-10*log(PLW[12])/LN10;else PLdB12=1000;"
+		INV_REL	"PLW[12]=0;if(PLdB12<1000)PLW[12]=pow(10.0,(-PLdB12)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL12 in dB"
+END
+T_NAME		plw20
+		TYPE	R32
+		SUBRANGE 0 262.9
+		CLASS	ACQU
+		REL	"plw20=plw3"
+		INV_REL	"D[0]=plw20"
+		UNIT	"dB"
+		TEXT	"plw20=plw3"
+		FORMAT	"%14.5g W"
+		NONEDIT
+END
+T_NAME		PLdB20
+		TYPE	R32
+		CLASS	ACQU
+		NONEDIT
+		SUBRANGE -24.2979 1000
+		REL	"if(plw20>0)PLdB20=-10*log(plw20)/LN10;else PLdB20=1000;"
+		INV_REL	"PLW[20]=0;if(PLdB20<1000)PLW[20]=pow(10.0,(-PLdB20)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL20 in dB"
+END
+T_NAME		plw21
+		TYPE	R32
+		SUBRANGE 0 262.9
+		CLASS	ACQU
+		REL	"plw21=0"
+		INV_REL	"D[0]=plw21"
+		UNIT	"dB"
+		TEXT	"plw21=0"
+		FORMAT	"%14.5g W"
+		NONEDIT
+END
+T_NAME		PLdB21
+		TYPE	R32
+		CLASS	ACQU
+		NONEDIT
+		SUBRANGE -24.2979 1000
+		REL	"if(plw21>0)PLdB21=-10*log(plw21)/LN10;else PLdB21=1000;"
+		INV_REL	"PLW[21]=0;if(PLdB21<1000)PLW[21]=pow(10.0,(-PLdB21)/10.0)"
+		UNIT	"dB"
+		FORMAT	"%14.2f dB"
+		TEXT	"power PL21 in dB"
+END

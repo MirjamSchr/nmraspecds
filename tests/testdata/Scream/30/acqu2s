@@ -1,0 +1,23 @@
+##TITLE= Parameter file, TopSpin 3.5 pl 6
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 13	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ 2023-12-18 23:48:26.829 +0100  nmr@Solid-NMR
+$$ C:/Users/nmr/TopSpin_Data_Corzilius/Maxneu/20231218_100mM_Ac_N-P-OH_10mM_AUPOL_1p3mm_18kHz_DNP_100K/30/acqu2s
+$$ process C:\Bruker\TopSpin3.5pl6\prog\mod\go4.exe
+##$ACQT0= 0
+##$BF1= 400.485372
+##$FnMODE= 0
+##$NUC1= <1H>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 2
+##$O1= 0
+##$ProjAngle= 0
+##$SFO1= 400.485372
+##$SW= 10.0038866248784
+##$SW_h= 4006.41025641026
+##$TD= 2
+##END=

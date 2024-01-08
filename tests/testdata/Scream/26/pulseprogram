@@ -1,0 +1,105 @@
+# 1 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+;Vica SCREAM DP and DPsat alternating
+;further comments and easier-to-use updates introduced by Thomas
+;
+; 14.04.2023
+
+;hpdec.av
+;acquisition on X with hp proton decoupling
+;interleaved acquisition of DP (1st) and DPsat (2nd) block
+
+;set NBL value to 2!
+;d1: recycle delay, set to 0.1s if duty cycle allows
+;d4: dinterpulse delay of initial saturation train
+;d20: interpulse delay for 1H saturation during buildup, set to 250ms
+;l4: nr of saturation pulses for initial saturation
+;l20: nr of saturation pulses during buildup
+;tbup: = l20*d20, SCREAM buildup time
+;pcpd2: set to (180 deg - 0.2 us) if not determined
+;pl1: carbon 90 hard pulse power
+;pl3: proton 90 hard pulse power
+;pl12: proton power for decoupling
+"plw2=0" ;pl2: not used
+"plw20=plw3" ;pl20: pl for saturation during buildup
+"plw21=0" ;pl21: set to 0W, not used
+;p4: proton 90 at power level PLW3
+;p1: carbon 90 at PLW1
+"p20=p4*2" ;p20: proton 180
+# 28 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+define loopcounter count
+"count=0"
+define delay tbup
+"tbup=l20*d20"
+
+"p30=p31-0.4u"
+
+# 36 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+define delay MCWRK
+define delay MCREST
+"MCWRK = 0.500000*10m"
+"MCREST = 10m - 0.500000*10m"
+  
+# 1 "mc_line 41 file C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final dc-measurement inserted automatically"
+
+    dccorr
+# 41 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+1 ze ;set RCU to replace mode
+
+
+  "tbup=(1+l20)*d20"
+# 46 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+2 MCWRK
+  MCREST
+
+
+  st0
+  d1 do:f2 ;recycle delay
+3 (p1 pl1 ph6^):f1
+  (p4 pl3 ph4^):f2 
+  d4
+lo to 3 times l4
+# 57 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+;  tbup do:f2
+4 (p20 pl21 ph0):f2
+	d20 ; dummy delay mimicking the not-applied 180 deg pulse on 1H
+lo to 4 times l20
+
+
+  (p1 pl1 ph1):f1 ;transmitter pulse on F1 with power level pl1
+  1u pl12:f2
+  1u cpds2:f2 ;use cpdprg2 spinal64 or tppm at power pl12
+  goscnp ph31 ;make sure the adc is finished, turn decoupling off
+  1u st
+# 69 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+;start DPsat
+
+  d1 do:f2 ;recycle delay, set to low values (e.g. 0.1s) if duty cycle allows
+5 (p1 pl1 ph6^):f1
+  (p4 pl3 ph4^):f2 
+  d4
+lo to 5 times l4
+
+;  tbup do:f2
+6 (p20 pl20 ph0):f2 ; 180 deg pulses on 1H during buildup
+  d20
+lo to 6 times l20
+# 82 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+  (p1 pl1 ph1):f1 ;transmitter pulse on F1 with power level pl1
+  1u pl12:f2
+  1u cpds2:f2 ;use cpdprg2 spinal64 or tppm at power pl12
+  go=2 ph31 ;make sure the adc is finished, turn decoupling off
+
+  1m do:f2
+;  d20
+
+  MCWRK  wr #0
+  MCWRK
+# 94 "C:/Bruker/TopSpin3.5pl6/exp/stan/nmr/lists/pp/user/tb_scream_final"
+;  wr #0 ;save data in current data set
+exit
+
+ph0= 0     ;constant phase for acquisition
+ph1= 0 1 2 3 ;simple pulse phase list
+ph4= 0 1
+ph6= 0 1
+ph31=0 1 2 3 ;signal routing corresponds to pulse phase list
