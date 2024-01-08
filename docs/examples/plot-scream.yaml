@@ -16,5 +16,8 @@ tasks:
     type: SinglePlotter2D
     properties:
       type: contour
+      properties:
+        drawing:
+          linestyles: '-'
       filename:
         - ScreamSpectrum.pdf
