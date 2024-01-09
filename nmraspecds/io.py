@@ -7,6 +7,8 @@ import aspecd.io
 import nmrglue
 import numpy as np
 
+import nmraspecds.metadata
+
 
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
@@ -87,6 +89,17 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._check_for_type()
         self._read_data()
         self._create_axes()
+        self._add_nucleus()
+
+    def _add_nucleus(self):
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.type = self._parameters['acqus']['NUC1']
+        nucleus.base_frequency.value = self._parameters['acqus']['BF1']
+        nucleus.base_frequency.unit = 'MHz'
+        nucleus.offset_hz.value = float(self._parameters['acqus']['O1'])
+        nucleus.offset_hz.unit = 'Hz'
+        nucleus.spectrometer_frequency.value = self._parameters['procs']['SF']
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
 
     def _create_axes(self):
         unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
@@ -112,6 +125,8 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             self.source = os.path.join(self.source, 'pdata',
                                        str(self.parameters[
                                                'processing_number']))
+
+
 
 
 class ScreamImporter(aspecd.io.DatasetImporter):

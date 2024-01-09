@@ -158,7 +158,7 @@ $$ process C:\Bruker\TopSpin3.5pl6\prog\mod\vtucntl.exe
 ##$NusSPTYPE= 0
 ##$NusT2= 1
 ##$NusTD= 0
-##$O1= 0
+##$O1= 5
 ##$O2= 0
 ##$O3= 0
 ##$O4= 2473.09

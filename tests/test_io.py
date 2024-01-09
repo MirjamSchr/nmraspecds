@@ -92,7 +92,7 @@ class TestBrukerImporter(unittest.TestCase):
 
     def test_proc_no_can_be_chosen(self):
         self.bruker_importer.source = 'testdata/Adamantane/1'
-        self.bruker_importer.parameters['processing_number'] =  2
+        self.bruker_importer.parameters['processing_number'] = 2
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue('pdata/2' in self.bruker_importer.source)
 
@@ -112,6 +112,73 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(self.dataset.data.axes[0].quantity, 'chemical shift')
         self.assertEqual(self.dataset.data.axes[1].quantity, 'intensity')
+
+    @unittest.skip
+    def test_spectral_reference_is_read(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertTrue(
+            self.dataset.metadata.processing_parameters.reference_frequency)
+
+    def test_nucleus_is_in_metadata(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertEqual(self.dataset.metadata.experiment.nuclei[0].type, '1H')
+
+    def test_base_frequency_is_in_metadata(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertAlmostEqual(
+            self.dataset.metadata.experiment.nuclei[0].base_frequency.value,
+            400.491372)
+
+    def test_base_frequency_unit_in_metadata(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertEqual(
+            self.dataset.metadata.experiment.nuclei[0].base_frequency.unit,
+            'MHz')
+
+    def test_offset_hz_value_and_unit_in_metadata(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertAlmostEqual(
+            self.dataset.metadata.experiment.nuclei[0].offset_hz.value, 5,
+            places=2)
+        self.assertEqual(
+            self.dataset.metadata.experiment.nuclei[0].offset_hz.unit, 'Hz')
+
+    def test_transmitter_freq_is_different_from_base_freq(self):
+        # only works because O1 was manually changed from 0 to 5 Hz in
+        # acqus-file.
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertNotEqual(
+            self.dataset.metadata.experiment.nuclei[0].base_frequency.value,
+            self.dataset.metadata.experiment.nuclei[0].transmitter_frequency.
+            value)
+
+    def test_spectrometer_frequency_is_written(self):
+        source = 'testdata/Adamantane/1'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertAlmostEqual(
+            self.dataset.metadata.experiment.nuclei[0].spectrometer_frequency.
+            value, 400.4910556
+        )
 
 
 class TestDatasetImporterFactory(unittest.TestCase):

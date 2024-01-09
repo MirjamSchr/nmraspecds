@@ -172,6 +172,12 @@ class Experiment(aspecd.metadata.Metadata):
         self.mas_frequency = None
         super().__init__(dict_=dict_)
 
+    def add_nucleus(self, nucleus):
+        # TODO: is this how it is done properly?
+        if not isinstance(nucleus, Nucleus):
+            TypeError('argument is not of class nmraspecds.metadata.Nucleus')
+        self.nuclei.append(nucleus)
+
 
 class Nucleus(aspecd.metadata.Metadata):
     """
@@ -215,6 +221,7 @@ class Nucleus(aspecd.metadata.Metadata):
         self.type = ''
         self.base_frequency = aspecd.metadata.PhysicalQuantity()
         self.offset_hz = aspecd.metadata.PhysicalQuantity()
+        self.spectrometer_frequency = aspecd.metadata.PhysicalQuantity()
         super().__init__(dict_=dict_)
 
     @property
