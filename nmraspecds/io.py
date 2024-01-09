@@ -89,17 +89,21 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._check_for_type()
         self._read_data()
         self._create_axes()
-        self._add_nucleus()
+        self._add_spectrometer_frequency()
+        self._add_nuclei()
 
-    def _add_nucleus(self):
-        nucleus = nmraspecds.metadata.Nucleus()
-        nucleus.type = self._parameters['acqus']['NUC1']
-        nucleus.base_frequency.value = self._parameters['acqus']['BF1']
-        nucleus.base_frequency.unit = 'MHz'
-        nucleus.offset_hz.value = float(self._parameters['acqus']['O1'])
-        nucleus.offset_hz.unit = 'Hz'
-        nucleus.spectrometer_frequency.value = self._parameters['procs']['SF']
-        self.dataset.metadata.experiment.add_nucleus(nucleus)
+    def _add_nuclei(self):
+
+        nuclei = dict()
+        for key, value in self._parameters['acqus'].items():
+            if key.startswith('NUC') and value != 'off':
+                nuclei[key] = value
+        for key in sorted(nuclei.keys()):
+            self._add_nucleus(key)
+
+    def _add_spectrometer_frequency(self):
+        self.dataset.metadata.experiment.spectrometer_frequency.value = (
+            self._parameters)['procs']['SF']
 
     def _create_axes(self):
         unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
@@ -126,7 +130,15 @@ class BrukerImporter(aspecd.io.DatasetImporter):
                                        str(self.parameters[
                                                'processing_number']))
 
-
+    def _add_nucleus(self, nuc='', ):
+        nr = nuc[-1]
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.type = self._parameters['acqus'][nuc]
+        nucleus.base_frequency.value = self._parameters['acqus'][f'BF{nr}']
+        nucleus.base_frequency.unit = 'MHz'
+        nucleus.offset_hz.value = float(self._parameters['acqus'][f'O{nr}'])
+        nucleus.offset_hz.unit = 'Hz'
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
 
 
 class ScreamImporter(aspecd.io.DatasetImporter):

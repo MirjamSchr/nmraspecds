@@ -163,6 +163,18 @@ class Experiment(aspecd.metadata.Metadata):
 
     mas_frequency: :class:`int`
         Magic Angle Spinning Frequency of the experiment, given in Hz.
+
+    spectrometer_frequency: :class:`aspecd.metadata.PhysicalQuantity`
+        Spectrometer frequency of the measured nucleus **after referencing**.
+
+        As ssNMR is seldom referenced internally, external referencing is
+        necessary to determine the correct frequency of the spectrometer.
+        This is done on a standard sample whose chemical shift is known and
+        can be set manually. From this, the spectrometer's frequency is
+        determined and has to be copied to the sample of interest. Of course,
+        the sample has to get measured shortly before or after the reference
+        compound to avoid drift of the magnetic field that occurs over time.
+
     """
 
     def __init__(self, dict_=None):
@@ -170,6 +182,7 @@ class Experiment(aspecd.metadata.Metadata):
         self.runs = None
         self.nuclei = []
         self.mas_frequency = None
+        self.spectrometer_frequency = aspecd.metadata.PhysicalQuantity()
         super().__init__(dict_=dict_)
 
     def add_nucleus(self, nucleus):
@@ -221,7 +234,6 @@ class Nucleus(aspecd.metadata.Metadata):
         self.type = ''
         self.base_frequency = aspecd.metadata.PhysicalQuantity()
         self.offset_hz = aspecd.metadata.PhysicalQuantity()
-        self.spectrometer_frequency = aspecd.metadata.PhysicalQuantity()
         super().__init__(dict_=dict_)
 
     @property

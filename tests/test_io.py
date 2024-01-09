@@ -100,6 +100,8 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
         self.dataset.import_from(self.bruker_importer)
         self.assertGreater(self.dataset.data.axes[0].values[0], 0)
+        self.assertAlmostEqual(self.dataset.data.axes[0].values[0], 156.8483,
+                               places=4)
 
     def test_set_axis_unit(self):
         self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
@@ -112,15 +114,6 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(self.dataset.data.axes[0].quantity, 'chemical shift')
         self.assertEqual(self.dataset.data.axes[1].quantity, 'intensity')
-
-    @unittest.skip
-    def test_spectral_reference_is_read(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
-        self.assertTrue(
-            self.dataset.metadata.processing_parameters.reference_frequency)
 
     def test_nucleus_is_in_metadata(self):
         source = 'testdata/Adamantane/1'
@@ -176,10 +169,18 @@ class TestBrukerImporter(unittest.TestCase):
         importer = importer_factory.get_importer(source=source)
         self.dataset.import_from(importer)
         self.assertAlmostEqual(
-            self.dataset.metadata.experiment.nuclei[0].spectrometer_frequency.
+            self.dataset.metadata.experiment.spectrometer_frequency.
             value, 400.4910556
         )
 
+    def test_nuclei_in_2nucleus_exp_are_written(self):
+        source = 'testdata/Adamantane/2'
+        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
+        importer = importer_factory.get_importer(source=source)
+        self.dataset.import_from(importer)
+        self.assertEqual(len(self.dataset.metadata.experiment.nuclei), 2)
+        self.assertNotEqual(self.dataset.metadata.experiment.nuclei[
+                                1].base_frequency.value, 0)
 
 class TestDatasetImporterFactory(unittest.TestCase):
     def setUp(self):
