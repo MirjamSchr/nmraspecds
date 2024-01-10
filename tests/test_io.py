@@ -116,35 +116,27 @@ class TestBrukerImporter(unittest.TestCase):
         self.assertEqual(self.dataset.data.axes[1].quantity, 'intensity')
 
     def test_nucleus_is_in_metadata(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertEqual(self.dataset.metadata.experiment.nuclei[0].type, '1H')
 
     def test_base_frequency_is_in_metadata(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertAlmostEqual(
             self.dataset.metadata.experiment.nuclei[0].base_frequency.value,
             400.491372)
 
     def test_base_frequency_unit_in_metadata(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertEqual(
             self.dataset.metadata.experiment.nuclei[0].base_frequency.unit,
             'MHz')
 
     def test_offset_hz_value_and_unit_in_metadata(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1/pdata/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertAlmostEqual(
             self.dataset.metadata.experiment.nuclei[0].offset_hz.value, 5,
             places=2)
@@ -154,33 +146,28 @@ class TestBrukerImporter(unittest.TestCase):
     def test_transmitter_freq_is_different_from_base_freq(self):
         # only works because O1 was manually changed from 0 to 5 Hz in
         # acqus-file.
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertNotEqual(
             self.dataset.metadata.experiment.nuclei[0].base_frequency.value,
             self.dataset.metadata.experiment.nuclei[0].transmitter_frequency.
             value)
 
     def test_spectrometer_frequency_is_written(self):
-        source = 'testdata/Adamantane/1'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/1'
+        self.dataset.import_from(self.bruker_importer)
         self.assertAlmostEqual(
             self.dataset.metadata.experiment.spectrometer_frequency.
             value, 400.4910556
         )
 
     def test_nuclei_in_2nucleus_exp_are_written(self):
-        source = 'testdata/Adamantane/2'
-        importer_factory = nmraspecds.dataset.DatasetFactory().importer_factory
-        importer = importer_factory.get_importer(source=source)
-        self.dataset.import_from(importer)
+        self.bruker_importer.source = 'testdata/Adamantane/2'
+        self.dataset.import_from(self.bruker_importer)
         self.assertEqual(len(self.dataset.metadata.experiment.nuclei), 2)
         self.assertNotEqual(self.dataset.metadata.experiment.nuclei[
                                 1].base_frequency.value, 0)
+
 
 class TestDatasetImporterFactory(unittest.TestCase):
     def setUp(self):

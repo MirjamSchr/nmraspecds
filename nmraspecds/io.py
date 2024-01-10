@@ -89,7 +89,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._check_for_type()
         self._read_data()
         self._create_axes()
-        self._add_spectrometer_frequency()
+        self._get_spectrometer_frequency()
         self._add_nuclei()
 
     def _add_nuclei(self):
@@ -101,7 +101,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         for key in sorted(nuclei.keys()):
             self._add_nucleus(key)
 
-    def _add_spectrometer_frequency(self):
+    def _get_spectrometer_frequency(self):
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
             self._parameters)['procs']['SF']
 
