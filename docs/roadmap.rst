@@ -16,4 +16,6 @@ For version 0.1
 
 * Create pseudo-processing steps that put all previously performed processing steps in the history.
 
+* Enable black for code style
+
 
