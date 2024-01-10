@@ -14,9 +14,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.chemical_shift_calibration = analysis.ChemicalShiftCalibration()
         self.dataset = nmraspecds.dataset.ExperimentalDataset()
         self.data = scipy.signal.windows.gaussian(99, std=2)
-        self.axis = np.linspace(0,30,num=99)
-
-
+        self.axis = np.linspace(0, 30, num=99)
 
     def test_instantiate_class(self):
         pass
@@ -67,4 +65,4 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.chemical_shift_calibration.parameters['chemical_shift'] = 1.33
         analysis = self.dataset.analyse(self.chemical_shift_calibration)
         self.assertTrue(analysis.result)
-        self.assertAlmostEqual(analysis.result, 2.3307,3)
+        self.assertAlmostEqual(analysis.result, 2.3307, 3)

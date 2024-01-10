@@ -76,9 +76,3 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         new_frequency = (freq * 1e6 - delta_nu) * 1e-6
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
             new_frequency)
-
-
-
-
-
-
