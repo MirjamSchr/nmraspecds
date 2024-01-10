@@ -46,3 +46,12 @@ class TestExternalReferencing(unittest.TestCase):
                             spectrometer_frequency_after)
         self.assertGreater(spectrometer_frequency_after,
                            spectrometer_frequency_before)
+
+    def test_without_offset_raises(self):
+        self.dataset.data.data = self.data
+        self.dataset.data.axes[0].values = self.axis
+        self.dataset.data.axes[0].unit = 'ppm'
+        self.dataset.metadata.experiment.spectrometer_frequency.from_string(
+            '400 MHz')
+        with self.assertRaises(ValueError):
+            self.dataset.process(self.referencing)
