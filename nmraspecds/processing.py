@@ -47,8 +47,20 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
 
     def _perform_task(self):
         print(self.parameters['offset'])
-        self.parameters
-        delta_nu_1 = 1
+        sr = self.parameters['offset']
+        # lineare Gleichung: delta y = Delta SR zwischen Ziel und aktueller
+        # Frequenz,
+        # Delta x zwischen Transmitter-Frequenz und (Transmitterfreq + SR)
+        # => Steigung = 1
+        # y-Offset = -1* SR -SR = -2SR
+        # => SR(new) = freq-2SR(old)
+        # current-SR = current freq - 2SR(old)
+        # sr_to_add = SR(old) - current-SR
+        #ppm_to_add = sr_to_add / (current_freq +sr)
+        #self.dataset.data.axes[0].values +=ppm_to_add
+        #self.dataset.metadata.experiment.spectrometer_frequency.value = (
+         #   current_freq + sr)
+
         #self._change_axis()
         #self._update_spectrometer_frequency()
         print(self.dataset.metadata.experiment.spectrometer_frequency)

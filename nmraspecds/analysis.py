@@ -53,6 +53,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             raise ValueError('No standard or chemical shift value provided.')
 
     def _perform_task(self):
+        #zu übertragender Wert ist SR!!
         self._peak_index = np.argmax(self.dataset.data.data)
         ppm_current = self.dataset.data.axes[0].values[self._peak_index]
         ppm_target = self.parameters['chemical_shift']
@@ -69,6 +70,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         slope = delta_freq/delta_nu
         y_offset = -slope * delta_freq - delta_nu
         delta_nu_final = slope * (target_freq - trans_freq) + y_offset
+        # müsste SR sein
         delta_ppm_final = delta_nu_final/trans_freq
-        self.result = delta_ppm_final
-
+        self.result = delta_nu_final
