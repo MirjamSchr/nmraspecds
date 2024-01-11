@@ -46,12 +46,20 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
             raise ValueError('No offset provided')
 
     def _perform_task(self):
-        self._change_axis()
-        self._update_spectromer_frequency()
+        print(self.parameters['offset'])
+        self.parameters
+        delta_nu_1 = 1
+        #self._change_axis()
+        #self._update_spectrometer_frequency()
+        print(self.dataset.metadata.experiment.spectrometer_frequency)
 
-    def _update_spectromer_frequency(self):
+    def _update_spectrometer_frequency(self):
+       # print(self.dataset.metadata.experiment.spectrometer_frequency,
+        #      '\n base frequency',
+         #     self.dataset.metadata.experiment.nuclei[0].base_frequency.value)
         initial_frequency = (
-            self.dataset.metadata.experiment.spectrometer_frequency.value)
+            self.dataset.metadata.experiment.nuclei[
+                0].transmitter_frequency.value)
         offset_hz = self.parameters['offset'] * initial_frequency
         frequency = (initial_frequency * 1e6 + offset_hz) * 1e-6
         self.dataset.metadata.experiment.spectrometer_frequency.value = (

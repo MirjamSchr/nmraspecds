@@ -25,6 +25,9 @@ class TestExternalReferencing(unittest.TestCase):
         self.dataset.data.axes[0].values = self.axis
         self.dataset.data.axes[0].unit = 'ppm'
         self.referencing.parameters['offset'] = 3
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string('400 MHz')
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
         axis_before = copy.deepcopy(self.dataset.data.axes[0].values)
         self.dataset.process(self.referencing)
         axis_after = self.dataset.data.axes[0].values
@@ -35,8 +38,11 @@ class TestExternalReferencing(unittest.TestCase):
         self.dataset.data.axes[0].values = self.axis
         self.dataset.data.axes[0].unit = 'ppm'
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
-            '400 MHz')
-        self.referencing.parameters['offset'] = 3
+            '403 MHz')
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string('400 MHz')
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
+        self.referencing.parameters['offset'] = 5
         spectrometer_frequency_before = copy.deepcopy(
             self.dataset.metadata.experiment.spectrometer_frequency.value)
         self.dataset.process(self.referencing)
