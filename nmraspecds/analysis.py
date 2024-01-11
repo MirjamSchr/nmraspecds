@@ -33,8 +33,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         obj = ChemicalShiftCalibration()
         ...
 
-    
-
     """
 
     def __init__(self):
@@ -68,9 +66,9 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         delta_nu = nu_target - nu_current
         target_freq = (current_freq * 1e6 - delta_nu) * 1e-6  # in MHz
         delta_freq = target_freq - current_freq
-        steigung = delta_freq/delta_nu
-        y_offset = -steigung * delta_freq - delta_nu
-        delta_nu_target_trans = steigung * (target_freq - trans_freq) + y_offset
-        delta_correct = delta_nu_target_trans/trans_freq
-        self.result = delta_correct
+        slope = delta_freq/delta_nu
+        y_offset = -slope * delta_freq - delta_nu
+        delta_nu_final = slope * (target_freq - trans_freq) + y_offset
+        delta_ppm_final = delta_nu_final/trans_freq
+        self.result = delta_ppm_final
 
