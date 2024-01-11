@@ -55,24 +55,22 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             raise ValueError('No standard or chemical shift value provided.')
 
     def _perform_task(self):
-        self._calculate_new_frequency()
-        self.result = self._update_axis_and_return_offset()
-
-    def _update_axis_and_return_offset(self):
-        offset_ppm = (self.parameters['chemical_shift'] -
-                      self.dataset.data.axes[0].values[self._peak_index])
-        self.dataset.data.axes[0].values += offset_ppm
-        return offset_ppm
-
-    def _calculate_new_frequency(self):
         self._peak_index = np.argmax(self.dataset.data.data)
         ppm_current = self.dataset.data.axes[0].values[self._peak_index]
         ppm_target = self.parameters['chemical_shift']
-        initial_frequency = (
+        current_freq = (
             self.dataset.metadata.experiment.spectrometer_frequency.value)
-        nu_current = ppm_current * initial_frequency
-        nu_target = ppm_target * initial_frequency
+        trans_freq = (
+            self.dataset.metadata.experiment.nuclei[
+                0].transmitter_frequency.value)
+        nu_current = ppm_current * current_freq
+        nu_target = ppm_target * current_freq
         delta_nu = nu_target - nu_current
-        new_frequency = (initial_frequency * 1e6 - delta_nu) * 1e-6  # in MHz
-        self.dataset.metadata.experiment.spectrometer_frequency.value = (
-            new_frequency)
+        target_freq = (current_freq * 1e6 - delta_nu) * 1e-6  # in MHz
+        delta_freq = target_freq - current_freq
+        steigung = delta_freq/delta_nu
+        y_offset = -steigung * delta_freq - delta_nu
+        delta_nu_target_trans = steigung * (target_freq - trans_freq) + y_offset
+        delta_correct = delta_nu_target_trans/trans_freq
+        self.result = delta_correct
+

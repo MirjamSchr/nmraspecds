@@ -5,6 +5,7 @@ import numpy as np
 import scipy
 
 import nmraspecds.dataset
+import nmraspecds.metadata
 import nmraspecds.io
 from nmraspecds import analysis
 
@@ -33,29 +34,21 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'standard or chemical shift'):
             self.dataset.analyse(self.chemical_shift_calibration)
 
-    def test_set_new_frequency(self):
+    def test_get_new_frequency_with_transmission_and_base_frequency_equal(self):
         self.dataset.data.data = self.data
         self.dataset.data.axes[0].values = self.axis
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
             '400 MHz')
-        frequency_before = (
-            self.dataset.metadata.experiment.spectrometer_frequency.value)
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string('400 MHz')
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
         self.chemical_shift_calibration.parameters['chemical_shift'] = 17
-        self.dataset.analyse(self.chemical_shift_calibration)
-        frequency_after = (
-            self.dataset.metadata.experiment.spectrometer_frequency.value)
-        self.assertNotEqual(frequency_before, frequency_after)
+        analysis = self.dataset.analyse(self.chemical_shift_calibration)
+        self.assertEqual(analysis.result, -2.)
 
-    def test_axis_is_adapted(self):
-        self.dataset.data.data = self.data
-        self.dataset.data.axes[0].values = self.axis
-        self.dataset.metadata.experiment.spectrometer_frequency.from_string(
-            '400 MHz')
-        self.chemical_shift_calibration.parameters['chemical_shift'] = 17
-        self.dataset.analyse(self.chemical_shift_calibration)
-        ppm_at_maximum = self.dataset.data.axes[0].values[np.argmax(
-            self.dataset.data.data)]
-        self.assertEqual(ppm_at_maximum, 17.)
+
+    def test_offset_is_corrected_for_spectrometer_frequency(self):
+        pass
 
     def test_perform_with_one_signal_returns_correct_value(self):
         """Only valid if reference signal is the one at the global maximum."""
