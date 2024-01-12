@@ -53,7 +53,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             raise ValueError('No standard or chemical shift value provided.')
 
     def _perform_task(self):
-        #zu übertragender Wert ist SR!!
         self._peak_index = np.argmax(self.dataset.data.data)
         ppm_current = self.dataset.data.axes[0].values[self._peak_index]
         ppm_target = self.parameters['chemical_shift']
@@ -62,14 +61,11 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         trans_freq = (
             self.dataset.metadata.experiment.nuclei[
                 0].transmitter_frequency.value)
-        nu_current = ppm_current * current_freq
-        nu_target = ppm_target * current_freq
-        delta_nu = nu_target - nu_current
-        target_freq = (current_freq * 1e6 - delta_nu) * 1e-6  # in MHz
-        delta_freq = target_freq - current_freq
-        slope = delta_freq/delta_nu
-        y_offset = -slope * delta_freq - delta_nu
-        delta_nu_final = slope * (target_freq - trans_freq) + y_offset
-        # müsste SR sein
-        delta_ppm_final = delta_nu_final/trans_freq
-        self.result = delta_nu_final
+        nu_current = self.dataset.metadata.experiment.spectrum_reference.value
+        assert current_freq == trans_freq + nu_current*1e-6
+
+        nu_peak_target = ppm_target * current_freq
+        nu_peak_current = ppm_current * current_freq
+        nu_peak_zero = nu_peak_current + nu_current
+        diff_nu = nu_peak_zero - nu_peak_target
+        self.result = diff_nu

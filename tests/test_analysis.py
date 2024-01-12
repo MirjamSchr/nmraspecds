@@ -35,30 +35,32 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'standard or chemical shift'):
             self.dataset.analyse(self.chemical_shift_calibration)
 
-    def test_get_offset_with_transmission_and_spectrometer_frequency_equal(self):
-        self.dataset.data.data = self.data
-        self.dataset.data.axes[0].values = self.axis
-        self.dataset.metadata.experiment.spectrometer_frequency.from_string(
-            '400 MHz')
-        nucleus = nmraspecds.metadata.Nucleus()
-        nucleus.base_frequency.from_string('400 MHz')
-        self.dataset.metadata.experiment.add_nucleus(nucleus)
-        self.chemical_shift_calibration.parameters['chemical_shift'] = 17
-        analysis = self.dataset.analyse(self.chemical_shift_calibration)
-        self.assertEqual(analysis.result, -2.)
-
-    def test_get_offset_with_transmission_and_spectrometer_frequency_different(
+    def test_get_offset_with_transmission_and_spectrometer_frequency_equal(
             self):
         self.dataset.data.data = self.data
         self.dataset.data.axes[0].values = self.axis
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
-            '401 MHz')
+            '400.0000 MHz')
         nucleus = nmraspecds.metadata.Nucleus()
-        nucleus.base_frequency.from_string('400 MHz')
+        nucleus.base_frequency.from_string('400.00000 MHz')
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
+        self.chemical_shift_calibration.parameters['chemical_shift'] = 13
+        analysis = self.dataset.analyse(self.chemical_shift_calibration)
+        self.assertAlmostEqual(analysis.result, 800., 3)
+
+    def test_get_offset_with_transmission_and_spectrometer_frequency_different(
+            self):
+        self.dataset.data.data = self.data
+        self.dataset.data.axes[0].values = self.axis + 50/400  # accounts for
+        # the offset of the base frequency
+        self.dataset.metadata.experiment.spectrometer_frequency.from_string(
+            '400.0 MHz')
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string('400.00005 MHz')
         self.dataset.metadata.experiment.add_nucleus(nucleus)
         self.chemical_shift_calibration.parameters['chemical_shift'] = 17
         analysis = self.dataset.analyse(self.chemical_shift_calibration)
-        self.assertAlmostEqual(analysis.result, -2.005)
+        self.assertAlmostEqual(analysis.result, -800, 3)
 
     def test_perform_with_one_signal_returns_correct_value(self):
         """Only valid if reference signal is the one at the global maximum."""
@@ -68,4 +70,4 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.chemical_shift_calibration.parameters['chemical_shift'] = 1.33
         analysis = self.dataset.analyse(self.chemical_shift_calibration)
         self.assertTrue(analysis.result)
-        self.assertAlmostEqual(analysis.result, -2.3307, 3)
+        self.assertAlmostEqual(analysis.result, -1249.52, -2)

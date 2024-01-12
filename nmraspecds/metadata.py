@@ -191,6 +191,15 @@ class Experiment(aspecd.metadata.Metadata):
             TypeError('argument is not of class nmraspecds.metadata.Nucleus')
         self.nuclei.append(nucleus)
 
+    @property
+    def spectrum_reference(self):
+        value = self.spectrometer_frequency.value - self.nuclei[
+            0].transmitter_frequency.value
+        quantity = aspecd.metadata.PhysicalQuantity()
+        quantity.value = value * 1e6
+        quantity.unit = 'Hz'
+        return quantity
+
 
 class Nucleus(aspecd.metadata.Metadata):
     """
