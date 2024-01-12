@@ -54,7 +54,6 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
                 self.dataset.metadata.experiment.nuclei[
                     0].transmitter_frequency.value*1e6 + target_delta_nu)/1e6
         ppm_to_add = delta_sr_hz / target_frequency
-        print('PPM to add', ppm_to_add)
         self.dataset.data.axes[0].values += ppm_to_add
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
             target_frequency)
