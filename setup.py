@@ -14,7 +14,7 @@ setuptools.setup(
     description='ASpecD derived Package for recipe driven data analysis of NMR spectra',
     long_description=read('README.rst'),
     long_description_content_type="text/x-rst",
-    author='Mirjam Schröder',
+    author='Mirjam Schröder, Florian Taube',
     author_email='mirjam.schroeder@catalysis.de',
     url='https://www.nmraspecds.de',
     project_urls={
@@ -39,7 +39,7 @@ setuptools.setup(
     install_requires=[
     ],
     extras_require={
-        'dev': ['prospector'],
+        'dev': ['prospector', 'black', ],
         'docs': ['sphinx', 'sphinx-rtd-theme', 'sphinx_multiversion'],
     },
     python_requires='>=3.7',
