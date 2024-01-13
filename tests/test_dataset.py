@@ -4,7 +4,6 @@ from nmraspecds import dataset
 
 
 class TestExperimentalDataset(unittest.TestCase):
-
     def setUp(self):
         self.experimental_dataset = dataset.ExperimentalDataset()
 
@@ -13,7 +12,6 @@ class TestExperimentalDataset(unittest.TestCase):
 
 
 class TestCalculatedDataset(unittest.TestCase):
-
     def setUp(self):
         self.calculated_dataset = dataset.CalculatedDataset()
 
@@ -22,7 +20,6 @@ class TestCalculatedDataset(unittest.TestCase):
 
 
 class TestDatasetFactory(unittest.TestCase):
-
     def setUp(self):
         self.dataset_factory = dataset.DatasetFactory()
 

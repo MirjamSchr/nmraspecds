@@ -9,22 +9,21 @@ def read(filename):
 
 
 setuptools.setup(
-    name='nmraspecds',
-    version=read('VERSION').strip(),
-    description='ASpecD derived Package for recipe driven data analysis of NMR spectra',
-    long_description=read('README.rst'),
+    name="nmraspecds",
+    version=read("VERSION").strip(),
+    description="ASpecD derived Package for recipe driven data analysis of NMR spectra",
+    long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
-    author='Mirjam Schröder, Florian Taube',
-    author_email='mirjam.schroeder@catalysis.de',
-    url='https://www.nmraspecds.de',
+    author="Mirjam Schröder, Florian Taube",
+    author_email="mirjam.schroeder@catalysis.de",
+    url="https://www.nmraspecds.de",
     project_urls={
-        "Documentation": 'https://docs.nmraspecds.de',
-        "Source": 'https://github.com/majrim-spc/nmraspecds',
+        "Documentation": "https://docs.nmraspecds.de",
+        "Source": "https://github.com/majrim-spc/nmraspecds",
     },
-    packages=setuptools.find_packages(exclude=('tests', 'docs')),
-    license='BSD',
-    keywords=[
-    ],
+    packages=setuptools.find_packages(exclude=("tests", "docs")),
+    license="BSD",
+    keywords=[],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
@@ -36,11 +35,17 @@ setuptools.setup(
         "Intended Audience :: Science/Research",
         "Development Status :: 4 - Beta",
     ],
-    install_requires=[
-    ],
+    install_requires=[],
     extras_require={
-        'dev': ['prospector', 'black', ],
-        'docs': ['sphinx', 'sphinx-rtd-theme', 'sphinx_multiversion'],
+        "dev": [
+            "prospector",
+            "black",
+        ],
+        "docs": [
+            "sphinx",
+            "sphinx-rtd-theme",
+            "sphinx_multiversion",
+        ],
     },
-    python_requires='>=3.7',
+    python_requires=">=3.7",
 )

@@ -4,7 +4,9 @@ metadata module of the nmraspecds package.
 import aspecd.metadata
 
 
-class ExperimentalDatasetMetadata(aspecd.metadata.ExperimentalDatasetMetadata):
+class ExperimentalDatasetMetadata(
+    aspecd.metadata.ExperimentalDatasetMetadata
+):
     """
     One sentence (on one line) describing the class.
 
@@ -41,7 +43,7 @@ class ExperimentalDatasetMetadata(aspecd.metadata.ExperimentalDatasetMetadata):
         obj = ExperimentalDatasetMetadata()
         ...
 
-    
+
 
     """
 
@@ -83,10 +85,10 @@ class Sample(aspecd.metadata.Sample):
 
     def __init__(self, dict_=None):
         # public properties
-        self.description = ''
-        self.solvent = ''
-        self.preparation = ''
-        self.tube = ''
+        self.description = ""
+        self.solvent = ""
+        self.preparation = ""
+        self.tube = ""
         super().__init__(dict_=dict_)
 
 
@@ -188,16 +190,18 @@ class Experiment(aspecd.metadata.Metadata):
     def add_nucleus(self, nucleus):
         # TODO: is this how it is done properly?
         if not isinstance(nucleus, Nucleus):
-            TypeError('argument is not of class nmraspecds.metadata.Nucleus')
+            TypeError("argument is not of class nmraspecds.metadata.Nucleus")
         self.nuclei.append(nucleus)
 
     @property
     def spectrum_reference(self):
-        value = self.spectrometer_frequency.value - self.nuclei[
-            0].transmitter_frequency.value
+        value = (
+            self.spectrometer_frequency.value
+            - self.nuclei[0].transmitter_frequency.value
+        )
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value * 1e6
-        quantity.unit = 'Hz'
+        quantity.unit = "Hz"
         return quantity
 
 
@@ -235,19 +239,19 @@ class Nucleus(aspecd.metadata.Metadata):
         obj = Nucleus()
         ...
 
-    
+
 
     """
 
     def __init__(self, dict_=None):
-        self.type = ''
+        self.type = ""
         self.base_frequency = aspecd.metadata.PhysicalQuantity()
         self.offset_hz = aspecd.metadata.PhysicalQuantity()
         super().__init__(dict_=dict_)
 
     @property
     def transmitter_frequency(self):
-        """ Actual frequency of the pulses of the given nucleus.
+        """Actual frequency of the pulses of the given nucleus.
 
         Returns
         -------
@@ -256,12 +260,12 @@ class Nucleus(aspecd.metadata.Metadata):
         value = self.base_frequency.value + self.offset_hz.value / 1e6
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value
-        quantity.unit = 'MHz'
+        quantity.unit = "MHz"
         return quantity
 
     @property
     def offset_ppm(self):
-        """ Offset of the pulse in ppm (O1p in Bruker's Topspin)
+        """Offset of the pulse in ppm (O1p in Bruker's Topspin)
 
         Returns
         -------
@@ -270,7 +274,7 @@ class Nucleus(aspecd.metadata.Metadata):
         value = self.offset_hz.value * 1e6 / (self.base_frequency.value * 1e6)
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value
-        quantity.unit = 'ppm'
+        quantity.unit = "ppm"
         return quantity
 
 
@@ -317,16 +321,15 @@ class Rotor(aspecd.metadata.Metadata):
         obj = Rotor()
         ...
 
-    
+
 
     """
 
     def __init__(self, dict_=None):
-        self.manufacturer = ''
-        self.material = ''
+        self.manufacturer = ""
+        self.material = ""
         self.diameter = aspecd.metadata.PhysicalQuantity()
-        self.cap_material = ''
-        self.plug = ''
-        self.insert = ''
+        self.cap_material = ""
+        self.plug = ""
+        self.insert = ""
         super().__init__(dict_=dict_)
-

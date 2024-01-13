@@ -32,42 +32,51 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         obj = ExternalReferencing()
         ...
 
-    
+
 
     """
 
     def __init__(self):
         super().__init__()
-        self.parameters['offset'] = None
+        self.parameters["offset"] = None
 
     def _sanitise_parameters(self):
-        if ('offset' not in self.parameters.keys() or
-                self.parameters['offset'] is None):
-            raise ValueError('No offset provided')
+        if (
+            "offset" not in self.parameters.keys()
+            or self.parameters["offset"] is None
+        ):
+            raise ValueError("No offset provided")
 
     def _perform_task(self):
-        target_delta_nu = self.parameters['offset']
-        current_sr_hz = (self.dataset.metadata.experiment.spectrum_reference
-                         .value)
+        target_delta_nu = self.parameters["offset"]
+        current_sr_hz = (
+            self.dataset.metadata.experiment.spectrum_reference.value
+        )
         delta_sr_hz = target_delta_nu + current_sr_hz  # Additional offset
         target_frequency = (
-                self.dataset.metadata.experiment.nuclei[
-                    0].transmitter_frequency.value*1e6 + target_delta_nu)/1e6
+            self.dataset.metadata.experiment.nuclei[
+                0
+            ].transmitter_frequency.value
+            * 1e6
+            + target_delta_nu
+        ) / 1e6
         ppm_to_add = delta_sr_hz / target_frequency
         self.dataset.data.axes[0].values += ppm_to_add
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
-            target_frequency)
+            target_frequency
+        )
 
     def _update_spectrometer_frequency(self):
-        initial_frequency = (
-            self.dataset.metadata.experiment.nuclei[
-                0].transmitter_frequency.value)
-        offset_hz = self.parameters['offset'] * initial_frequency
+        initial_frequency = self.dataset.metadata.experiment.nuclei[
+            0
+        ].transmitter_frequency.value
+        offset_hz = self.parameters["offset"] * initial_frequency
         frequency = (initial_frequency * 1e6 + offset_hz) * 1e-6
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
-            frequency)
+            frequency
+        )
 
     def _change_axis(self):
         for axis in self.dataset.data.axes:
-            if axis.unit in ('ppm', 'Hz'):
-                axis.values += self.parameters['offset']
+            if axis.unit in ("ppm", "Hz"):
+                axis.values += self.parameters["offset"]

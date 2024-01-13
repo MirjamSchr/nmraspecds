@@ -43,7 +43,7 @@ class DatasetFactory(aspecd.dataset.DatasetFactory):
         self.importer_factory = nmraspecds.io.DatasetImporterFactory()
 
     @staticmethod
-    def _create_dataset(source=''):
+    def _create_dataset(source=""):
         """Return cwepr dataset.
 
         Parameters
@@ -90,7 +90,7 @@ class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
         obj = ExperimentalDataset()
         ...
 
-    
+
 
     """
 
@@ -127,10 +127,8 @@ class CalculatedDataset(aspecd.dataset.CalculatedDataset):
         obj = CalculatedDataset()
         ...
 
-    
+
 
     """
 
     pass
-
-
