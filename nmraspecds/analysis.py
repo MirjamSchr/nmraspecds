@@ -93,10 +93,12 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         self.parameters["nucleus"] = None
         self.parameters["return_type"] = "value"
         self._peak_index = None
-        self._nucleus = None
         self._offset = None
         self._standard_shifts = {
-            "adamantane": {"1H": 1.8, "13C": 37.77},
+            "adamantane": {
+                "1H": 1.8,
+                "13C": 37.77,
+            },
             "nh4h2po3": {
                 "31P": 1.33,
             },
@@ -118,7 +120,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             or not self.dataset.metadata.experiment.nuclei[0].type
             or "nucleus" not in self.parameters.keys()
         ):
-            print("Bin in Schleife")
             if (
                 len(self._standard_shifts[self.parameters["standard"]].keys())
                 == 1
@@ -127,7 +128,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
                     self.parameters["standard"]
                 ]
 
-            print("here")
             raise ValueError(
                 "Type of nucleus undetermined, cannot assign standard."
             )
@@ -140,10 +140,12 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     def _assign_parameters(self):
         if not self.parameters["chemical_shift"]:
             standard = self.parameters["standard"].lower()
-            self._nucleus = self.dataset.metadata.experiment.nuclei[0].type
+            self.parameters[
+                "nucleus"
+            ] = self.dataset.metadata.experiment.nuclei[0].type
             self.parameters["chemical_shift"] = self._standard_shifts[
                 standard
-            ][self._nucleus]
+            ][self.parameters["nucleus"]]
 
     def _get_offset(self):
         self._peak_index = np.argmax(self.dataset.data.data)
@@ -167,4 +169,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         if self.parameters["return_type"] == "value":
             self.result = self._offset
         elif self.parameters["return_type"] == "dict":
-            self.result = {"offset": self._offset, "nucleus": self._nucleus}
+            self.result = {
+                "offset": self._offset,
+                "nucleus": self.parameters["nucleus"],
+            }
