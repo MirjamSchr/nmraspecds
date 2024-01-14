@@ -91,8 +91,12 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._create_axes()
         self._get_spectrometer_frequency()
         self._add_nuclei()
-        self.dataset.metadata.experiment.runs = self._parameters['acqus']['NS']
+        self._import_metadata()
 
+    def _import_metadata(self):
+        self.dataset.metadata.experiment.runs = self._parameters['acqus']['NS']
+        self.dataset.metadata.experiment.delays = self._parameters['acqus']['D']
+        self.dataset.metadata.experiment.loops = self._parameters['acqus']['L']
 
     def _add_nuclei(self):
         nuclei = dict()

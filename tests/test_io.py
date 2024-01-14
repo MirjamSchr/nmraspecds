@@ -7,6 +7,30 @@ import nmraspecds.dataset
 from nmraspecds import io
 
 
+class TestDatasetImporterFactory(unittest.TestCase):
+    def setUp(self):
+        self.dataset_importer_factory = io.DatasetImporterFactory()
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_returns_bruker_importer(self):
+        source = "testdata/Adamantane/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertIsInstance(importer, io.BrukerImporter)
+
+    def test_returned_importer_has_source_set(self):
+        source = "testdata/Adamantane/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertIn(source, importer.source)
+
+
 class TestBrukerImporter(unittest.TestCase):
     def setUp(self):
         self.bruker_importer = io.BrukerImporter()
@@ -185,29 +209,15 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue(self.dataset.metadata.experiment.runs)
 
+    def test_loops_are_imported(self):
+        self.bruker_importer.source = "testdata/Adamantane/2"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertIsInstance(self.dataset.metadata.experiment.loops, list)
 
-class TestDatasetImporterFactory(unittest.TestCase):
-    def setUp(self):
-        self.dataset_importer_factory = io.DatasetImporterFactory()
-
-    def test_instantiate_class(self):
-        pass
-
-    def test_returns_bruker_importer(self):
-        source = "testdata/Adamantane/1"
-        importer_factory = (
-            nmraspecds.dataset.DatasetFactory().importer_factory
-        )
-        importer = importer_factory.get_importer(source=source)
-        self.assertIsInstance(importer, io.BrukerImporter)
-
-    def test_returned_importer_has_source_set(self):
-        source = "testdata/Adamantane/1"
-        importer_factory = (
-            nmraspecds.dataset.DatasetFactory().importer_factory
-        )
-        importer = importer_factory.get_importer(source=source)
-        self.assertIn(source, importer.source)
+    def test_delays_imported(self):
+        self.bruker_importer.source = "testdata/Adamantane/2"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertIsInstance(self.dataset.metadata.experiment.delays, list)
 
 
 class TestScreamImporter(unittest.TestCase):

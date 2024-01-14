@@ -185,6 +185,8 @@ class Experiment(aspecd.metadata.Metadata):
         self.nuclei = []
         self.mas_frequency = None
         self.spectrometer_frequency = aspecd.metadata.PhysicalQuantity()
+        self.loops = list()
+        self.delays = list()
         super().__init__(dict_=dict_)
 
     def add_nucleus(self, nucleus):
