@@ -208,6 +208,7 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.source = "testdata/Adamantane/2"
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue(self.dataset.metadata.experiment.runs)
+        self.assertIsInstance(self.dataset.metadata.experiment.runs, int)
 
     def test_loops_are_imported(self):
         self.bruker_importer.source = "testdata/Adamantane/2"

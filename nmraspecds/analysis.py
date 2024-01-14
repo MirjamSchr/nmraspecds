@@ -43,7 +43,10 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         self.parameters["spectrometer_frequency"] = None
         self.parameters["standard"] = ""
         self.parameters["chemical_shift"] = None
+        self.parameters['return_type'] = 'value'
         self._peak_index = None
+        self._nucleus = None
+        self._offset = None
         self._standard_shifts = {
             'adamantane': {
                 '1H': 1.8,
@@ -80,13 +83,14 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     def _perform_task(self):
         self._assign_parameters()
         self._get_offset()
+        self._assign_result()
 
     def _assign_parameters(self):
         if not self.parameters['chemical_shift']:
             standard = self.parameters['standard'].lower()
-            type_ = self.dataset.metadata.experiment.nuclei[0].type
+            self._nucleus = self.dataset.metadata.experiment.nuclei[0].type
             self.parameters['chemical_shift'] = self._standard_shifts[
-                standard][type_]
+                standard][self._nucleus]
 
     def _get_offset(self):
         self._peak_index = np.argmax(self.dataset.data.data)
@@ -104,4 +108,14 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         nu_peak_current = ppm_current * current_freq
         nu_peak_zero = nu_peak_current + nu_current
         diff_nu = nu_peak_zero - nu_peak_target
-        self.result = diff_nu
+        self._offset = diff_nu
+
+    def _assign_result(self):
+        if self.parameters['return_type'] == 'value':
+            self.result = self._offset
+        elif self.parameters['return_type'] == 'dict':
+            self.result = {
+                'offset': self._offset,
+                'nucleus': self._nucleus
+            }
+
