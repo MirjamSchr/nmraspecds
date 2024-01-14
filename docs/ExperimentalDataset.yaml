@@ -29,11 +29,17 @@ metadata:
     software: ''
   probehead:
     model: ''
+    configuration: ''
   experiment:
     type: ''
     runs: null
     nuclei: []
     mas_frequency: null
+    spectrometer_frequency:
+      unit: ''
+      dimension: ''
+      name: ''
+      value: 0.0
   rotor:
     manufacturer: ''
     material: ''

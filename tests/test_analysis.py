@@ -77,7 +77,34 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         importer = nmraspecds.io.BrukerImporter()
         importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(importer)
-        self.chemical_shift_calibration.parameters["chemical_shift"] = 1.33
+        self.chemical_shift_calibration.parameters["chemical_shift"] = 1.8
         analysis = self.dataset.analyse(self.chemical_shift_calibration)
         self.assertTrue(analysis.result)
-        self.assertAlmostEqual(analysis.result, -1249.52, -2)
+        self.assertAlmostEqual(analysis.result, -1439.44, -2)
+
+    def test_nucleus_is_accounted_for(self):
+        self.dataset.data.data = self.data
+        self.dataset.data.axes[0].values = (
+            self.axis + 50 / 400
+        )
+        self.dataset.metadata.experiment.spectrometer_frequency.from_string(
+            "400.0 MHz"
+        )
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string("400.00005 MHz")
+        nucleus.type = '13C'
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
+        self.chemical_shift_calibration.parameters["standard"] = 'adamantane'
+        analysis = self.dataset.analyse(self.chemical_shift_calibration)
+        self.assertAlmostEqual(analysis.parameters[
+                                   'chemical_shift'], 37.77)
+
+    def test_choses_correct_standard(self):
+        importer = nmraspecds.io.BrukerImporter()
+        importer.source = "testdata/Adamantane/1/pdata/1"
+        self.dataset.import_from(importer)
+        self.chemical_shift_calibration.parameters['standard'] = 'adamantane'
+        analysis = self.dataset.analyse(self.chemical_shift_calibration)
+        self.assertAlmostEqual(analysis.parameters[
+                             "chemical_shift"], 1.8)
+
