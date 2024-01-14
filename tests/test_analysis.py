@@ -99,7 +99,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.assertAlmostEqual(analysis.parameters[
                                    'chemical_shift'], 37.77)
 
-    def test_choses_correct_standard(self):
+    def test_chooses_correct_standard(self):
         importer = nmraspecds.io.BrukerImporter()
         importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(importer)
@@ -108,3 +108,4 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.assertAlmostEqual(analysis.parameters[
                              "chemical_shift"], 1.8)
 
+    #def test_

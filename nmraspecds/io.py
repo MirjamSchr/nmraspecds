@@ -91,6 +91,8 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._create_axes()
         self._get_spectrometer_frequency()
         self._add_nuclei()
+        self.dataset.metadata.experiment.runs = self._parameters['acqus']['NS']
+
 
     def _add_nuclei(self):
         nuclei = dict()

@@ -180,6 +180,11 @@ class TestBrukerImporter(unittest.TestCase):
             self.dataset.metadata.experiment.nuclei[1].base_frequency.value, 0
         )
 
+    def test_scannumber_is_imported(self):
+        self.bruker_importer.source = "testdata/Adamantane/2"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertTrue(self.dataset.metadata.experiment.runs)
+
 
 class TestDatasetImporterFactory(unittest.TestCase):
     def setUp(self):
