@@ -167,15 +167,11 @@ class Experiment(aspecd.metadata.Metadata):
         Magic Angle Spinning Frequency of the experiment, given in Hz.
 
     spectrometer_frequency: :class:`aspecd.metadata.PhysicalQuantity`
-        Spectrometer frequency of the measured nucleus **after referencing**.
+        Current spectrometer frequency of the dataset.
 
-        As ssNMR is seldom referenced internally, external referencing is
-        necessary to determine the correct frequency of the spectrometer.
-        This is done on a standard sample whose chemical shift is known and
-        can be set manually. From this, the spectrometer's frequency is
-        determined and has to be copied to the sample of interest. Of course,
-        the sample has to get measured shortly before or after the reference
-        compound to avoid drift of the magnetic field that occurs over time.
+        Current spectrometer frequency ("SF" in Bruker's Topspin) of the
+        dataset. Is different from the transmitter frequency (and independend of
+         it) depending on the axis.
 
     """
 

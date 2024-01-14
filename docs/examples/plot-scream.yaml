@@ -10,7 +10,7 @@ datasets:
   id: scream
   importer: ScreamImporter
   importer_parameters:
-    number_of_experiments: 11
+    number_of_experiments: 13
 tasks:
   - kind: singleplot
     type: SinglePlotter2D

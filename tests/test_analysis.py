@@ -35,15 +35,14 @@ class TestChemicalShiftCalibration(unittest.TestCase):
             self.calibration.description.lower(),
         )
 
-    def test_perform_without_spectrometer_frequency_raises(self):
-        with self.assertRaisesRegex(ValueError, "spectrometer frequency"):
+    def test_without_standard_and_chemical_shift_raises(self):
+        self.calibration.parameters["spectrometer_frequency"] = 400.1
+        with self.assertRaisesRegex(ValueError, "standard or chemical shift"):
             self.dataset.analyse(self.calibration)
 
-    def test_without_standard_and_chemical_shift_raises(self):
-        self.calibration.parameters[
-            "spectrometer_frequency"
-        ] = 400.1
-        with self.assertRaisesRegex(ValueError, "standard or chemical shift"):
+    def test_with_standard_without_nucleus_raises(self):
+        self.calibration.parameters["standard"] = "adamantane"
+        with self.assertRaisesRegex(ValueError, "nucleus"):
             self.dataset.analyse(self.calibration)
 
     def test_get_offset_with_transmission_and_spectrometer_frequency_equal(
@@ -89,43 +88,38 @@ class TestChemicalShiftCalibration(unittest.TestCase):
 
     def test_nucleus_is_accounted_for(self):
         self.dataset.data.data = self.data
-        self.dataset.data.axes[0].values = (
-            self.axis + 50 / 400
-        )
+        self.dataset.data.axes[0].values = self.axis + 50 / 400
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
             "400.0 MHz"
         )
         nucleus = nmraspecds.metadata.Nucleus()
         nucleus.base_frequency.from_string("400.00005 MHz")
-        nucleus.type = '13C'
+        nucleus.type = "13C"
         self.dataset.metadata.experiment.add_nucleus(nucleus)
-        self.calibration.parameters["standard"] = 'adamantane'
+        self.calibration.parameters["standard"] = "adamantane"
         analysis = self.dataset.analyse(self.calibration)
-        self.assertAlmostEqual(analysis.parameters[
-                                   'chemical_shift'], 37.77)
+        self.assertAlmostEqual(analysis.parameters["chemical_shift"], 37.77)
 
     def test_chooses_correct_standard(self):
         self._import_dataset()
-        self.calibration.parameters['standard'] = 'adamantane'
+        self.calibration.parameters["standard"] = "adamantane"
         analysis = self.dataset.analyse(self.calibration)
-        self.assertAlmostEqual(analysis.parameters[
-                             "chemical_shift"], 1.8)
+        self.assertAlmostEqual(analysis.parameters["chemical_shift"], 1.8)
 
     def test_analysis_has_return_type_and_defaults_to_value(self):
-        self.assertIn('return_type', self.calibration.parameters)
-        self.assertEqual(self.calibration.parameters[
-                             'return_type'], 'value')
+        self.assertIn("return_type", self.calibration.parameters)
+        self.assertEqual(self.calibration.parameters["return_type"], "value")
 
     def test_return_type_is_dict(self):
         self._import_dataset()
-        self.calibration.parameters['standard'] = 'adamantane'
-        self.calibration.parameters['return_type'] = 'dict'
+        self.calibration.parameters["standard"] = "adamantane"
+        self.calibration.parameters["return_type"] = "dict"
         analysis = self.dataset.analyse(self.calibration)
         self.assertIsInstance(analysis.result, dict)
 
     def test_return_dict_contains_nucleus(self):
         self._import_dataset()
-        self.calibration.parameters['standard'] = 'adamantane'
-        self.calibration.parameters['return_type'] = 'dict'
+        self.calibration.parameters["standard"] = "adamantane"
+        self.calibration.parameters["return_type"] = "dict"
         analysis = self.dataset.analyse(self.calibration)
-        self.assertEqual(analysis.result['nucleus'], '1H')
+        self.assertEqual(analysis.result["nucleus"], "1H")
