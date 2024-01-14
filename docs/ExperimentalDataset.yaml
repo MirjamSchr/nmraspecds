@@ -40,6 +40,8 @@ metadata:
       dimension: ''
       name: ''
       value: 0.0
+    loops: []
+    delays: []
   rotor:
     manufacturer: ''
     material: ''

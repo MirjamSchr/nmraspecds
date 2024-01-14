@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import nmraspecds.dataset
+import nmraspecds.processing
 from nmraspecds import io
+from numpy import testing
 
 
 class TestDatasetImporterFactory(unittest.TestCase):
@@ -231,23 +233,49 @@ class TestScreamImporter(unittest.TestCase):
 
     def test_import_data_to_dataset(self):
         self.scream_importer.source = "testdata/Scream/22"
+        self.scream_importer.parameters["number_of_experiments"] = 13
         self.dataset.import_from(self.scream_importer)
         self.assertTrue(self.dataset.data.data.any())
 
     def test_is_2d(self):
         self.scream_importer.source = "testdata/Scream/22"
-        self.scream_importer.parameters["number_of_experiments"] = 11
+        self.scream_importer.parameters["number_of_experiments"] = 13
         self.dataset.import_from(self.scream_importer)
         self.assertEqual(self.scream_importer._tmp_data.ndim, 2)
 
     def test_dataset_contains_2d_data(self):
         self.scream_importer.source = "testdata/Scream/22"
-        self.scream_importer.parameters["number_of_experiments"] = 11
+        self.scream_importer.parameters["number_of_experiments"] = 13
         self.dataset.import_from(self.scream_importer)
-        self.assertEqual(self.dataset.data.data.shape, (16384, 11))
+        self.assertEqual(self.dataset.data.data.shape, (16384, 13))
 
     def test_axes_have_correct_size(self):
         self.scream_importer.source = "testdata/Scream/22"
-        self.scream_importer.parameters["number_of_experiments"] = 11
+        self.scream_importer.parameters["number_of_experiments"] = 13
         self.dataset.import_from(self.scream_importer)
-        self.assertEqual(len(self.dataset.data.axes[1].values), 11)
+        self.assertEqual(len(self.dataset.data.axes[1].values), 13)
+
+    def test_buildup_axes_exist(self):
+        self.scream_importer.source = "testdata/Scream/22"
+        self.scream_importer.parameters["number_of_experiments"] = 13
+        self.dataset.import_from(self.scream_importer)
+        testing.assert_array_equal(
+            self.dataset.data.axes[1].values,
+            np.array(
+                [0.25, 0.5, 1, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
+            ),
+        )
+
+    def test_normalisation_to_ns(self):
+        source = "testdata/Scream/34/pdata/103"
+        test_dataset = nmraspecds.dataset.ExperimentalDataset()
+        test_dataset.import_from(nmraspecds.io.BrukerImporter(source))
+        normalisation = nmraspecds.processing.NormalisationToNumberOfScans()
+        test_dataset.process(normalisation)
+
+        self.scream_importer.source = "testdata/Scream/22"
+        self.scream_importer.parameters["number_of_experiments"] = 13
+        self.dataset.import_from(self.scream_importer)
+        self.assertEqual(
+            test_dataset.data.data[42], self.dataset.data.data[42, -1]
+        )

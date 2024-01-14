@@ -8,6 +8,8 @@ import nmrglue
 import numpy as np
 
 import nmraspecds.metadata
+import nmraspecds.dataset
+import nmraspecds.processing
 
 
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
@@ -94,9 +96,15 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._import_metadata()
 
     def _import_metadata(self):
-        self.dataset.metadata.experiment.runs = self._parameters['acqus']['NS']
-        self.dataset.metadata.experiment.delays = self._parameters['acqus']['D']
-        self.dataset.metadata.experiment.loops = self._parameters['acqus']['L']
+        self.dataset.metadata.experiment.runs = self._parameters["acqus"][
+            "NS"
+        ]
+        self.dataset.metadata.experiment.delays = self._parameters["acqus"][
+            "D"
+        ]
+        self.dataset.metadata.experiment.loops = self._parameters["acqus"][
+            "L"
+        ]
 
     def _add_nuclei(self):
         nuclei = dict()
@@ -189,6 +197,8 @@ class ScreamImporter(aspecd.io.DatasetImporter):
         super().__init__(source=source)
         self.parameters["number_of_experiments"] = 1
         self._tmp_data = None
+        self._tmp_t_buildup = None
+        self._datasets = []
 
     def _import(self):
         base_path, last_element = os.path.split(self.source)
@@ -201,15 +211,35 @@ class ScreamImporter(aspecd.io.DatasetImporter):
             self.source = os.path.join(
                 base_path, str(variable_element), "pdata", "103"
             )
-            self._parameters, self._data = nmrglue.bruker.read_pdata(
-                self.source
-            )
+            tmp_dataset = nmraspecds.dataset.ExperimentalDataset()
+            tmp_dataset.import_from(BrukerImporter(self.source))
+            self._datasets.append(tmp_dataset)
+
+        for count, single_dataset in enumerate(self._datasets):
             if self._tmp_data is None:
                 self._tmp_data = np.ndarray(
                     (
-                        len(self._data),
-                        self.parameters["number_of_experiments"],
+                        len(self._datasets[0].data.data),
+                        len(self._datasets),
                     )
                 )
-            self._tmp_data[:, count] = self._data
+            normalisation = (
+                nmraspecds.processing.NormalisationToNumberOfScans()
+            )
+            single_dataset.process(normalisation)
+            self._tmp_data[:, count] = single_dataset.data.data
+            if self._tmp_t_buildup is None:
+                self._tmp_t_buildup = np.ndarray((len(self._datasets),))
+            self._tmp_t_buildup[count] = (
+                single_dataset.metadata.experiment.loops[20]
+                * single_dataset.metadata.experiment.delays[20]
+            )
+
         self.dataset.data.data = self._tmp_data
+        self._create_axes()
+
+    def _create_axes(self):
+        self.dataset.data.axes[1].values = self._tmp_t_buildup
+        self.dataset.data.axes[1].unit = "s"
+        self.dataset.data.axes[1].quantity = "buildup time"
+        self.dataset.data.axes[2].quantity = "intensity"
