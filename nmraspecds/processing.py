@@ -1,7 +1,13 @@
 """
 processing module of the nmraspecds package.
 """
+import logging
+
 import aspecd.processing
+import spindata
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class ExternalReferencing(aspecd.processing.SingleProcessingStep):
@@ -9,6 +15,9 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     One sentence (on one line) describing the class.
 
     More description comes here...
+
+    * gyromagnetic ratios are given in γ/10^7 rad s–1 T–1 (
+      https://doi.org/10.1351/pac200173111795 via spindata by Benno Meier)
 
 
     Attributes
@@ -39,6 +48,7 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     def __init__(self):
         super().__init__()
         self.parameters["offset"] = None
+        self._target_spectrometer_frequency_value = float
 
     def _sanitise_parameters(self):
         if (
@@ -46,40 +56,71 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
             or self.parameters["offset"] is None
         ):
             raise ValueError("No offset provided")
+        if (
+            len(self.dataset.metadata.experiment.nuclei) == 0
+            or not self.dataset.metadata.experiment.nuclei[0].type
+        ):
+            logger.warning(
+                "No nucleus given in current dataset. Values are "
+                "taken as they come, no guarantee for correct "
+                "results."
+            )
 
     def _perform_task(self):
-        target_delta_nu = self.parameters["offset"]
+        if isinstance(self.parameters["offset"], dict):
+            self._rewrite_parameters()
+        self._offset = self.parameters["offset"]
+        if self._nuclei_differ():
+            self._calcuate_offset_for_different_nucleus()
+        self._update_axis_with_correct_offset()
+        self._update_spectrometer_frequency()
+
+    def _calcuate_offset_for_different_nucleus(self):
+        self._offset = self.parameters["offset"]
+        self._offset /= spindata.gamma(self.parameters["offset_nucleus"])
+        self._offset *= spindata.gamma(
+            self.dataset.metadata.experiment.nuclei[0].type
+        )
+
+    def _nuclei_differ(self):
+        if "offset_nucleus" not in self.parameters.keys():
+            logger.info(
+                "Nucleus is supposed to be of the same type as in "
+                "the dataset."
+            )
+            return False
+        return (
+            self.parameters["offset_nucleus"]
+            != self.dataset.metadata.experiment.nuclei[0].type
+        )
+
+    def _rewrite_parameters(self):
+        # nucleus is nucleus corresponding to offset!
+        self.parameters["offset_nucleus"] = self.parameters["offset"][
+            "nucleus"
+        ]
+        self.parameters["offset"] = self.parameters["offset"]["offset"]
+
+    def _update_axis_with_correct_offset(self):
+        target_delta_nu = self._offset
         current_sr_hz = (
             self.dataset.metadata.experiment.spectrum_reference.value
         )
         delta_sr_hz = target_delta_nu + current_sr_hz  # Additional offset
-        target_frequency = (
+        self._target_spectrometer_frequency_value = (
             self.dataset.metadata.experiment.nuclei[
                 0
             ].transmitter_frequency.value
             * 1e6
             + target_delta_nu
         ) / 1e6
-        ppm_to_add = delta_sr_hz / target_frequency
+        ppm_to_add = delta_sr_hz / self._target_spectrometer_frequency_value
         self.dataset.data.axes[0].values += ppm_to_add
-        self.dataset.metadata.experiment.spectrometer_frequency.value = (
-            target_frequency
-        )
 
     def _update_spectrometer_frequency(self):
-        initial_frequency = self.dataset.metadata.experiment.nuclei[
-            0
-        ].transmitter_frequency.value
-        offset_hz = self.parameters["offset"] * initial_frequency
-        frequency = (initial_frequency * 1e6 + offset_hz) * 1e-6
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
-            frequency
+            self._target_spectrometer_frequency_value
         )
-
-    def _change_axis(self):
-        for axis in self.dataset.data.axes:
-            if axis.unit in ("ppm", "Hz"):
-                axis.values += self.parameters["offset"]
 
 
 class NormalisationToNumberOfScans(aspecd.processing.SingleProcessingStep):
