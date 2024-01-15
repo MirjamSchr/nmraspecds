@@ -12,18 +12,28 @@ logger.addHandler(logging.NullHandler())
 
 class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     """
-    One sentence (on one line) describing the class.
+    Referencing of the dataset to a given offset (in Hz).
 
-    More description comes here...
+    Following the analysis step
+    :class:`nmraspecds:analysis:ChemicalShiftCalibration`, in this processing
+    step, the axis of the dataset is adapted using the provided offset to
+    reference the spectrum.
 
-    * gyromagnetic ratios are given in γ/10^7 rad s–1 T–1 (
-      https://doi.org/10.1351/pac200173111795 via spindata by Benno Meier)
+    Often it is necessary to reference to a chemical shift of a different
+    type of nucleus. This is accounted for with adapting the offset to the
+    dataset's nucleus in the case, both types of nuclei are given. The
+    gyromagnetic ratios (γ/10^7 rad s^–1 T^–1) [1] are used via spindata by
+    Benno Meier.
 
+    References
+    ----------
+
+    [1] https://doi.org/10.1351/pac200173111795
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
+    parameters["offset"] : :class:`float` or :class:`dict`
+        Offset (in Hz) to add to the base frequency to obtain correct axis.
 
     Raises
     ------
@@ -33,14 +43,47 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
 
     Examples
     --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
+    In the simplest case, the offset is known and can just be inserted here:
 
-    .. code-block::
+    .. code-block:: yaml
 
-        obj = ExternalReferencing()
-        ...
+        - kind: processing
+          type: ExternalReferencing
+          properties:
+            parameters:
+              offset: 532
 
+    More sophisticatedly, the type of nucleus is also given to automatically
+    account for the gyromagnetic ratios of the nuclei:
+
+    .. code-block:: yaml
+
+        - kind: processing
+          type: ExternalReferencing
+          properties:
+            parameters:
+              offset: 532
+              offset_nucleus: 13C
+
+
+    In reality, the combination of the analysis step with the corresponding
+    processing step is powerful to use and could look as follows:
+
+    .. code-block:: yaml
+
+        - kind: singleanalysis
+          type: ChemicalShiftCalibration
+          properties:
+            parameters:
+              standard: adamantane
+              nucleus: 1H
+          result: my_offset
+
+        - kind: processing
+          type: ExternalReferencing
+          properties:
+            parameters:
+              offset: my_offset
 
 
     """

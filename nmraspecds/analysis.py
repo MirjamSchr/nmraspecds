@@ -20,7 +20,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     reference compound to avoid drift of the magnetic field that occurs over
     time.
 
-    Currently, the following field standards are supported:
+    Currently, the following standards are supported:
 
     ==================  ==========  =======  ====================  =========
     Substance           Name        Nucleus  chemical shift / ppm  Reference
@@ -36,14 +36,16 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     Q8M8 = Octakis(trimethylsiloxy)silsesquioxane
 
     The column "name" here refers to the value the parameter ``standard`` can
-    take (see below). These names are case-insensitive.
+    take (see below). These names are case-insensitive. If multiple peaks are
+    present, the one indicated in the table above will be considered.
 
-     If multiple peaks are present, the one indicated in the table above will
-     be considered.
+    Eventually, the offset is returned which corresponds to the "SR" value in
+    Bruker's TopSpin software.
 
     References
     ----------
     [1] Solid State Nucl. Magn. Res. 1992, 1, 41 - 44
+
 
     Attributes
     ----------
@@ -61,6 +63,14 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
 
         Default: value
 
+    Returns
+    -------
+    offset:
+        Can be a single number or a dict. The dict additionally contains the
+        nucleus that is given in the dataset. With this, in the next step,
+        the offset is automatically converted if the dataset is acquired on
+        another nucleus.
+
 
     Raises
     ------
@@ -70,8 +80,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
 
     Examples
     --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
 
     .. code-block:: yaml
 
