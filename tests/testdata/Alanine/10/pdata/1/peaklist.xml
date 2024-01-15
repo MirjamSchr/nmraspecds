@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList modified="2023-05-09T09:29:41">
+  <PeakList1D>
+    <PeakList1DHeader creator="nmr" date="2023-05-09T09:29:41" expNo="10" name="230508_Referencing_1p3mm_Alanine" owner="" procNo="1" source="C:\Users\nmr\TopSpin_Data_Corzilius\Referencing">
+      <PeakPickDetails>F1=181.794632ppm, F2=173.487671ppm, MI=5.55cm, MAXI=7.63cm, PC=0.200
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="178.1853" intensity="6.51" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="nmr" date="2023-05-09T09:29:41" expNo="10" name="230508_Referencing_1p3mm_Alanine" owner="" procNo="1" source="C:\Users\nmr\TopSpin_Data_Corzilius\Referencing">
+      <PeakPickDetails>F1=61.343708ppm, F2=34.825333ppm, MI=9.27cm, MAXI=11.00cm, PC=0.200
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="50.9806" intensity="10.00" type="0"/>
+  </PeakList1D>
+  <PeakList1D>
+    <PeakList1DHeader creator="nmr" date="2023-05-09T09:29:41" expNo="10" name="230508_Referencing_1p3mm_Alanine" owner="" procNo="1" source="C:\Users\nmr\TopSpin_Data_Corzilius\Referencing">
+      <PeakPickDetails>F1=32.908344ppm, F2=-10.862948ppm, MI=5.75cm, MAXI=6.87cm, PC=0.200
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="20.0868" intensity="6.38" type="0"/>
+  </PeakList1D>
+</PeakList>

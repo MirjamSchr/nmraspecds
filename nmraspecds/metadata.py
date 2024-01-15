@@ -195,7 +195,7 @@ class Experiment(aspecd.metadata.Metadata):
     def spectrum_reference(self):
         value = (
             self.spectrometer_frequency.value
-            - self.nuclei[0].transmitter_frequency.value
+            - self.nuclei[0].base_frequency.value
         )
         quantity = aspecd.metadata.PhysicalQuantity()
         quantity.value = value * 1e6

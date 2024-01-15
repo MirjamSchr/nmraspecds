@@ -1,0 +1,63 @@
+
+Report of AU program poptau
+# Start time: 2021-03-10 17:22:58.381 +0100
+
+Number of experiments: 6
+total experiment time will be:  4 min  0 sec
+
+F1P=668.507ppm F2P=-699.881ppm
+PH_mode=2  FT_mod=6
+
+
+PROCNO=999
+
+Linear optimization of PLW 1 in 6 steps, as Step: Group 0
+starting at 15.000000000  endval= 40.000000000 
+OPTIMUM= POSMAX
+VARMOD= LIN
+
+Experiment      PLW 1         Maximum point   Minimum point       Integral
+     1      15.000000000000        77447789         5696043      39790320.697337
+     2      20.000000000000        85297201         2147274      45054122.784504
+     3      25.000000000000        22064959          320979       7165104.295400
+     4      30.000000000000       108273858         6249424      55810996.462470
+     5      35.000000000000       309298321       128262242     209202899.881356
+     6      40.000000000000       124179018         2931049      57550810.145278
+poptau for PLW 1 finished.
+POSMAX at experiment 5:  PLW 1 = 35.000000  
+
+
+Report of AU program poptau
+# Start time: 2022-05-16 14:00:41.274 +0200
+
+Number of experiments: 6
+total experiment time will be:  4 min  0 sec
+
+
+Report of AU program poptau
+# Start time: 2022-05-16 14:01:31.424 +0200
+
+Number of experiments: 6
+total experiment time will be:  4 min  0 sec
+
+F1P=199.413ppm F2P=1.270ppm
+PH_mode=1  FT_mod=6
+
+
+PROCNO=999
+
+Linear optimization of SPW 0 in 6 steps, as Step: Group 0
+starting at 10.000000000  endval= 35.000000000 
+OPTIMUM= POSMAX
+VARMOD= LIN
+
+Experiment      SPW 0         Maximum point   Minimum point       Integral
+     1      10.000000000000       327550998       -30913924       5864117.255639
+     2      15.000000000000       269828987       -29970109       5220031.041799
+     3      20.000000000000       207310499       -27047981       4868500.632471
+     4      25.000000000000       273669185       -29563803       3540214.829234
+     5      30.000000000000       240327132       -23672933       3973496.196763
+     6      35.000000000000       184142934       -30277133       2412984.372881
+poptau for SPW 0 finished.
+POSMAX at experiment 1:  SPW 0 = 10.000000  
+

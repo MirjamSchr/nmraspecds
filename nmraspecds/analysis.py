@@ -3,6 +3,7 @@ analysis module of the nmraspecds package.
 """
 import aspecd.analysis
 import numpy as np
+import scipy.signal
 
 
 class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
@@ -14,11 +15,10 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     This is done on a standard sample whose chemical shift is known and
     can be set manually. From this, the offset from the spectrometer's
     frequency is determined (this step) and has to be transferred to the
-    sample of interest (see :class:`nmraspecds.processing.ExternalReferencing
-    `). Of
-    course,
-    the sample has to get measured shortly before or after the reference
-    compound to avoid drift of the magnetic field that occurs over time.
+    sample of interest (see :class:`nmraspecds.processing.ExternalReferencing`).
+     Of course, the sample has to get measured shortly before or after the
+    reference compound to avoid drift of the magnetic field that occurs over
+    time.
 
     Currently, the following field standards are supported:
 
@@ -28,7 +28,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     Adamantane          adamantane  1H       1.8                   [0]
     Adamantane          adamantane  13C      37.77 (low field)     [0]
     Ammoniumophosphate  NH4H2PO3    31P      1.33                  [0]
-    Alanine             alanine     13C      19.8 (high field)     [0]
+    Alanine             alanine     13C      176.8 (high field)    [0]
     Q8M8                Q8M8        29Si     11.66                 [1]
     Al(H2O)3+           Aluminum    27Al     0                     [0]
     ==================  ==========  =======  ====================  =========
@@ -37,6 +37,9 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
 
     The column "name" here refers to the value the parameter ``standard`` can
     take (see below). These names are case-insensitive.
+
+     If multiple peaks are present, the one indicated in the table above will
+     be considered.
 
     References
     ----------
@@ -54,7 +57,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
 
     parameters["return_type"]: :class:`str`
         Defines, type of output, can be "value" or "dict". The latter
-        contains additional information e.g. Type of nucleus.
+        contains additional information e.g. type of nucleus.
 
         Default: value
 
@@ -102,11 +105,13 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             "nh4h2po3": {
                 "31P": 1.33,
             },
-            "alanine": {
-                "13C": 19.8  # TODO: Is this the signal used for referencing?
-            },
+            "alanine": {"13C": 176.8},
             "q8m8": {"29Si": 11.66},
             "aluminum": {"27Al": 0},
+        }
+        self._peak_list = {
+            "adamantane": {"13C": 1},
+            "alanine": {"13C": 1},
         }
 
     def _sanitise_parameters(self):
@@ -115,15 +120,8 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             and not self.parameters["chemical_shift"]
         ):
             raise ValueError("No standard or chemical shift value provided.")
-        if self.parameters["standard"] and (
-            len(self.dataset.metadata.experiment.nuclei) == 0
-            or not self.dataset.metadata.experiment.nuclei[0].type
-            or "nucleus" not in self.parameters.keys()
-        ):
-            if (
-                len(self._standard_shifts[self.parameters["standard"]].keys())
-                == 1
-            ):
+        if self._standard_given_but_nucleus_not():
+            if self._only_one_nucleus_in_standards_list():
                 self.parameters["nucleus"] = self._standard_shifts[
                     self.parameters["standard"]
                 ]
@@ -131,6 +129,19 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             raise ValueError(
                 "Type of nucleus undetermined, cannot assign standard."
             )
+
+    def _only_one_nucleus_in_standards_list(self):
+        return (
+            len(self._standard_shifts[self.parameters["standard"]].keys())
+            == 1
+        )
+
+    def _standard_given_but_nucleus_not(self):
+        return self.parameters["standard"] and (
+            len(self.dataset.metadata.experiment.nuclei) == 0
+            or not self.dataset.metadata.experiment.nuclei[0].type
+            or "nucleus" not in self.parameters.keys()
+        )
 
     def _perform_task(self):
         self._assign_parameters()
@@ -148,7 +159,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             ][self.parameters["nucleus"]]
 
     def _get_offset(self):
-        self._peak_index = np.argmax(self.dataset.data.data)
+        self._get_peak_index()
         ppm_current = self.dataset.data.axes[0].values[self._peak_index]
         ppm_target = self.parameters["chemical_shift"]
         current_freq = (
@@ -158,12 +169,28 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
             0
         ].transmitter_frequency.value
         nu_current = self.dataset.metadata.experiment.spectrum_reference.value
-        assert current_freq == trans_freq + nu_current * 1e-6
         nu_peak_target = ppm_target * current_freq
         nu_peak_current = ppm_current * current_freq
         nu_peak_zero = nu_peak_current + nu_current
         diff_nu = nu_peak_zero - nu_peak_target
         self._offset = diff_nu
+
+    def _get_peak_index(self):
+        peak_indices, _ = scipy.signal.find_peaks(
+            self.dataset.data.data,
+            height=0.2 * max(self.dataset.data.data),
+            distance=0.05 * len(self.dataset.data.data),
+        )
+        if len(peak_indices) > 1:
+            index = (
+                self._peak_list[self.parameters["standard"]][
+                    self.parameters["nucleus"]
+                ]
+                - 1
+            )
+            self._peak_index = peak_indices[-index]
+        else:
+            self._peak_index = peak_indices[0]
 
     def _assign_result(self):
         if self.parameters["return_type"] == "value":

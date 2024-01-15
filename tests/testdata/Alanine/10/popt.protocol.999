@@ -1,0 +1,25 @@
+
+Report of AU program poptau
+# Start time: 2022-05-16 14:01:32.804 +0200
+
+F1P=199.413ppm F2P=1.270ppm
+PH_mode=1  FT_mod=6
+
+
+PROCNO=999
+
+Linear optimization of SPW 0 in 6 steps, as Step: Group 0
+starting at 10.000000000  endval= 35.000000000 
+OPTIMUM= POSMAX
+VARMOD= LIN
+
+Experiment      SPW 0         Maximum point   Minimum point       Integral
+     1      10.000000000000       327550998       -30913924       5864117.255639
+     2      15.000000000000       269828987       -29970109       5220031.041799
+     3      20.000000000000       207310499       -27047981       4868500.632471
+     4      25.000000000000       273669185       -29563803       3540214.829234
+     5      30.000000000000       240327132       -23672933       3973496.196763
+     6      35.000000000000       184142934       -30277133       2412984.372881
+poptau for SPW 0 finished.
+POSMAX at experiment 1:  SPW 0 = 10.000000  
+

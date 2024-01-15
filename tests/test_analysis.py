@@ -23,7 +23,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
 
     def _import_dataset(self):
         importer = nmraspecds.io.BrukerImporter()
-        importer.source = "testdata/Adamantane/1/pdata/1"
+        importer.source = "/home/mirjam/Daten/NMR/231106_Adamantane_Ref_4mm/1"
         self.dataset.import_from(importer)
 
     def test_instantiate_class(self):
@@ -66,8 +66,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.dataset.data.data = self.data
         self.dataset.data.axes[0].values = (
             self.axis + 50 / 400
-        )  # accounts for
-        # the offset of the base frequency
+        )  # accounts for the offset of the base frequency
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
             "400.0 MHz"
         )
@@ -123,3 +122,14 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.calibration.parameters["return_type"] = "dict"
         analysis = self.dataset.analyse(self.calibration)
         self.assertEqual(analysis.result["nucleus"], "1H")
+
+    def test_deals_with_standard_with_three_peaks(self):
+        importer = nmraspecds.io.BrukerImporter()
+        importer.source = (
+            "/home/mirjam/Daten/NMR/230508_Referencing_1p3mm_Alanine/10"
+        )
+        self.dataset.import_from(importer)
+        self.calibration.parameters["standard"] = "alanine"
+        analysis = self.dataset.analyse(self.calibration)
+        self.assertAlmostEqual(analysis.parameters["chemical_shift"], 178, -2)
+        self.assertAlmostEqual(analysis.result, 51.92, -1)

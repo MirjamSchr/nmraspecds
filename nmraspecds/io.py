@@ -149,10 +149,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
                 str(self.parameters["processing_number"]),
             )
 
-    def _add_nucleus(
-        self,
-        nuc="",
-    ):
+    def _add_nucleus(self, nuc=""):
         nr = nuc[-1]
         nucleus = nmraspecds.metadata.Nucleus()
         nucleus.type = self._parameters["acqus"][nuc]
