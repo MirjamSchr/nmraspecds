@@ -23,7 +23,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
 
     def _import_dataset(self):
         importer = nmraspecds.io.BrukerImporter()
-        importer.source = "/home/mirjam/Daten/NMR/231106_Adamantane_Ref_4mm/1"
+        importer.source = "testdata/Adamantane/1"
         self.dataset.import_from(importer)
 
     def test_instantiate_class(self):
@@ -125,9 +125,7 @@ class TestChemicalShiftCalibration(unittest.TestCase):
 
     def test_deals_with_standard_with_three_peaks(self):
         importer = nmraspecds.io.BrukerImporter()
-        importer.source = (
-            "/home/mirjam/Daten/NMR/230508_Referencing_1p3mm_Alanine/10"
-        )
+        importer.source = "testdata/Alanine/10"
         self.dataset.import_from(importer)
         self.calibration.parameters["standard"] = "alanine"
         analysis = self.dataset.analyse(self.calibration)
