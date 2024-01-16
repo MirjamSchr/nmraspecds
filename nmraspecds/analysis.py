@@ -110,7 +110,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
                 "1H": 1.8,
                 "13C": 37.77,
             },
-            "nh4h2po3": {
+            "nh4h2po4": {
                 "31P": 1.33,
             },
             "alanine": {"13C": 176.8},
