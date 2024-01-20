@@ -116,6 +116,29 @@ class TestExternalReferencing(unittest.TestCase):
         with self.assertLogs(__package__, level="WARNING"):
             self.dataset.process(self.referencing)
 
+    def test_correct_delta_with_different_value_pairs(self):
+        target_offsets = (-800, 400, 400)
+        current_offsets = (200, 400, -200)
+        deltas = (-1000, 0, 600)
+        self.dataset.data.data = self.data
+        self.dataset.data.axes[0].values = self.axis
+        self.dataset.data.axes[0].unit = "ppm"
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string("400 MHz")
+        nucleus.offset_hz.from_string("-2000 Hz")
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
+        for nr, delta in enumerate(deltas):
+            with self.subTest(delta=delta):
+                self.referencing.parameters["offset"] = target_offsets[nr]
+                self.dataset.metadata.experiment.spectrometer_frequency.value = (
+                    self.dataset.metadata.experiment.nuclei[
+                        0
+                    ].base_frequency.value
+                    + current_offsets[nr] * 1e-6
+                )
+                referencing = self.dataset.process(self.referencing)
+                self.assertAlmostEqual(delta, referencing._delta, 7)
+
 
 class TestNormalisationToNumberOfScans(unittest.TestCase):
     def setUp(self):

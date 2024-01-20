@@ -92,6 +92,7 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         super().__init__()
         self.parameters["offset"] = None
         self._target_spectrometer_frequency_value = float
+        self._delta = None
 
     def _sanitise_parameters(self):
         if (
@@ -118,12 +119,12 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         self._update_axis_with_correct_offset()
         self._update_spectrometer_frequency()
 
-    def _calcuate_offset_for_different_nucleus(self):
-        self._offset = self.parameters["offset"]
-        self._offset /= spindata.gamma(self.parameters["offset_nucleus"])
-        self._offset *= spindata.gamma(
-            self.dataset.metadata.experiment.nuclei[0].type
-        )
+    def _rewrite_parameters(self):
+        # nucleus is nucleus to which offset was obtained!
+        self.parameters["offset_nucleus"] = self.parameters["offset"][
+            "nucleus"
+        ]
+        self.parameters["offset"] = self.parameters["offset"]["offset"]
 
     def _nuclei_differ(self):
         if "offset_nucleus" not in self.parameters.keys():
@@ -137,27 +138,37 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
             != self.dataset.metadata.experiment.nuclei[0].type
         )
 
-    def _rewrite_parameters(self):
-        # nucleus is nucleus corresponding to offset!
-        self.parameters["offset_nucleus"] = self.parameters["offset"][
-            "nucleus"
-        ]
-        self.parameters["offset"] = self.parameters["offset"]["offset"]
+    def _calcuate_offset_for_different_nucleus(self):
+        self._offset = self.parameters["offset"]
+        self._offset /= spindata.gamma(self.parameters["offset_nucleus"])
+        self._offset *= spindata.gamma(
+            self.dataset.metadata.experiment.nuclei[0].type
+        )
 
     def _update_axis_with_correct_offset(self):
         target_delta_nu = self._offset
         current_sr_hz = (
             self.dataset.metadata.experiment.spectrum_reference.value
         )
-        delta_sr_hz = target_delta_nu + current_sr_hz  # Additional offset
+        delta_sr_hz = target_delta_nu - current_sr_hz  # Additional offset
+        self._delta = delta_sr_hz
         self._target_spectrometer_frequency_value = (
-            self.dataset.metadata.experiment.nuclei[
-                0
-            ].transmitter_frequency.value
+            # self.dataset.metadata.experiment.nuclei[
+            # 0].transmitter_frequency.value
+            self.dataset.metadata.experiment.nuclei[0].base_frequency.value
+            # TODO: Welche Frequenz man verwendet scheint keinen Eingfluss zu
+            #  haben! Warum? Unterschied zu klein? Mit realen Daten
+            #  nachvollziehen
+            # self.dataset.metadata.experiment.spectrometer_frequency.value
             * 1e6
             + target_delta_nu
         ) / 1e6
+        # print('Transmitter vs Spectrometer',
+        #     self.dataset.metadata.experiment.nuclei[
+        #        0].transmitter_frequency.value,
+        #   self.dataset.metadata.experiment.spectrometer_frequency.value)
         ppm_to_add = delta_sr_hz / self._target_spectrometer_frequency_value
+        # print('Delta', delta_sr_hz)
         self.dataset.data.axes[0].values += ppm_to_add
 
     def _update_spectrometer_frequency(self):
