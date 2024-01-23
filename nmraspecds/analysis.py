@@ -98,7 +98,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         self.description = (
             "Determine chemical shift offset from a standard " "sample"
         )
-
         self.parameters["standard"] = ""
         self.parameters["chemical_shift"] = None
         self.parameters["nucleus"] = None
@@ -125,7 +124,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     def _sanitise_parameters(self):
         if (
             not self.parameters["standard"]
-            and not self.parameters["chemical_shift"]
+            and self.parameters["chemical_shift"] == None
         ):
             raise ValueError("No standard or chemical shift value provided.")
         if self._standard_given_but_nucleus_not():
@@ -157,11 +156,11 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         self._assign_result()
 
     def _assign_parameters(self):
-        if not self.parameters["chemical_shift"]:
+        self.parameters["nucleus"] = self.dataset.metadata.experiment.nuclei[
+            0
+        ].type
+        if self.parameters["chemical_shift"] == None:
             standard = self.parameters["standard"].lower()
-            self.parameters[
-                "nucleus"
-            ] = self.dataset.metadata.experiment.nuclei[0].type
             self.parameters["chemical_shift"] = self._standard_shifts[
                 standard
             ][self.parameters["nucleus"]]

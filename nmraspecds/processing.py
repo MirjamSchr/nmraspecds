@@ -91,6 +91,7 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     def __init__(self):
         super().__init__()
         self.parameters["offset"] = None
+        self.parameters["offset_nucleus"] = None
         self._target_spectrometer_frequency_value = float
         self._delta = None
 
@@ -127,7 +128,10 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         self.parameters["offset"] = self.parameters["offset"]["offset"]
 
     def _nuclei_differ(self):
-        if "offset_nucleus" not in self.parameters.keys():
+        if (
+            "offset_nucleus" not in self.parameters.keys()
+            or not self.dataset.metadata.experiment.nuclei[0].type
+        ):
             logger.info(
                 "Nucleus is supposed to be of the same type as in "
                 "the dataset."
@@ -150,25 +154,13 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         current_sr_hz = (
             self.dataset.metadata.experiment.spectrum_reference.value
         )
-        delta_sr_hz = target_delta_nu - current_sr_hz  # Additional offset
+        delta_sr_hz = target_delta_nu + current_sr_hz  # Additional offset
         self._delta = delta_sr_hz
         self._target_spectrometer_frequency_value = (
-            # self.dataset.metadata.experiment.nuclei[
-            # 0].transmitter_frequency.value
             self.dataset.metadata.experiment.nuclei[0].base_frequency.value
-            # TODO: Welche Frequenz man verwendet scheint keinen Eingfluss zu
-            #  haben! Warum? Unterschied zu klein? Mit realen Daten
-            #  nachvollziehen
-            # self.dataset.metadata.experiment.spectrometer_frequency.value
-            * 1e6
-            + target_delta_nu
-        ) / 1e6
-        # print('Transmitter vs Spectrometer',
-        #     self.dataset.metadata.experiment.nuclei[
-        #        0].transmitter_frequency.value,
-        #   self.dataset.metadata.experiment.spectrometer_frequency.value)
+            + target_delta_nu / 1e6
+        )
         ppm_to_add = delta_sr_hz / self._target_spectrometer_frequency_value
-        # print('Delta', delta_sr_hz)
         self.dataset.data.axes[0].values += ppm_to_add
 
     def _update_spectrometer_frequency(self):

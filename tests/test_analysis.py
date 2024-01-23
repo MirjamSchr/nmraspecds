@@ -40,6 +40,15 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "standard or chemical shift"):
             self.dataset.analyse(self.calibration)
 
+    def test_with_no_standard_and_chemical_shift_is_zero_does_not_raise(self):
+        self._create_dataset()
+        self.calibration.parameters["spectrometer_frequency"] = 400.1
+        self.calibration.parameters["chemical_shift"] = 0
+        nucleus = nmraspecds.metadata.Nucleus()
+        nucleus.base_frequency.from_string("400.00000 MHz")
+        self.dataset.metadata.experiment.add_nucleus(nucleus)
+        self.dataset.analyse(self.calibration)
+
     def test_with_standard_without_nucleus_raises(self):
         self.calibration.parameters["standard"] = "adamantane"
         with self.assertRaisesRegex(ValueError, "nucleus"):
@@ -98,6 +107,14 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         self.calibration.parameters["standard"] = "adamantane"
         analysis = self.dataset.analyse(self.calibration)
         self.assertAlmostEqual(analysis.parameters["chemical_shift"], 37.77)
+
+    def test_nucleus_is_accounted_for_in_dataset(self):
+        self._import_dataset()
+        self.calibration.parameters["chemical_shift"] = 1.8
+        self.calibration.parameters["return_type"] = "dict"
+        analysis = self.dataset.analyse(self.calibration)
+        self.assertIsInstance(analysis.result, dict)
+        self.assertEqual(analysis.result["nucleus"], "1H")
 
     def test_chooses_correct_standard(self):
         self._import_dataset()
