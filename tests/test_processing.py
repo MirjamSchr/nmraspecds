@@ -1,7 +1,6 @@
 import copy
 import unittest
 
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from numpy import testing
@@ -16,8 +15,8 @@ class TestExternalReferencing(unittest.TestCase):
     def setUp(self):
         self.referencing = processing.ExternalReferencing()
         self.dataset = nmraspecds.dataset.ExperimentalDataset()
-        self.data = scipy.signal.windows.gaussian(65, std=2)
-        self.axis = np.linspace(0, 30, num=65)
+        self.data = scipy.signal.windows.gaussian(2048, std=2)
+        self.axis = np.linspace(0, 30, num=2048)
 
     def _import_dataset(self):
         importer = nmraspecds.io.BrukerImporter()
@@ -42,7 +41,7 @@ class TestExternalReferencing(unittest.TestCase):
         self.dataset.process(self.referencing)
         axis_after = self.dataset.data.axes[0].values
         testing.assert_allclose(
-            axis_before + 520 / 400, axis_after, rtol=1e-4
+            axis_before - 520 / 400, axis_after, rtol=1e-4
         )
 
     def test_new_frequency_is_written(self):
@@ -116,7 +115,6 @@ class TestExternalReferencing(unittest.TestCase):
         with self.assertLogs(__package__, level="WARNING"):
             self.dataset.process(self.referencing)
 
-    @unittest.skip
     def test_correct_delta_with_different_value_pairs(self):
         target_offsets = (-800, 400, 400)
         current_offsets = (200, 400, -200)
@@ -140,31 +138,9 @@ class TestExternalReferencing(unittest.TestCase):
                 referencing = self.dataset.process(self.referencing)
                 self.assertAlmostEqual(delta, referencing._delta, 7)
 
-    @unittest.skip
-    def test_with_real_data_works(self):
-        importer = nmraspecds.io.BrukerImporter()
-        importer.source = "//home/mirjam/Daten/NMR/221028_AlCl3/2"
-        self.dataset.import_from(importer)
-        importer.source = "/home/mirjam/Daten/NMR/221028_AlCl3/2"
-        analysis_dataset = nmraspecds.dataset.ExperimentalDataset()
-        analysis_dataset.import_from(importer)
-
-        analysis = nmraspecds.analysis.ChemicalShiftCalibration()
-        analysis.parameters["return_type"] = "dict"
-        analysis.parameters["chemical_shift"] = 0
-        axis_before = copy.deepcopy(analysis_dataset.data.axes[0].values)
-        analysis_result = analysis_dataset.analyse(analysis)
-        self.referencing.parameters["offset"] = analysis_result.result
-        referencing = self.dataset.process(self.referencing)
-        axis_after = self.dataset.data.axes[0].values
-        plt.plot(self.dataset.data.axes[0].values, self.dataset.data.data)
-        # plt.xlim([0,100])
-        # plt.show()
-        # print('Delta', referencing._delta)
-        # print('Hallo', min(self.dataset.data.axes[0].values))
-        self.assertNotEqual(axis_before[0], axis_after[0])
-
     def test_with_real_parameters_offset_zero(self):
+        """Original data: 230821/Adamantane_Ref_4mm and
+        230821_sa105/2/pdata/1"""
         self.dataset.data.data = self.data
         self.dataset.data.axes[0].values = np.linspace(-387.3, 383.7, num=65)
         self.dataset.data.axes[0].unit = "ppm"
@@ -174,23 +150,23 @@ class TestExternalReferencing(unittest.TestCase):
         self.dataset.metadata.experiment.add_nucleus(nucleus)
         self.dataset.metadata.experiment.spectrometer_frequency.from_string(
             "162.1146880 MHz"
-        )
+        )  # offset: -8000 Hz
         self.referencing.parameters["offset"] = {
             "offset": -182.5,
             "nucleus": "13C",
         }
         referencing = self.dataset.process(self.referencing)
         self.assertAlmostEqual(-294, referencing._offset, -1)
-        self.assertAlmostEqual(-8294, referencing._delta, 0)
+        self.assertAlmostEqual(7706, referencing._delta, 0)
 
     def test_with_real_parameters_offset_nonzero(self):
+        """Original data: 221028_AlCl3/2"""
         self.dataset.data.data = self.data
-        self.dataset.data.axes[0].values = np.linspace(-235.6, 263.4, num=65)
+        self.dataset.data.axes[0].values = np.linspace(
+            -302.215, 196.82411, num=2048
+        )
         self.dataset.data.axes[0].unit = "ppm"
         nucleus = nmraspecds.metadata.Nucleus()
-        plt.plot(self.dataset.data.axes[0].values, self.dataset.data.data)
-        # plt.xlim([0, 100])
-        # plt.show()
         nucleus.base_frequency.from_string("104.3585990 MHz")
         nucleus.offset_hz.from_string("1500.00 Hz")
         nucleus.type = "27Al"
@@ -204,11 +180,14 @@ class TestExternalReferencing(unittest.TestCase):
         }
         referencing = self.dataset.process(self.referencing)
         self.assertAlmostEqual(-48.38, referencing._offset, -1)
-        self.assertAlmostEqual(6951, referencing._delta, -1)
+        self.assertAlmostEqual(-7048.38, referencing._delta, -1)
         self.assertAlmostEqual(
             104.3585504,
             self.dataset.metadata.experiment.spectrometer_frequency.value,
             2,
+        )
+        self.assertAlmostEqual(
+            264.32587, max(self.dataset.data.axes[0].values), -2
         )
 
 

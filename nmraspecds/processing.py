@@ -154,14 +154,24 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         current_sr_hz = (
             self.dataset.metadata.experiment.spectrum_reference.value
         )
-        delta_sr_hz = target_delta_nu + current_sr_hz  # Additional offset
+        delta_sr_hz = target_delta_nu - current_sr_hz  # Additional offset
         self._delta = delta_sr_hz
         self._target_spectrometer_frequency_value = (
             self.dataset.metadata.experiment.nuclei[0].base_frequency.value
             + target_delta_nu / 1e6
         )
-        ppm_to_add = delta_sr_hz / self._target_spectrometer_frequency_value
-        self.dataset.data.axes[0].values += ppm_to_add
+        # ppm_to_add = delta_sr_hz / self._target_spectrometer_frequency_value
+        # ppm_to_add = delta_sr_hz / self.dataset.metadata.experiment.nuclei[
+        #   0].base_frequency.value
+        # TODO: Frequency did not make a difference on the axis yet. Don't
+        #  know why.
+        ppm_to_add = (
+            delta_sr_hz
+            / self.dataset.metadata.experiment.nuclei[
+                0
+            ].transmitter_frequency.value
+        )
+        self.dataset.data.axes[0].values -= ppm_to_add
 
     def _update_spectrometer_frequency(self):
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
