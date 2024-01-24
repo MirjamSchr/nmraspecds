@@ -22,8 +22,8 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     Often it is necessary to reference to a chemical shift of a different
     type of nucleus. This is accounted for with adapting the offset to the
     dataset's nucleus in the case, both types of nuclei are given. The
-    gyromagnetic ratios (γ/10^7 rad s^–1 T^–1) [1] are used via spindata by
-    Benno Meier.
+    gyromagnetic ratios (γ/10^7 rad s^–1 T^–1) [1] are used via the spindata
+    package by Benno Meier.
 
     References
     ----------
@@ -53,7 +53,7 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
             parameters:
               offset: 532
 
-    More sophisticatedly, the type of nucleus is also given to automatically
+    More sophisticated, the type of nucleus is also given to automatically
     account for the gyromagnetic ratios of the nuclei:
 
     .. code-block:: yaml
@@ -213,3 +213,42 @@ class NormalisationToNumberOfScans(aspecd.processing.SingleProcessingStep):
 
     def _perform_task(self):
         self.dataset.data.data /= self.dataset.metadata.experiment.runs
+
+
+class Normalisation(aspecd.processing.Normalisation):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = Normalisation()
+        ...
+
+
+
+    """
+
+    def _perform_task(self):
+        if "scan_number" in self.parameters["kind"].lower():
+            self.dataset.data.data /= self.dataset.metadata.experiment.runs
+        else:
+            super()._perform_task()

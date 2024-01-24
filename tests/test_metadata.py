@@ -54,7 +54,7 @@ class TestExperiment(unittest.TestCase):
         self.experiment.spectrometer_frequency.from_string("400.0 MHz")
         spectrum_reference = (
             self.experiment.spectrometer_frequency.value * 1e6
-            - self.experiment.nuclei[0].transmitter_frequency.value * 1e6
+            - self.experiment.nuclei[0].base_frequency.value * 1e6
         )
         self.assertAlmostEqual(
             self.experiment.spectrum_reference.value, spectrum_reference

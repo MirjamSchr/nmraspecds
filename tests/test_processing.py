@@ -1,6 +1,7 @@
 import copy
 import unittest
 
+import aspecd.processing
 import numpy as np
 import scipy
 from numpy import testing
@@ -204,3 +205,27 @@ class TestNormalisationToNumberOfScans(unittest.TestCase):
         dataset.metadata.experiment.runs = 12
         dataset.process(self.normalisation)
         self.assertEqual(1, dataset.data.data[0])
+
+
+class TestNormalisation(unittest.TestCase):
+    def setUp(self):
+        self.normalisation = processing.Normalisation()
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_normalises_to_number_of_scans(self):
+        dataset = nmraspecds.dataset.ExperimentalDataset()
+        dataset.data.data = np.asarray([12.0])
+        dataset.metadata.experiment.runs = 8
+        self.normalisation.parameters["kind"] = "scan_number"
+        dataset.process(self.normalisation)
+        self.assertEqual(1.5, dataset.data.data[0])
+
+    def test_with_kind_maximum_processes_with_aspecd(self):
+        dataset = nmraspecds.dataset.ExperimentalDataset()
+        dataset.data.data = np.asarray([12.0])
+        dataset.metadata.experiment.runs = 15
+        self.normalisation.parameters["kind"] = "maximum"
+        dataset.process(self.normalisation)
+        self.assertEqual(1, max(dataset.data.data))
