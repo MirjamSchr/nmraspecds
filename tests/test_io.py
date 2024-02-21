@@ -272,7 +272,8 @@ class TestScreamImporter(unittest.TestCase):
         test_dataset.import_from(nmraspecds.io.BrukerImporter(source))
         normalisation = nmraspecds.processing.NormalisationToNumberOfScans()
         test_dataset.process(normalisation)
-
+        plt.plot(self.dataset.data.data)
+        plt.show()
         self.scream_importer.source = "testdata/Scream/22"
         self.scream_importer.parameters["number_of_experiments"] = 13
         self.dataset.import_from(self.scream_importer)

@@ -236,6 +236,13 @@ class ScreamImporter(aspecd.io.DatasetImporter):
         self._create_axes()
 
     def _create_axes(self):
+        # unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
+        # unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
+        # self.dataset.data.axes[0].values = unit_converter.ppm_scale()
+
+        self.dataset.data.axes[0].unit = "ppm"
+        self.dataset.data.axes[0].quantity = "chemical shift"
+
         self.dataset.data.axes[1].values = self._tmp_t_buildup
         self.dataset.data.axes[1].unit = "s"
         self.dataset.data.axes[1].quantity = "buildup time"
