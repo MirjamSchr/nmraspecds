@@ -133,8 +133,8 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
             or not self.dataset.metadata.experiment.nuclei[0].type
         ):
             logger.info(
-                "Nucleus is supposed to be of the same type as in "
-                "the dataset."
+                "No information on nucleus, it is assumed to be of the "
+                "same type as in the dataset."
             )
             return False
         return (
@@ -143,7 +143,7 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         )
 
     def _calcuate_offset_for_different_nucleus(self):
-        self._offset = self.parameters["offset"]
+        # self._offset = self.parameters["offset"]
         self._offset /= spindata.gamma(self.parameters["offset_nucleus"])
         self._offset *= spindata.gamma(
             self.dataset.metadata.experiment.nuclei[0].type
