@@ -49,7 +49,7 @@ class PlotterExtensions:
             )
 
         def backward(values):
-            return utils.convert_ppm_to_delta_kHz(
+            return utils.convert_delta_kHz_to_ppm(
                 values, reference_frequency=reference_frequency
             )
 
