@@ -5,17 +5,19 @@ This is the definite source of information for developers, besides having a look
 
 .. toctree::
     :maxdepth: 1
-    
+
+    nmraspecds.analysis
     nmraspecds.dataset
     nmraspecds.io
     nmraspecds.metadata
-    nmraspecds.analysis
     nmraspecds.plotting
     nmraspecds.processing
+    nmraspecds.utils
 
 
 Index
 -----
 
 * :ref:`genindex`
+
 
