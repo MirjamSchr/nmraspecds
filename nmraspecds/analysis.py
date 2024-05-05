@@ -16,7 +16,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     can be set manually. From this, the offset from the spectrometer's
     frequency is determined (this step) and has to be transferred to the
     sample of interest (see :class:`nmraspecds.processing.ExternalReferencing`).
-     Of course, the sample has to get measured shortly before or after the
+    Of course, the sample has to get measured shortly before or after the
     reference compound to avoid drift of the magnetic field that occurs over
     time.
 
@@ -56,7 +56,6 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         Standard substance to take chemical shift from. Either the parameter
         "chemical_shift" or "standard" need to be provided.
 
-
     parameters["return_type"]: :class:`str`
         Defines, type of output, can be "value" or "dict". The latter
         contains additional information e.g. type of nucleus.
@@ -77,6 +76,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     ValueError
         Either Standard sample or chemical shift to reference to needs to be
         provided.
+
 
     Examples
     --------
@@ -124,7 +124,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
     def _sanitise_parameters(self):
         if (
             not self.parameters["standard"]
-            and self.parameters["chemical_shift"] == None
+            and self.parameters["chemical_shift"] is None
         ):
             raise ValueError("No standard or chemical shift value provided.")
         if self._standard_given_but_nucleus_not():
@@ -159,7 +159,7 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
         self.parameters["nucleus"] = self.dataset.metadata.experiment.nuclei[
             0
         ].type
-        if self.parameters["chemical_shift"] == None:
+        if self.parameters["chemical_shift"] is None:
             standard = self.parameters["standard"].lower()
             self.parameters["chemical_shift"] = self._standard_shifts[
                 standard
