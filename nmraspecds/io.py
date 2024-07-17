@@ -4,6 +4,7 @@ io module of the nmraspecds package.
 import os.path
 
 import aspecd.io
+import linecache
 import nmrglue
 import numpy as np
 
@@ -240,3 +241,55 @@ class ScreamImporter(aspecd.io.DatasetImporter):
         self.dataset.data.axes[1].unit = "s"
         self.dataset.data.axes[1].quantity = "buildup time"
         self.dataset.data.axes[2].quantity = "intensity"
+
+
+class FittingImporter(aspecd.io.DatasetImporter):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = FittingImporter()
+        ...
+
+
+
+    """
+
+    def __init__(self, source=None):
+        super().__init__(source=source)
+
+    def _import(self):
+        if self.source:
+            if not self.source.endswith(".asc"):
+                self.source += ".asc"
+
+        data = np.loadtxt(self.source, skiprows=3)
+        self.dataset.data.data = data[:, 1:]
+        frequency = float(linecache.getline(self.source, 2).strip("##freq "))
+        self.dataset.data.axes[0].values = data[:, 0] / frequency
+        self.dataset.data.axes[0].unit = "ppm"
+        # TODO: Check, whether this is the correct type of frequency.
+        self.dataset.metadata.experiment.spectrometer_frequency.value = (
+            frequency
+        )
+        self.dataset.metadata.experiment.spectrometer_frequency.unit = "MHz"

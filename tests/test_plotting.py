@@ -1,5 +1,6 @@
 import unittest
 
+import aspecd.plotting
 import matplotlib
 
 from nmraspecds import plotting, dataset
@@ -208,3 +209,23 @@ class TestMultiPlotter1DStacked(unittest.TestCase):
             r"\Delta \nu",
             secondary_axes[0].get_xaxis().get_label().get_text(),
         )
+
+
+class TestFittingPlotter2D(unittest.TestCase):
+    def setUp(self):
+        self.plotter = plotting.FittingPlotter2D()
+        self.dataset = dataset.ExperimentalDataset()
+        self.dataset.data.data = np.ones((10, 4)) * [1, 2, 3, 4]
+        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[0].unit = "ppm"
+        self.dataset.data.axes[1].quantity = "chemical shift"
+        self.dataset.data.axes[1].unit = "ppm"
+        self.dataset.data.axes[2].quantity = "intensity"
+        self.dataset.data.axes[2].unit = "a.u."
+        self.plotter.dataset = self.dataset
+
+    def test_instantiate_class(self):
+        self.plotter.plot()
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        self.plotter.save(saver)

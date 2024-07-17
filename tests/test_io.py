@@ -278,3 +278,43 @@ class TestScreamImporter(unittest.TestCase):
         self.assertEqual(
             test_dataset.data.data[42], self.dataset.data.data[42, -1]
         )
+
+
+class TestFittingImporter(unittest.TestCase):
+    def setUp(self):
+        self.fitting_importer = io.FittingImporter()
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+        self.fitting_importer.source = "testdata/fitting-data.asc"
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_import_data_to_dataset(self):
+        self.fitting_importer.source = "testdata/fitting-data.asc"
+        self.dataset.import_from(self.fitting_importer)
+        self.assertTrue(self.dataset.data.data.any())
+
+    def test_import_data_to_dataset_wo_suffix(self):
+        self.fitting_importer.source = "testdata/fitting-data"
+        self.dataset.import_from(self.fitting_importer)
+        self.assertTrue(self.dataset.data.data.any())
+
+    def test_data_has_correct_size(self):
+        self.dataset.import_from(self.fitting_importer)
+        self.assertEqual(2, self.dataset.data.data.ndim)
+        self.assertEqual(4, self.dataset.data.data.shape[1])
+
+    def test_x_axis_is_calculated(self):
+        self.dataset.import_from(self.fitting_importer)
+        self.assertAlmostEqual(337.30, self.dataset.data.axes[0].values[0], 2)
+
+    def test_x_axis_has_unit(self):
+        self.dataset.import_from(self.fitting_importer)
+        self.assertEqual("ppm", self.dataset.data.axes[0].unit)
+
+    def test_metadata_contains_frequency(self):
+        self.dataset.import_from(self.fitting_importer)
+        self.assertEqual(
+            283.417,
+            self.dataset.metadata.experiment.spectrometer_frequency.value,
+        )

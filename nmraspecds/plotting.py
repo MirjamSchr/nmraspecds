@@ -543,3 +543,67 @@ class MultiPlotter1DStacked(
                     0
                 ].metadata.experiment.spectrometer_frequency.value
             )
+
+
+class FittingPlotter2D(SinglePlotter2DStacked):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = FittingPlotter2D()
+        ...
+
+
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.parameters["offset"] = 0
+
+    def _create_plot(self):
+        super()._create_plot()
+        props = self.properties.get_properties()
+        print(self.properties.drawing.color)
+        self.properties.drawing.color = ["red", "k"]
+        # TODO: Problem: SinglePlotter2DStacked ist nur für eine Farbe
+        #  ausgelegt.
+        # print(self.drawing[1].properties())
+        # TODO: Account for stacking dimension
+        colors = [
+            "k",
+            "tab:red",
+            "tab:gray",
+            "tab:gray",
+            "tab:gray",
+            "tab:gray",
+        ]
+        print("HERE1")
+        for nr, drawing in enumerate(self.drawing):
+            print(nr, "HERE")
+            print(drawing.properties()["color"])
+            drawing.properties()["color"] = colors[nr]
+            drawing.color = colors[nr]
+            print(drawing.color)
+
+        super()._create_plot()
