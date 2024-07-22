@@ -46,7 +46,13 @@ class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
 
     def _get_importer(self):
-        return BrukerImporter(source=self.source)
+        if os.path.isdir(self.source):
+            return BrukerImporter(source=self.source)
+        else:
+            if self.source.endswith(".asc") or os.path.isfile(
+                self.source + ".asc"
+            ):
+                return FittingImporter(source=self.source)
 
 
 class BrukerImporter(aspecd.io.DatasetImporter):

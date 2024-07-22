@@ -32,6 +32,14 @@ class TestDatasetImporterFactory(unittest.TestCase):
         importer = importer_factory.get_importer(source=source)
         self.assertIn(source, importer.source)
 
+    def test_returns_fitting_importer(self):
+        source = "testdata/fitting-data.asc"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertIsInstance(importer, io.FittingImporter)
+
 
 class TestBrukerImporter(unittest.TestCase):
     def setUp(self):

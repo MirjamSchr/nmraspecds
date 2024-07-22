@@ -585,11 +585,9 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         super()._create_plot()
         props = self.properties.get_properties()
         print(self.properties.drawing.color)
-        self.properties.drawing.color = ["red", "k"]
+        self.properties.drawing.color = "grey"
         # TODO: Problem: SinglePlotter2DStacked ist nur für eine Farbe
         #  ausgelegt.
-        # print(self.drawing[1].properties())
-        # TODO: Account for stacking dimension
         colors = [
             "k",
             "tab:red",
@@ -598,12 +596,5 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             "tab:gray",
             "tab:gray",
         ]
-        print("HERE1")
-        for nr, drawing in enumerate(self.drawing):
-            print(nr, "HERE")
-            print(drawing.properties()["color"])
-            drawing.properties()["color"] = colors[nr]
-            drawing.color = colors[nr]
-            print(drawing.color)
 
-        super()._create_plot()
+    # TODO: Account for stacking dimension

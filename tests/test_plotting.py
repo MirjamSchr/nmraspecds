@@ -2,6 +2,7 @@ import unittest
 
 import aspecd.plotting
 import matplotlib
+import scipy.signal.windows
 
 from nmraspecds import plotting, dataset
 import numpy as np
@@ -215,7 +216,10 @@ class TestFittingPlotter2D(unittest.TestCase):
     def setUp(self):
         self.plotter = plotting.FittingPlotter2D()
         self.dataset = dataset.ExperimentalDataset()
-        self.dataset.data.data = np.ones((10, 4)) * [1, 2, 3, 4]
+        data = np.array([])
+        for nr in range(1, 6):
+            data = np.append(data, scipy.signal.windows.gaussian(31, std=nr))
+        self.dataset.data.data = data.reshape(5, 31).T
         self.dataset.data.axes[0].quantity = "chemical shift"
         self.dataset.data.axes[0].unit = "ppm"
         self.dataset.data.axes[1].quantity = "chemical shift"
