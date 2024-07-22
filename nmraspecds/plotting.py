@@ -2,6 +2,7 @@
 plotting module of the nmraspecds package.
 """
 import aspecd.plotting
+import numpy as np
 
 from nmraspecds import utils
 
@@ -582,9 +583,10 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["offset"] = 0
 
     def _create_plot(self):
+        maxima = self.get_maxima()
+        print(maxima)
         super()._create_plot()
         props = self.properties.get_properties()
-        print(self.properties.drawing.color)
         self.properties.drawing.color = "grey"
         # TODO: Problem: SinglePlotter2DStacked ist nur für eine Farbe
         #  ausgelegt.
@@ -598,3 +600,10 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         ]
 
     # TODO: Account for stacking dimension
+
+    def get_maxima(self):
+        max_ppm = []
+        for row in range(2, self.dataset.data.data.shape[1]):
+            arg = np.argmax(self.dataset.data.data[:, row])
+            max_ppm.append(self.dataset.data.axes[0].values[arg])
+        return max_ppm

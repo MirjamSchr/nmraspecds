@@ -222,8 +222,8 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.dataset.data.data = data.reshape(5, 31).T
         self.dataset.data.axes[0].quantity = "chemical shift"
         self.dataset.data.axes[0].unit = "ppm"
-        self.dataset.data.axes[1].quantity = "chemical shift"
-        self.dataset.data.axes[1].unit = "ppm"
+        self.dataset.data.axes[1].quantity = "Peak No"
+        self.dataset.data.axes[1].unit = None
         self.dataset.data.axes[2].quantity = "intensity"
         self.dataset.data.axes[2].unit = "a.u."
         self.plotter.dataset = self.dataset
