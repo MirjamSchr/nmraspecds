@@ -171,7 +171,8 @@ class Experiment(aspecd.metadata.Metadata):
 
         Current spectrometer frequency ("SF" in Bruker's Topspin) of the
         dataset. Is different from the transmitter frequency (and independend of
-         it) depending on the axis.
+         it) depending on the axis. The value is obtained after referencing
+         the measurement.
 
     """
 
@@ -216,10 +217,10 @@ class Nucleus(aspecd.metadata.Metadata):
         Nucleus that is measured, such as 1H or 29Si or 195Pt.
 
     base_frequency : :class:`aspecd.metadata.PhysicalQuantity`
-        Current base frequency of that nucleus.
+        Current base frequency of a given nucleus.
 
     offset_hz : :class:`aspecd.metadata.PhysicalQuantity`
-        Offset of the nucleus, given in Hz. (O1 in Buker's Topspin)
+        Offset of the nucleus' frequency, given in Hz. (O1 in Buker's Topspin)
 
     Raises
     ------

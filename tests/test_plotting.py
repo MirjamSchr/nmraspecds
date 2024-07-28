@@ -214,12 +214,19 @@ class TestMultiPlotter1DStacked(unittest.TestCase):
 
 class TestFittingPlotter2D(unittest.TestCase):
     def setUp(self):
+        def gaussian(amp, fwhm, mean):
+            return lambda x: amp * np.exp(
+                -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
+            )
+
         self.plotter = plotting.FittingPlotter2D()
         self.dataset = dataset.ExperimentalDataset()
         data = np.array([])
-        for nr in range(1, 6):
-            data = np.append(data, scipy.signal.windows.gaussian(31, std=nr))
-        self.dataset.data.data = data.reshape(5, 31).T
+        xvalues = np.linspace(1, 50)
+        for nr in range(1, 8):
+            # data = np.append(data, scipy.signal.windows.gaussian(31, std=nr))
+            data = np.append(data, gaussian(50, 5, nr * 5 + 8)(xvalues))
+        self.dataset.data.data = data.reshape(7, 50).T
         self.dataset.data.axes[0].quantity = "chemical shift"
         self.dataset.data.axes[0].unit = "ppm"
         self.dataset.data.axes[1].quantity = "Peak No"
@@ -233,3 +240,5 @@ class TestFittingPlotter2D(unittest.TestCase):
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
         self.plotter.save(saver)
+
+    # def test_

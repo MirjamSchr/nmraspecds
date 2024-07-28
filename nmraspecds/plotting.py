@@ -3,6 +3,7 @@ plotting module of the nmraspecds package.
 """
 import aspecd.plotting
 import numpy as np
+import matplotlib as mpl
 
 from nmraspecds import utils
 
@@ -548,9 +549,14 @@ class MultiPlotter1DStacked(
 
 class FittingPlotter2D(SinglePlotter2DStacked):
     """
-    One sentence (on one line) describing the class.
+    Plotter for fitted data with a special color scheme.
 
-    More description comes here...
+    Creates a special type of plot with the experimental data (black), the sum
+    of the single, fitted peaks (red) and all single peaks (grey).
+    Experimental data were previously fitted with DMFit, exported (
+    experimental dataset with sum and all peaks) are imported with
+    `nmraspecds.io.FittingImporter`. See the importer for details to the
+    dataset.
 
 
     Attributes
@@ -566,16 +572,14 @@ class FittingPlotter2D(SinglePlotter2DStacked):
 
     Examples
     --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
+    The easiest way to use this Plotter
 
-    .. code-block::
+    .. code-block:: yaml
 
-        obj = FittingPlotter2D()
-        ...
-
-
-
+       - kind: singleplot
+         type: FittingPlotter2D
+         properties:
+           filename: output.pdf
     """
 
     def __init__(self):
@@ -583,21 +587,24 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["offset"] = 0
 
     def _create_plot(self):
-        maxima = self.get_maxima()
-        print(maxima)
+        self.properties.colormap = self._create_colormap()
         super()._create_plot()
-        props = self.properties.get_properties()
-        self.properties.drawing.color = "grey"
-        # TODO: Problem: SinglePlotter2DStacked ist nur für eine Farbe
-        #  ausgelegt.
-        colors = [
-            "k",
-            "tab:red",
-            "tab:gray",
-            "tab:gray",
-            "tab:gray",
-            "tab:gray",
-        ]
+        ylim_min = self.put_maxima_below_curves()
+        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
+        self.axes.plot(
+            self.dataset.data.axes[0].values, residues + 1.1 * ylim_min
+        )
+        # self.axes.legend(['experiment', 'simulation', 'single peaks',
+        # 'residual'])
+
+    def put_maxima_below_curves(self):
+        ylim_min, ylim_max = self.axes.get_ylim()
+        delta_ylim = ylim_max + abs(ylim_min)
+        self.axes.set_ylim(3.3 * ylim_min, ylim_max)
+        maxima = self.get_maxima()
+        print(f"Maxima at {maxima} ppm")
+        [self.axes.text(n + 3, 2.5 * ylim_min, f"{n:.0f}") for n in maxima]
+        return ylim_min
 
     # TODO: Account for stacking dimension
 
@@ -607,3 +614,14 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             arg = np.argmax(self.dataset.data.data[:, row])
             max_ppm.append(self.dataset.data.axes[0].values[arg])
         return max_ppm
+
+    def _create_colormap(self):
+        cmaplist = [
+            "k",
+            "tab:red",
+            *["tab:gray"] * (self.dataset.data.data.shape[1] - 2),
+        ]
+        cmap = mpl.colors.LinearSegmentedColormap.from_list(
+            "Custom cmap", cmaplist, len(cmaplist)
+        )
+        return cmap
