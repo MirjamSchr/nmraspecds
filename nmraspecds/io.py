@@ -294,8 +294,9 @@ class FittingImporter(aspecd.io.DatasetImporter):
         frequency = float(linecache.getline(self.source, 2).strip("##freq "))
         self.dataset.data.axes[0].values = data[:, 0] / frequency
         self.dataset.data.axes[0].unit = "ppm"
-        self.dataset.data.axes[1].unit = "spectrum No"
-        self.dataset.data.axes[2].unit = "intensity"
+        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[1].quantity = "spectrum No"
+        self.dataset.data.axes[2].quantity = "intensity"
         self.dataset.metadata.experiment.spectrometer_frequency.value = (
             frequency
         )
