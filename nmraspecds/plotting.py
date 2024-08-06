@@ -558,6 +558,8 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     `nmraspecds.io.FittingImporter`. See the importer for details to the
     dataset.
 
+    Giving a colormap changes the default colors of the plot.
+
 
     Attributes
     ----------
@@ -587,15 +589,32 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["offset"] = 0
 
     def _create_plot(self):
-        self.properties.colormap = self._create_colormap()
+        # self.properties.colormap = self._create_colormap()
+
         super()._create_plot()
+
+        self._change_line_properties()
+
         ylim_min = self.put_maxima_below_curves()
         residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
         self.axes.plot(
-            self.dataset.data.axes[0].values, residues + 1.1 * ylim_min
+            self.dataset.data.axes[0].values,
+            residues + 1.1 * ylim_min,
+            color="steelblue",
+            alpha=0.6,
         )
         # self.axes.legend(['experiment', 'simulation', 'single peaks',
         # 'residual'])
+
+    def _change_line_properties(self):
+        length = self.dataset.data.data.shape[1] - 2
+        color_ = ["k", "tab:red", *["tab:gray"] * length]
+        linestyle_ = ["-", "--", *["-"] * length]
+        alpha_ = [1, 1, *[0.6] * length]
+        for nr, line in enumerate(self.properties.drawings):
+            setattr(self.properties.drawings[nr], "color", color_[nr])
+            setattr(self.properties.drawings[nr], "linestyle", linestyle_[nr])
+            setattr(self.properties.drawings[nr], "alpha", alpha_[nr])
 
     def put_maxima_below_curves(self):
         ylim_min, ylim_max = self.axes.get_ylim()
