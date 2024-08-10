@@ -50,6 +50,37 @@ _origdata:
     index: []
 device_data: {}
 metadata:
+  measurement:
+    start: null
+    end: null
+    purpose: ''
+    operator: ''
+    labbook_entry: ''
+  sample:
+    description: ''
+    solvent: ''
+    preparation: ''
+    container:
+      manufacturer: ''
+      material: ''
+      diameter:
+        unit: ''
+        dimension: ''
+        name: ''
+        value: 0.0
+      cap_material: ''
+      plug: ''
+      insert: ''
+    name: ''
+    id: null
+    loi: ''
+  temperature_control:
+    temperature:
+      unit: ''
+      dimension: ''
+      name: ''
+      value: 0.0
+    controller: ''
   spectrometer:
     model: ''
     software: ''
@@ -68,23 +99,6 @@ metadata:
       value: 0.0
     loops: []
     delays: []
-  sample:
-    name: ''
-    id: null
-    loi: ''
-  measurement:
-    start: null
-    end: null
-    purpose: ''
-    operator: ''
-    labbook_entry: ''
-  temperature_control:
-    temperature:
-      unit: ''
-      dimension: ''
-      name: ''
-      value: 0.0
-    controller: ''
 history: []
 _history_pointer: -1
 analyses: []

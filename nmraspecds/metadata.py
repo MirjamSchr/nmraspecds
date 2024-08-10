@@ -36,18 +36,18 @@ class ExperimentalDatasetMetadata(
     experiment : :class:`Experiment`
         Experimental details, such as MAS frequency and pulse sequence.
 
-    rotor : :class:`Rotor`
-        Rotor size, material, cap and inserts
+    sample : :class:`Sample`
+        Details on the sample used for this experiment as well as its container.
 
 
     """
 
     def __init__(self):
+        super().__init__()
         self.spectrometer = Spectrometer()
         self.probehead = Probehead()
         self.experiment = Experiment()
         self.sample = Sample()
-        super().__init__()
 
 
 class Sample(aspecd.metadata.Sample):
@@ -73,7 +73,7 @@ class Sample(aspecd.metadata.Sample):
     preparation : :class:`str`
         Short details of the sample preparation.
 
-    container : :class:`str`
+    container : :class:`SampleContainer`
         Type and dimension of the sample container (tube or rotor) used.
 
     """
@@ -83,12 +83,12 @@ class Sample(aspecd.metadata.Sample):
         self.description = ""
         self.solvent = ""
         self.preparation = ""
-        self.container = SampleContainer()
+        self.container = Rotor()
         super().__init__(dict_=dict_)
 
 
 class SampleContainer(aspecd.metadata.Metadata):
-    """ """
+    """Details on the sample containing container."""
 
 
 class Spectrometer(aspecd.metadata.Metadata):

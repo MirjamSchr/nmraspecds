@@ -49,18 +49,21 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
 
     Attributes
     ----------
-    parameters["chemical_shift"]: :class:`float`
-        Chemical shift the largest peaks should be shifted to.
+    parameters : :class:`dict`
+        All parameters necessary for this step.
 
-    parameters["standard"]: :class:`str`
-        Standard substance to take chemical shift from. Either the parameter
-        "chemical_shift" or "standard" need to be provided.
+        chemical_shift : :class:`float`
+            Chemical shift the largest peaks should be shifted to.
 
-    parameters["return_type"]: :class:`str`
-        Defines, type of output, can be "value" or "dict". The latter
-        contains additional information e.g. type of nucleus.
+        standard : :class:`str`
+            Standard substance to take chemical shift from. Either the
+            parameter "chemical_shift" or "standard" need to be provided.
 
-        Default: value
+        return_type : :class:`str`
+            Defines, type of output, can be "value" or "dict". The latter
+            contains additional information e.g. type of nucleus.
+
+            Default: value
 
     Returns
     -------

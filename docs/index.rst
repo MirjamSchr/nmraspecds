@@ -145,6 +145,16 @@ This program is free software: you can redistribute it and/or modify it under th
    dataset-structure
    installing
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples:
+   :hidden:
+
+   examples/index
+   examples/list
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Developers:
