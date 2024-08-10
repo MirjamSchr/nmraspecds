@@ -1,0 +1,35 @@
+{
+    "title": "NMRAspecds",
+    "description": "NMRAspecds is a Python package for processing and analysis of nuclear magnetic resonance (NMR) data based on the ASpecD framework and focussing on reproducibility.",
+    "creators": [
+        {
+            "orcid": "https://orcid.org/0000-0002-8940-3185",
+            "name": "Schröder, Mirjam"
+        }
+    ],
+    "contributors": [
+        {
+            "orcid": "https://orcid.org/0009-0001-7269-1782",
+            "name": "Taube, Florian",
+            "type": "ProjectMember"
+        },
+        {
+            "orcid": "https://orcid.org/0000-0003-2913-0004",
+            "name": "Biskup, Till",
+            "type": "RelatedPerson"
+        }
+    ],
+    "license": "BSD-2-Clause",
+    "keywords": [
+         "nuclear magnetic resonance spectroscopy",
+         "NMR spectroscopy",
+         "spectroscopy",
+         "magnetic resonance",
+         "data processing and analysis",
+         "reproducible science",
+         "reproducible research",
+         "good scientific practice",
+         "recipe-driven data analysis"
+    ],
+    "upload_type": "software"
+}
