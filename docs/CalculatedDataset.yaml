@@ -23,18 +23,6 @@ data:
       dtype: float64
       array: []
     index: []
-metadata:
-  calculation:
-    type: ''
-    parameters: {}
-history: []
-analyses: []
-annotations: []
-representations: []
-id: ''
-label: ''
-references: []
-tasks: []
 _origdata:
   calculated: true
   data:
@@ -60,5 +48,18 @@ _origdata:
       dtype: float64
       array: []
     index: []
-_package_name: nmraspecds
+device_data: {}
+metadata:
+  calculation:
+    type: ''
+    parameters: {}
+history: []
 _history_pointer: -1
+analyses: []
+annotations: []
+representations: []
+id: ''
+label: ''
+references: []
+tasks: []
+_package_name: nmraspecds

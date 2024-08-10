@@ -23,61 +23,6 @@ data:
       dtype: float64
       array: []
     index: []
-metadata:
-  spectrometer:
-    model: ''
-    software: ''
-  probehead:
-    model: ''
-    configuration: ''
-  experiment:
-    type: ''
-    runs: null
-    nuclei: []
-    mas_frequency: null
-    spectrometer_frequency:
-      unit: ''
-      dimension: ''
-      name: ''
-      value: 0.0
-    loops: []
-    delays: []
-  rotor:
-    manufacturer: ''
-    material: ''
-    diameter:
-      unit: ''
-      dimension: ''
-      name: ''
-      value: 0.0
-    cap_material: ''
-    plug: ''
-    insert: ''
-  measurement:
-    start: null
-    end: null
-    purpose: ''
-    operator: ''
-    labbook_entry: ''
-  sample:
-    name: ''
-    id: null
-    loi: ''
-  temperature_control:
-    temperature:
-      unit: ''
-      dimension: ''
-      name: ''
-      value: 0.0
-    controller: ''
-history: []
-analyses: []
-annotations: []
-representations: []
-id: ''
-label: ''
-references: []
-tasks: []
 _origdata:
   calculated: false
   data:
@@ -103,5 +48,50 @@ _origdata:
       dtype: float64
       array: []
     index: []
-_package_name: nmraspecds
+device_data: {}
+metadata:
+  spectrometer:
+    model: ''
+    software: ''
+  probehead:
+    model: ''
+    configuration: ''
+  experiment:
+    type: ''
+    runs: null
+    nuclei: []
+    mas_frequency: null
+    spectrometer_frequency:
+      unit: ''
+      dimension: ''
+      name: ''
+      value: 0.0
+    loops: []
+    delays: []
+  sample:
+    name: ''
+    id: null
+    loi: ''
+  measurement:
+    start: null
+    end: null
+    purpose: ''
+    operator: ''
+    labbook_entry: ''
+  temperature_control:
+    temperature:
+      unit: ''
+      dimension: ''
+      name: ''
+      value: 0.0
+    controller: ''
+history: []
 _history_pointer: -1
+analyses: []
+annotations: []
+representations: []
+id: ''
+label: ''
+references: []
+tasks: []
+_package_name: nmraspecds
