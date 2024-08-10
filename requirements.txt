@@ -1,0 +1,7 @@
+aspecd>=0.10
+matplotlib
+numpy~=1.26.3
+scipy~=1.11.4
+setuptools~=68.2.0
+nmrglue~=0.10
+spindata~=1.13

@@ -35,10 +35,7 @@ setuptools.setup(
         "Intended Audience :: Science/Research",
         "Development Status :: 4 - Beta",
     ],
-    install_requires=[
-        "aspecd",
-        "nmrglue",
-    ],
+    install_requires=["aspecd>=0.10", "nmrglue", "spindata"],
     extras_require={
         "dev": [
             "prospector",
