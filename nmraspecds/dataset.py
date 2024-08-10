@@ -8,33 +8,22 @@ import nmraspecds.io
 
 class DatasetFactory(aspecd.dataset.DatasetFactory):
     """
-    One sentence (on one line) describing the class.
+    Factory for creating dataset objects based on the source provided.
 
-    More description comes here...
+    Particularly in case of recipe-driven data analysis (c.f.
+    :mod:`aspecd.tasks`),
+    there is a need to automatically retrieve datasets using nothing more
+    than a source string that can be, e.g., a path or LOI.
+
+    The DatasetFactory operates in conjunction with a
+    :class:`cwepr.io.factory.DatasetImporterFactory` to import the actual
+    dataset. See the respective class documentation for more details.
 
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = DatasetFactory()
-        ...
-
-
+    importer_factory : :class:`cwepr.io.factory.DatasetImporterFactory`
+        ImporterFactory instance used for importing datasets
 
     """
 
@@ -44,7 +33,7 @@ class DatasetFactory(aspecd.dataset.DatasetFactory):
 
     @staticmethod
     def _create_dataset(source=""):
-        """Return cwepr dataset.
+        """Return nmraspecds dataset.
 
         Parameters
         ----------
@@ -55,8 +44,8 @@ class DatasetFactory(aspecd.dataset.DatasetFactory):
 
         Returns
         -------
-        dataset : :class:`cwepr.dataset.ExperimentalDataset`
-            Dataset object for cwepr package
+        dataset : :class:`nmraspecds.dataset.ExperimentalDataset`
+            Dataset object for nmraspecds package
 
         """
         return nmraspecds.dataset.ExperimentalDataset()
@@ -64,33 +53,11 @@ class DatasetFactory(aspecd.dataset.DatasetFactory):
 
 class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
     """
-    One sentence (on one line) describing the class.
+    Set of data uniting all relevant information.
 
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = ExperimentalDataset()
-        ...
-
-
+    Core element of the package as all io, processing, analysis ans plotting
+    steps are wrapped around a dataset which contains numerical data and
+    metadata.
 
     """
 
@@ -101,32 +68,7 @@ class ExperimentalDataset(aspecd.dataset.ExperimentalDataset):
 
 class CalculatedDataset(aspecd.dataset.CalculatedDataset):
     """
-    One sentence (on one line) describing the class.
-
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = CalculatedDataset()
-        ...
-
+    Base class for datasets containing calculated data.
 
 
     """

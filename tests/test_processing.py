@@ -192,21 +192,6 @@ class TestExternalReferencing(unittest.TestCase):
         )
 
 
-class TestNormalisationToNumberOfScans(unittest.TestCase):
-    def setUp(self):
-        self.normalisation = processing.NormalisationToNumberOfScans()
-
-    def test_instantiate_class(self):
-        pass
-
-    def test_normalises_to_number_of_scans(self):
-        dataset = nmraspecds.dataset.ExperimentalDataset()
-        dataset.data.data = np.asarray([12.0])
-        dataset.metadata.experiment.runs = 12
-        dataset.process(self.normalisation)
-        self.assertEqual(1, dataset.data.data[0])
-
-
 class TestNormalisation(unittest.TestCase):
     def setUp(self):
         self.normalisation = processing.Normalisation()

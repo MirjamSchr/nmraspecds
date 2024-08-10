@@ -8,9 +8,21 @@ class ExperimentalDatasetMetadata(
     aspecd.metadata.ExperimentalDatasetMetadata
 ):
     """
-    One sentence (on one line) describing the class.
+    Set of all metadata for a dataset object.
 
-    More description comes here...
+    Metadata as a unified structure of information coupled to the dataset are
+    necessary for the understanding, analysis and processing of data,
+    especially in NMR.
+    Some parameters are written automatically by the
+    spectrometer's software, others, depending also on the actual setup (that
+    may change over time!) are omitted. It is highly recommended those
+    parameters should be noted by hand, for example in an *.info-file.*
+
+    ..note ::
+
+        Not all parameters are yet taken into account, only the most
+        important ones, that are needed for processing and analysis that are
+        already implemented.
 
 
     Attributes
@@ -27,23 +39,6 @@ class ExperimentalDatasetMetadata(
     rotor : :class:`Rotor`
         Rotor size, material, cap and inserts
 
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = ExperimentalDatasetMetadata()
-        ...
-
-
 
     """
 
@@ -51,7 +46,7 @@ class ExperimentalDatasetMetadata(
         self.spectrometer = Spectrometer()
         self.probehead = Probehead()
         self.experiment = Experiment()
-        self.rotor = Rotor()
+        self.sample = Sample()
         super().__init__()
 
 
@@ -78,8 +73,8 @@ class Sample(aspecd.metadata.Sample):
     preparation : :class:`str`
         Short details of the sample preparation.
 
-    tube : :class:`str`
-        Type and dimension of the sample tube used.
+    container : :class:`str`
+        Type and dimension of the sample container (tube or rotor) used.
 
     """
 
@@ -88,8 +83,12 @@ class Sample(aspecd.metadata.Sample):
         self.description = ""
         self.solvent = ""
         self.preparation = ""
-        self.tube = ""
+        self.container = SampleContainer()
         super().__init__(dict_=dict_)
+
+
+class SampleContainer(aspecd.metadata.Metadata):
+    """ """
 
 
 class Spectrometer(aspecd.metadata.Metadata):
@@ -119,11 +118,6 @@ class Spectrometer(aspecd.metadata.Metadata):
 class Probehead(aspecd.metadata.Metadata):
     """Metadata corresponding to the probehead.
 
-    Parameters
-    ----------
-    dict_ : :class:`dict`
-        Dictionary containing properties to set.
-
 
     Attributes
     ----------
@@ -148,8 +142,6 @@ class Probehead(aspecd.metadata.Metadata):
 class Experiment(aspecd.metadata.Metadata):
     """Metadata corresponding to the experiment.
 
-    More description comes here...
-
 
     Attributes
     ----------
@@ -171,8 +163,8 @@ class Experiment(aspecd.metadata.Metadata):
 
         Current spectrometer frequency ("SF" in Bruker's Topspin) of the
         dataset. Is different from the transmitter frequency (and independend of
-         it) depending on the axis. The value is obtained after referencing
-         the measurement.
+        it) depending on the axis. The value is obtained after referencing
+        the measurement.
 
     """
 
@@ -206,38 +198,24 @@ class Experiment(aspecd.metadata.Metadata):
 
 class Nucleus(aspecd.metadata.Metadata):
     """
-    One sentence (on one line) describing the class.
+    Metadata to describe the observed nucleus.
 
-    More description comes here...
-
+    The here mentioned frequencies are the settings given in the pulse
+    program: The base frequency of the nucleus that corresponds to the
+    current magnetic field (and that needs to get recalibrated from time to
+    time) and the offset if one wants to excite  the nucleus with a certain
+    offset and not at 0 ppm.
 
     Attributes
     ----------
     type : :class:`str`
-        Nucleus that is measured, such as 1H or 29Si or 195Pt.
+        Nucleus that is observed, such as 1H or 29Si or 195Pt.
 
     base_frequency : :class:`aspecd.metadata.PhysicalQuantity`
         Current base frequency of a given nucleus.
 
     offset_hz : :class:`aspecd.metadata.PhysicalQuantity`
         Offset of the nucleus' frequency, given in Hz. (O1 in Buker's Topspin)
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = Nucleus()
-        ...
-
 
 
     """
@@ -277,11 +255,9 @@ class Nucleus(aspecd.metadata.Metadata):
         return quantity
 
 
-class Rotor(aspecd.metadata.Metadata):
+class Rotor(SampleContainer):
     """
-    One sentence (on one line) describing the class.
-
-    More description comes here...
+    Details on the rotor used for the experiment.
 
 
     Attributes
@@ -303,23 +279,6 @@ class Rotor(aspecd.metadata.Metadata):
 
     insert : :class:`str`
         Describes insert if one was used,
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = Rotor()
-        ...
-
 
 
     """

@@ -7,6 +7,7 @@ import nmraspecds.dataset
 import nmraspecds.processing
 from nmraspecds import io
 from numpy import testing
+import aspecd.exceptions
 
 
 class TestDatasetImporterFactory(unittest.TestCase):
@@ -74,6 +75,11 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.parameters["type"] = "fid"
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue(self.dataset.data.data.any())
+
+    def test_import_with_wrong_filename_raises(self):
+        self.bruker_importer.source = "testdata/foo/1"
+        with self.assertRaises(FileNotFoundError):
+            self.dataset.import_from(self.bruker_importer)
 
     def test_data_is_fid(self):
         self.bruker_importer.source = "testdata/Adamantane/1"
@@ -278,7 +284,8 @@ class TestScreamImporter(unittest.TestCase):
         source = "testdata/Scream/34/pdata/103"
         test_dataset = nmraspecds.dataset.ExperimentalDataset()
         test_dataset.import_from(nmraspecds.io.BrukerImporter(source))
-        normalisation = nmraspecds.processing.NormalisationToNumberOfScans()
+        normalisation = nmraspecds.processing.Normalisation()
+        normalisation.parameters["kind"] = "scan_number"
         test_dataset.process(normalisation)
         self.scream_importer.source = "testdata/Scream/22"
         self.scream_importer.parameters["number_of_experiments"] = 13

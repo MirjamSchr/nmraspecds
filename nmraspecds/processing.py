@@ -35,15 +35,11 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
     parameters["offset"] : :class:`float` or :class:`dict`
         Offset (in Hz) to add to the base frequency to obtain correct axis.
 
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
 
     Examples
     --------
-    In the simplest case, the offset is known and can just be inserted here:
+    In the simplest case, the offset (SR in TopsSpin) is known and can just be
+    inserted here:
 
     .. code-block:: yaml
 
@@ -84,7 +80,6 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
           properties:
             parameters:
               offset: my_offset
-
 
     """
 
@@ -179,71 +174,33 @@ class ExternalReferencing(aspecd.processing.SingleProcessingStep):
         )
 
 
-class NormalisationToNumberOfScans(aspecd.processing.SingleProcessingStep):
-    """
-    One sentence (on one line) describing the class.
-
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = NormalisationToNumberOfScans()
-        ...
-
-
-
-    """
-
-    def _perform_task(self):
-        self.dataset.data.data /= self.dataset.metadata.experiment.runs
-
-
 class Normalisation(aspecd.processing.Normalisation):
     """
-    One sentence (on one line) describing the class.
+    Normalize data additionally to number of scans.
 
-    More description comes here...
+    Extension of the class :class:`aspecd:processing:Normalization`. For all
+    other kinds see the documentation of the parent class.
 
+    Additional kind:
 
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
+    * scan_number
 
-    Raises
-    ------
-    exception
-        Short description when and why raised
+         Data is divided by the number of scans.
 
 
     Examples
     --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
+
+    As there are no further settings, the normalization is performed in an
+    recipe as follows:
 
     .. code-block::
 
-        obj = Normalisation()
-        ...
-
-
+        - kind: processing
+          type: Normalisation
+          properties:
+            parameters:
+              kind: scan_number
 
     """
 

@@ -558,7 +558,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     `nmraspecds.io.FittingImporter`. See the importer for details to the
     dataset.
 
-    Giving a colormap changes the default colors of the plot.
+    Providing a colormap changes the default colors of the plot.
 
 
     Attributes

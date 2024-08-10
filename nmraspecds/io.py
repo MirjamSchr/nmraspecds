@@ -15,33 +15,15 @@ import nmraspecds.processing
 
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
-    One sentence (on one line) describing the class.
+    Factory to return the appropiate importer for the dataset.
 
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
+    The format is currently determined from the type of data.
 
     Raises
     ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = DatasetImporterFactory()
-        ...
-
-
+    UnsupportedDataFormatError
+        Raised if a format is set but does not match any of the supported
+        formats
 
     """
 
@@ -57,21 +39,33 @@ class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
 
 class BrukerImporter(aspecd.io.DatasetImporter):
     """
-    One sentence (on one line) describing the class.
+    Import data from Bruker format.
 
-    More description comes here...
+    Data acquired with Bruker spectrometers are mostly processed in TopSpin
+    Software. If nothing else is given, processed data (processing no. 1) is
+    imported together with metadata. The import of data and metadata is done
+    using nmrglue and then mapped to the dataset.
 
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
+    parameters : :class:`dict`
+        Parameters controlling the import
+
+        type : : class:`str`
+            type of data, raw or processed.
+
+            Default: pdata
+
+        processing_number : :class:`str`
+            Processing number of the desired dataset.
+
+            Default: 1
 
     Raises
     ------
-    exception
-        Short description when and why raised
-
+    FileNotFound
+        Raised if source file was not found.
 
     Examples
     --------
@@ -80,10 +74,10 @@ class BrukerImporter(aspecd.io.DatasetImporter):
 
     .. code-block::
 
-        obj = BrukerImporter()
-        ...
-
-
+        datasets:
+          - source: dataset
+            id: data
+            label: My Data
 
     """
 
@@ -96,6 +90,8 @@ class BrukerImporter(aspecd.io.DatasetImporter):
 
     def _import(self):
         self._check_for_type()
+        if not os.path.exists(self.source):
+            raise FileNotFoundError
         self._read_data()
         self._create_axes()
         self._get_spectrometer_frequency()
@@ -142,6 +138,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             )
         else:
             self._parameters, self._data = nmrglue.bruker.read(self.source)
+
         self.dataset.data.data = self._data
 
     def _check_for_type(self):
@@ -169,31 +166,10 @@ class BrukerImporter(aspecd.io.DatasetImporter):
 
 class ScreamImporter(aspecd.io.DatasetImporter):
     """
-    One sentence (on one line) describing the class.
+    Import scream data from a pseudo-2D dataset after processing.
 
-    More description comes here...
-
-
-    Attributes
-    ----------
-    attr : :class:`None`
-        Short description
-
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
-
-    Examples
-    --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
-
-    .. code-block::
-
-        obj = ScreamImporter()
-        ...
+    .. note::
+        Importer not finished yet.
 
     """
 
@@ -227,9 +203,8 @@ class ScreamImporter(aspecd.io.DatasetImporter):
                         len(self._datasets),
                     )
                 )
-            normalisation = (
-                nmraspecds.processing.NormalisationToNumberOfScans()
-            )
+            normalisation = nmraspecds.processing.Normalisation()
+            normalisation.parameters["kind"] = "scan_number"
             single_dataset.process(normalisation)
             self._tmp_data[:, count] = single_dataset.data.data
             if self._tmp_t_buildup is None:
@@ -251,9 +226,27 @@ class ScreamImporter(aspecd.io.DatasetImporter):
 
 class FittingImporter(aspecd.io.DatasetImporter):
     """
-    One sentence (on one line) describing the class.
+    Import data from DMFit with experimental and simulated data.
 
-    More description comes here...
+    Data needs to be exported to ascii-format using the " Export spec,
+    model with all lines" command.
+
+    The file is composed with three comment lines:
+      * title of the dataset
+      * frequency
+      * description of the columns.
+
+    .. code-block::
+
+        31P-spectrum MAS 12 kHz
+        ##freq 283.417
+        ##col_ Hz	Spectrum	Model	Line#1	Line#2
+
+    The data then follows in the columns. As only the frequency is available as
+    metadata, most NMR specific processing steps cannot be performed. The
+    data can then be plotted with the special plotter
+    :class:`nmraspecds.plotting.FittingPlotter2D` which povides a color
+    scheme that explains the single peaks.
 
 
     Attributes
@@ -261,23 +254,24 @@ class FittingImporter(aspecd.io.DatasetImporter):
     attr : :class:`None`
         Short description
 
-    Raises
-    ------
-    exception
-        Short description when and why raised
-
 
     Examples
     --------
-    It is always nice to give some examples how to use the class. Best to do
-    that with code examples:
+    The import of the dataset is performed as usual. Together with a plot in
+    the simplest
+    case, the recipe looks as follows:
 
-    .. code-block::
+    .. code-block:: yaml
 
-        obj = FittingImporter()
-        ...
-
-
+        datasets:
+          - source: fitting-data
+            id: fit-data
+            label: My Fitted Data
+        tasks:
+          - kind: Singleplot
+            type: FittingPlotter2D
+            properties:
+              filename: output.pdf
 
     """
 
