@@ -1,6 +1,6 @@
 
-.. image:: images/zenodo.xxxxxxx.svg
-   :target: https://doi.org/10.5281/zenodo.xxxxxxx
+.. image:: images/zenodo.13293054.svg
+   :target: https://doi.org/10.5281/zenodo.13293054
    :align: right
 
 ========================
@@ -95,12 +95,12 @@ How to cite
 
 NMRAspecds is free software. However, if you use NMRAspecds for your own research, please cite the software:
 
-  * Mirjam Schröder. NMRAspecds (2024). `doi:10.5281/zenodo.xxxxxxx <https://doi.org/10.5281/zenodo.xxxxxxx>`_
+  * Mirjam Schröder. NMRAspecds (2024). `doi:10.5281/zenodo.13293054 <https://doi.org/10.5281/zenodo.13293054>`_
 
-To make things easier, NMRAspecds has a `DOI <https://doi.org/10.5281/zenodo.xxxxxxx>`_ provided by `Zenodo <https://zenodo.org/>`_, and you may click on the badge below to directly access the record associated with it. Note that this DOI refers to the package as such and always forwards to the most current version.
+To make things easier, NMRAspecds has a `DOI <https://doi.org/10.5281/zenodo.13293054>`_ provided by `Zenodo <https://zenodo.org/>`_, and you may click on the badge below to directly access the record associated with it. Note that this DOI refers to the package as such and always forwards to the most current version.
 
-.. image:: images/zenodo.xxxxxxx.svg
-   :target: https://doi.org/10.5281/zenodo.xxxxxxx
+.. image:: images/zenodo.13293054.svg
+   :target: https://doi.org/10.5281/zenodo.13293054
 
 
 Installation
