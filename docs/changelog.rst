@@ -12,5 +12,17 @@ Not yet released
 
 * First public release
 
-* ...
+* Set up dataset with metadata.
+
+* Import 1D data (raw or processed) from Bruker's TopSpin format.
+
+* Import fitted data from DMFit-ASCII files.
+
+* Basic NMR-specific processing steps: external referencing and normalization to no of scans.
+
+* Analysis step for chemical shift calibration.
+
+* Plotter adapted to NMR specific conventions (inverted x-axes).
+
+* Special plotter for fitted datasets.
 
