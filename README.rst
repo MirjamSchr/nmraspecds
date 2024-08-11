@@ -2,6 +2,10 @@
 NMRAspecds
 ==========
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.13293054.svg
+   :target: https://doi.org/10.5281/zenodo.13293054
+   :align: right
+
 The NMRAspecds package provides tools for handling experimental data obtained using nuclear magnetic resonance (NMR) spectroscopy and is derived from the `ASpecD framework <https://docs.aspecd.de/>`_,  hence all data generated with the nmraspecds package are completely reproducible and have a complete history.
 
 What is even better: Actual data processing and analysis no longer requires programming skills, but is as simple as writing a text file summarising all the steps you want to have been performed on your dataset(s) in an organised way. Curious? Have a look at the following example::
@@ -31,7 +35,7 @@ What is even better: Actual data processing and analysis no longer requires prog
             - second_dataset.pdf
 
 
-Interested in more real-live examples? Check out the growing :doc:`list of examples <examples/index>` providing complete recipes for different needs.
+Interested in more real-live examples? Check out the growing list of examples providing complete recipes for different needs.
 
 
 Features
@@ -66,14 +70,10 @@ And to make it even more convenient for users and future-proof:
 
 
 
-.. info::
-  NMRAspecds is currently under active development and still considered in Beta development state. Therefore, expect frequent changes in features and public APIs that may break your own code. Nevertheless, feedback as well as feature requests are highly welcome.
-
-
 Target audience
 ===============
 
-The NMRAspecds package addresses scientists working with nuclear magnetic resonance (NMR) data on a daily base and concerned with reproducibility. Due to being based on the `ASpecD framework <https://www.aspecd.de/>`_, the NMRAspecds package ensures reproducibility and---as much as possible---replicability of data processing, starting from recording data and ending with their final (graphical) representation, e.g., in a peer-reviewed publication. This is achieved by automatically creating a gap-less record of each operation performed on your data. If you do care about reproducibility and are looking for a system that helps you to achieve this goal, the NMRAspecds package may well be interesting for you.
+The NMRAspecds package addresses scientists working with nuclear magnetic resonance (NMR) data on a daily base and concerned with reproducibility. Due to being based on the ASpecD framework, the NMRAspecds package ensures reproducibility and---as much as possible---replicability of data processing, starting from recording data and ending with their final (graphical) representation, e.g., in a peer-reviewed publication. This is achieved by automatically creating a gap-less record of each operation performed on your data. If you do care about reproducibility and are looking for a system that helps you to achieve this goal, the NMRAspecds package may well be interesting for you.
 
 
 How to cite
@@ -92,9 +92,7 @@ To make things easier, NMRAspecds has a `DOI <https://doi.org/10.5281/zenodo.132
 Installation
 ============
 
-To install the NMRAspecds package on your computer (sensibly within a Python virtual environment), open a terminal (activate your virtual environment), and type in the following:
-
-.. code-block:: bash
+To install the NMRAspecds package on your computer (sensibly within a Python virtual environment), open a terminal (activate your virtual environment), and type in the following::
 
     pip install nmraspecds
 
