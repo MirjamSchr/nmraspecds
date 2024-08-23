@@ -1,6 +1,7 @@
 """
 io module of the nmraspecds package.
 """
+import glob
 import os.path
 
 import aspecd.io
@@ -15,9 +16,10 @@ import nmraspecds.processing
 
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
-    Factory to return the appropiate importer for the dataset.
+    Factory to return the appropriate importer for the dataset.
 
-    The format is currently determined from the type of data.
+    The format is currently determined from the type of data. Abbreviations
+    for the sample names can be used, i.e. ``42`` instead of ``20240816_sa42``.
 
     Raises
     ------
@@ -28,13 +30,18 @@ class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
 
     def _get_importer(self):
+        if self.source.endswith(".asc") or os.path.isfile(
+            self.source + ".asc"
+        ):
+            return FittingImporter(source=self.source)
+        # TODO: Maybe improve process of detecting abbreviated sample names.
+        if not os.path.exists(self.source):
+            path, expno = os.path.split(self.source)
+            basepath, sample = os.path.split(path)
+            name = glob.glob(f"{basepath}/*{str(sample)}*")[0]
+            self.source = os.path.join(name, expno)
         if os.path.isdir(self.source):
             return BrukerImporter(source=self.source)
-        else:
-            if self.source.endswith(".asc") or os.path.isfile(
-                self.source + ".asc"
-            ):
-                return FittingImporter(source=self.source)
 
 
 class BrukerImporter(aspecd.io.DatasetImporter):
@@ -228,7 +235,7 @@ class FittingImporter(aspecd.io.DatasetImporter):
     """
     Import data from DMFit with experimental and simulated data.
 
-    Data needs to be exported to ascii-format using the " Export spec,
+    Data needs to be exported to ascii-format using the "Export spec,
     model with all lines" command.
 
     The file is composed with three comment lines:
@@ -258,8 +265,7 @@ class FittingImporter(aspecd.io.DatasetImporter):
     Examples
     --------
     The import of the dataset is performed as usual. Together with a plot in
-    the simplest
-    case, the recipe looks as follows:
+    the simplest case, the recipe looks as follows:
 
     .. code-block:: yaml
 

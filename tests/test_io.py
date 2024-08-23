@@ -41,6 +41,22 @@ class TestDatasetImporterFactory(unittest.TestCase):
         importer = importer_factory.get_importer(source=source)
         self.assertIsInstance(importer, io.FittingImporter)
 
+    def test_gets_name_from_sampleno(self):
+        source = "testdata/51/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertTrue(importer.source.endswith("/20240816_sa51/1"))
+
+    def test_source_without_asc_extension_returns_fitting_importer(self):
+        source = "testdata/fitting-data"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertIsInstance(importer, nmraspecds.io.FittingImporter)
+
 
 class TestBrukerImporter(unittest.TestCase):
     def setUp(self):
