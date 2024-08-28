@@ -589,22 +589,21 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["offset"] = 0
 
     def _create_plot(self):
-        # self.properties.colormap = self._create_colormap()
-
         super()._create_plot()
-
         self._change_line_properties()
 
-        ylim_min = self.put_maxima_below_curves()
-        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
-        self.axes.plot(
-            self.dataset.data.axes[0].values,
-            residues + 1.1 * ylim_min,
-            color="steelblue",
-            alpha=0.6,
-        )
+        # self._insert_maxima_and_residues()
+        self._insert_maxima_and_residues_sensible()
+        # self.print_rmsd_in_spectrum(residues)
+
         # self.axes.legend(['experiment', 'simulation', 'single peaks',
         # 'residual'])
+
+    def print_rmsd_in_spectrum(self, residues, x_1, x_2):
+        x_1 = np.where(self.dataset.data.axes[0].values > 100)[0][-1]
+        x_2 = np.where(self.dataset.data.axes[0].values < 20)[0][0]
+        rmsd = np.sqrt(1 / (x_2 - x_1) * np.mean(residues[x_1:x_2] ** 2))
+        self.axes.text(90, 20, f"RMSD = {rmsd:.3f}")
 
     def _change_line_properties(self):
         length = self.dataset.data.data.shape[1] - 2
@@ -644,3 +643,30 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             "Custom cmap", cmaplist, len(cmaplist)
         )
         return cmap
+
+    def _insert_maxima_and_residues(self):
+        ylim_min = self.put_maxima_below_curves()
+        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
+        self.axes.plot(
+            self.dataset.data.axes[0].values,
+            residues + 1.1 * ylim_min,
+            color="steelblue",
+            alpha=0.6,
+        )
+
+    def _insert_maxima_and_residues_sensible(self):
+        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
+        amplitude_residues = max(residues) + abs(min(residues))
+        self.axes.plot(
+            self.dataset.data.axes[0].values,
+            residues - 0.9 * amplitude_residues,
+            color="steelblue",
+            alpha=0.6,
+        )
+
+        maxima = self.get_maxima()
+        print(f"Maxima at {maxima} ppm")
+        [
+            self.axes.text(n + 3, -2 * amplitude_residues, f"{n:.0f}")
+            for n in maxima
+        ]

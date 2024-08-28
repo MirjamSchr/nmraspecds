@@ -4,6 +4,7 @@ import aspecd.plotting
 import matplotlib
 import scipy.signal.windows
 
+import nmraspecds.io
 from nmraspecds import plotting, dataset
 import numpy as np
 
@@ -214,13 +215,17 @@ class TestMultiPlotter1DStacked(unittest.TestCase):
 
 class TestFittingPlotter2D(unittest.TestCase):
     def setUp(self):
+        self.plotter = plotting.FittingPlotter2D()
+        self.dataset = dataset.ExperimentalDataset()
+
+        self.create_test_dataset()
+
+    def create_test_dataset(self):
         def gaussian(amp, fwhm, mean):
             return lambda x: amp * np.exp(
                 -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
             )
 
-        self.plotter = plotting.FittingPlotter2D()
-        self.dataset = dataset.ExperimentalDataset()
         data = np.array([])
         xvalues = np.linspace(1, 50)
         for nr in range(1, 8):
@@ -233,12 +238,30 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.dataset.data.axes[1].unit = None
         self.dataset.data.axes[2].quantity = "intensity"
         self.dataset.data.axes[2].unit = "a.u."
-        self.plotter.dataset = self.dataset
 
     def test_instantiate_class(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
         self.plotter.save(saver)
 
-    # def test_
+    def test_get_rmsd_in_range(self):
+        source = "testdata/fitting-data.asc"
+        importer = nmraspecds.io.FittingImporter(source=source)
+        self.dataset.import_from(importer)
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        # self.plotter.rms
+        # self.plotter.save(saver)
+
+    def test_residues_have_senseful_offset(self):
+        source = "testdata/fitting-data.asc"
+        importer = nmraspecds.io.FittingImporter(source=source)
+        self.dataset.import_from(importer)
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        self.plotter.save(saver)
