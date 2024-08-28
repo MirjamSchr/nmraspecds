@@ -245,7 +245,7 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        self.plotter.save(saver)
+        # self.plotter.save(saver)
 
     def test_get_rmsd_in_range(self):
         source = "testdata/fitting-data.asc"
@@ -261,6 +261,38 @@ class TestFittingPlotter2D(unittest.TestCase):
         importer = nmraspecds.io.FittingImporter(source=source)
         self.dataset.import_from(importer)
         self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        self.plotter.save(saver)
+
+    def test_residues_offset_range_settable(self):
+        source = "testdata/fitting-data.asc"
+        importer = nmraspecds.io.FittingImporter(source=source)
+        self.dataset.import_from(importer)
+        self.plotter.parameters["range_residues"] = [-200, -300]
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        # self.assertTrue(min(self.plotter.residues > 5))
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        # self.plotter.save(saver)
+
+    def test_maxima_with_annotation_object(self):
+        source = "testdata/fitting-data.asc"
+        importer = nmraspecds.io.FittingImporter(source=source)
+        self.dataset.import_from(importer)
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        # self.assertTrue(min(self.plotter.residues > 5))
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        self.plotter.save(saver)
+
+    def test_set_offset(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        self.plotter.parameters["offset_residues"] = 25
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"

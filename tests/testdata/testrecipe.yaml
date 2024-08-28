@@ -13,8 +13,6 @@ tasks:
       properties:
         axes: 
           xlim: [100, 20]
-          ylim: [-70, 100]
-        drawings: 
-          - label: 'a'
-          - label: 'b'
-
+          ylim: [-55, 100]
+      parameters:
+        range_residues: [100, 20]

@@ -2,6 +2,7 @@
 plotting module of the nmraspecds package.
 """
 import aspecd.plotting
+import aspecd.annotation
 import numpy as np
 import matplotlib as mpl
 
@@ -587,17 +588,18 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     def __init__(self):
         super().__init__()
         self.parameters["offset"] = 0
+        self.parameters["offset_residues"] = None
+        self.parameters["range_residues"] = None
+        self.residues = None
+        self.factor = 0.7
 
     def _create_plot(self):
         super()._create_plot()
         self._change_line_properties()
 
-        # self._insert_maxima_and_residues()
-        self._insert_maxima_and_residues_sensible()
+        self._insert_residues()
+        self._set_maxima()
         # self.print_rmsd_in_spectrum(residues)
-
-        # self.axes.legend(['experiment', 'simulation', 'single peaks',
-        # 'residual'])
 
     def print_rmsd_in_spectrum(self, residues, x_1, x_2):
         x_1 = np.where(self.dataset.data.axes[0].values > 100)[0][-1]
@@ -614,15 +616,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             setattr(self.properties.drawings[nr], "color", color_[nr])
             setattr(self.properties.drawings[nr], "linestyle", linestyle_[nr])
             setattr(self.properties.drawings[nr], "alpha", alpha_[nr])
-
-    def put_maxima_below_curves(self):
-        ylim_min, ylim_max = self.axes.get_ylim()
-        delta_ylim = ylim_max + abs(ylim_min)
-        self.axes.set_ylim(3.3 * ylim_min, ylim_max)
-        maxima = self.get_maxima()
-        print(f"Maxima at {maxima} ppm")
-        [self.axes.text(n + 3, 2.5 * ylim_min, f"{n:.0f}") for n in maxima]
-        return ylim_min
 
     # TODO: Account for stacking dimension
 
@@ -644,29 +637,39 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         )
         return cmap
 
-    def _insert_maxima_and_residues(self):
-        ylim_min = self.put_maxima_below_curves()
-        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
+    def _insert_residues(self):
+        self.residues = (
+            self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
+        )
+        if self.parameters["range_residues"]:
+            upper, lower = self.parameters["range_residues"]
+            x_1 = np.where(self.dataset.data.axes[0].values > upper)[0][-1]
+            x_2 = np.where(self.dataset.data.axes[0].values < lower)[0][0]
+            self.amplitude_residues = max(self.residues[x_1:x_2]) - min(
+                self.residues[x_1:x_2]
+            )
+        elif self.parameters["offset_residues"]:
+            self.amplitude_residues = (
+                self.parameters["offset_residues"] / self.factor
+            )
+        else:
+            self.amplitude_residues = max(self.residues) + abs(
+                min(self.residues)
+            )
         self.axes.plot(
             self.dataset.data.axes[0].values,
-            residues + 1.1 * ylim_min,
+            self.residues - self.factor * self.amplitude_residues,
             color="steelblue",
             alpha=0.6,
         )
 
-    def _insert_maxima_and_residues_sensible(self):
-        residues = self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
-        amplitude_residues = max(residues) + abs(min(residues))
-        self.axes.plot(
-            self.dataset.data.axes[0].values,
-            residues - 0.9 * amplitude_residues,
-            color="steelblue",
-            alpha=0.6,
-        )
-
+    def _set_maxima(self):
+        annotation = aspecd.annotation.Text()
         maxima = self.get_maxima()
         print(f"Maxima at {maxima} ppm")
-        [
-            self.axes.text(n + 3, -2 * amplitude_residues, f"{n:.0f}")
-            for n in maxima
-        ]
+        annotation.parameters["xpositions"] = [n + 2 for n in maxima]
+        annotation.parameters["ypositions"] = (
+            self.amplitude_residues * -2.2 * self.factor
+        )
+        annotation.parameters["texts"] = [f"{max_:.0f}" for max_ in maxima]
+        self.annotate(annotation)
