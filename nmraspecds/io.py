@@ -14,6 +14,21 @@ import nmraspecds.dataset
 import nmraspecds.processing
 
 
+class UnsupportedDataFormatError(Exception):
+    """Exception raised when data format is not supported.
+
+    Attributes
+    ----------
+    message : :class:`str`
+        explanation of the error
+
+    """
+
+    def __init__(self, message=""):
+        super().__init__(message)
+        self.message = message
+
+
 class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
     Factory to return the appropriate importer for the dataset.
@@ -30,18 +45,27 @@ class DatasetImporterFactory(aspecd.io.DatasetImporterFactory):
     """
 
     def _get_importer(self):
+        # Check characteristic for fitted data.
         if self.source.endswith(".asc") or os.path.isfile(
             self.source + ".asc"
         ):
             return FittingImporter(source=self.source)
         # TODO: Maybe improve process of detecting abbreviated sample names.
+        # Source path is completed if the sample name was abbreviated (path
+        # does not exist).
         if not os.path.exists(self.source):
-            path, expno = os.path.split(self.source)
-            basepath, sample = os.path.split(path)
-            name = glob.glob(f"{basepath}/*{str(sample)}*")[0]
-            self.source = os.path.join(name, expno)
+            try:
+                path, expno = os.path.split(self.source)
+                basepath, sample = os.path.split(path)
+                name = glob.glob(f"{basepath}/*{str(sample)}*")[0]
+                self.source = os.path.join(name, expno)
+            except IndexError:
+                raise FileNotFoundError
+        # Standard behaviour for Bruker data.
         if os.path.isdir(self.source):
             return BrukerImporter(source=self.source)
+        else:
+            raise UnsupportedDataFormatError
 
 
 class BrukerImporter(aspecd.io.DatasetImporter):

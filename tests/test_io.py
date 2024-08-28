@@ -57,6 +57,22 @@ class TestDatasetImporterFactory(unittest.TestCase):
         importer = importer_factory.get_importer(source=source)
         self.assertIsInstance(importer, nmraspecds.io.FittingImporter)
 
+    def test_raises_with_nonexisting_file_name(self):
+        source = "testdata/asdf/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        with self.assertRaises(FileNotFoundError):
+            importer_factory.get_importer(source=source)
+
+    def test_raises_with_not_recognized_file_name(self):
+        source = "test_io.py"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        with self.assertRaises(io.UnsupportedDataFormatError):
+            importer_factory.get_importer(source=source)
+
 
 class TestBrukerImporter(unittest.TestCase):
     def setUp(self):
