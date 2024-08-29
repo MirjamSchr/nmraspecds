@@ -210,3 +210,50 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
                 "offset": self._offset,
                 "nucleus": self.parameters["nucleus"],
             }
+
+
+class RMSD(aspecd.analysis.SingleAnalysisStep):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = RMSD()
+        ...
+
+
+    .. versionadded:: 0.2
+
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.description = "Determine RMSD of data"
+
+    def _sanitise_parameters(self):
+        pass
+
+    def _perform_task(self):
+        data = self.dataset.data.data
+        rmsd = np.sqrt(1 / len(data) * np.mean(data**2))
+        self.result = rmsd

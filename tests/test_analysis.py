@@ -148,3 +148,25 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         analysis = self.dataset.analyse(self.calibration)
         self.assertAlmostEqual(analysis.parameters["chemical_shift"], 178, -2)
         self.assertAlmostEqual(analysis.result, 51.92, -1)
+
+
+class TestRMSD(unittest.TestCase):
+    def setUp(self):
+        self.rmsd = nmraspecds.analysis.RMSD()
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+        xvalues = np.linspace(1, 200, num=200)
+        yvalues = np.random.random(200)
+        self.dataset.data.data = yvalues
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_has_appropriate_description(self):
+        self.assertIn(
+            "rmsd",
+            self.rmsd.description.lower(),
+        )
+
+    def test_number_is_calculated(self):
+        analysis = self.dataset.analyse(self.rmsd)
+        self.assertIsInstance(analysis.result, np.float64)

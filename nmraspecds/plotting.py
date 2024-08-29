@@ -604,7 +604,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     def print_rmsd_in_spectrum(self, residues, x_1, x_2):
         x_1 = np.where(self.dataset.data.axes[0].values > 100)[0][-1]
         x_2 = np.where(self.dataset.data.axes[0].values < 20)[0][0]
-        rmsd = np.sqrt(1 / (x_2 - x_1) * np.mean(residues[x_1:x_2] ** 2))
+        rmsd = np.sqrt(1 / (x_2 - x_1) * np.mean(self.residues[x_1:x_2] ** 2))
         self.axes.text(90, 20, f"RMSD = {rmsd:.3f}")
 
     def _change_line_properties(self):
