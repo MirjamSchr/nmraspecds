@@ -226,12 +226,17 @@ class TestFittingPlotter2D(unittest.TestCase):
                 -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
             )
 
-        data = np.array([])
-        xvalues = np.linspace(1, 50)
-        for nr in range(1, 8):
-            # data = np.append(data, scipy.signal.windows.gaussian(31, std=nr))
-            data = np.append(data, gaussian(50, 5, nr * 5 + 8)(xvalues))
-        self.dataset.data.data = data.reshape(7, 50).T
+        xvalues = np.flip(np.linspace(1, 50, num=200))
+        noise = np.random.normal(0, 0.5, len(xvalues))
+        data = (
+            gaussian(50, 5, 25)(xvalues)
+            + gaussian(15, 3, 15)(xvalues)
+            + noise
+        )
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        self.dataset.data.data = data.reshape(3, 200).T
+        self.dataset.data.axes[0].values = xvalues
         self.dataset.data.axes[0].quantity = "chemical shift"
         self.dataset.data.axes[0].unit = "ppm"
         self.dataset.data.axes[1].quantity = "Peak No"
@@ -264,7 +269,7 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        self.plotter.save(saver)
+        # self.plotter.save(saver)
 
     def test_residues_offset_range_settable(self):
         source = "testdata/fitting-data.asc"
@@ -287,13 +292,45 @@ class TestFittingPlotter2D(unittest.TestCase):
         # self.assertTrue(min(self.plotter.residues > 5))
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        self.plotter.save(saver)
+        # self.plotter.save(saver)
 
     def test_set_offset(self):
         self.create_test_dataset()
         self.plotter.dataset = self.dataset
         self.plotter.parameters["offset_residues"] = 25
         self.plotter.plot()
+        self.assertAlmostEqual(
+            self.plotter.parameters["offset_residues"], self.plotter._offset
+        )
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        self.plotter.save(saver)
+        # self.plotter.save(saver)
+
+    def test_indicator_is_changed_in_first_run(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        self.assertFalse(self.plotter.indicator_maxima)
+        self.plotter.plot()
+        self.assertTrue(self.plotter.indicator_maxima)
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        # self.plotter.save(saver)
+
+    def test_raw_offset_with_percent(self):
+        self.create_test_dataset()
+        amp = self.dataset.data.data[:, 0].max()
+        self.plotter.dataset = self.dataset
+        self.plotter.parameters["offset_residues"] = "10%"
+        self.plotter.plot()
+        self.assertAlmostEqual(self.plotter._offset, amp * 0.1, delta=0.5)
+
+    def test_range_and_percentage_settable(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        self.plotter.parameters["offset_residues"] = "50%"
+        self.plotter.parameters["range_residues"] = [20, 3]
+        self.plotter.plot()
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        #        self.plotter.save(saver)
+        self.assertAlmostEqual(self.plotter._offset, 15 * 0.5, delta=1)

@@ -1,6 +1,7 @@
 """
 plotting module of the nmraspecds package.
 """
+import re
 import aspecd.plotting
 import aspecd.annotation
 import numpy as np
@@ -592,6 +593,8 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["range_residues"] = None
         self.residues = None
         self.factor = 0.7
+        self.indicator_maxima = False
+        self._offset = None
 
     def _create_plot(self):
         super()._create_plot()
@@ -643,33 +646,63 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         )
         if self.parameters["range_residues"]:
             upper, lower = self.parameters["range_residues"]
+            print(upper, lower)
             x_1 = np.where(self.dataset.data.axes[0].values > upper)[0][-1]
             x_2 = np.where(self.dataset.data.axes[0].values < lower)[0][0]
-            self.amplitude_residues = max(self.residues[x_1:x_2]) - min(
-                self.residues[x_1:x_2]
+            print(x_2, x_1)
+            self._offset = abs(max(self.residues[x_1:x_2])) + abs(
+                min(self.residues[x_1:x_2])
             )
-        elif self.parameters["offset_residues"]:
-            self.amplitude_residues = (
-                self.parameters["offset_residues"] / self.factor
+        if self.parameters["offset_residues"]:
+            _residues_ofset = self.parameters["offset_residues"]
+            if isinstance(_residues_ofset, str) and "%" in _residues_ofset:
+                percent = (
+                    float(
+                        re.sub(
+                            r"[^0-9.]", "", self.parameters["offset_residues"]
+                        )
+                    )
+                    / 100
+                )
+                print(percent)
+                if self._offset:
+                    self._offset *= percent
+                else:
+                    self._offset = (
+                        abs(max(self.dataset.data.data[:, 0]))
+                        + abs(min(self.dataset.data.data[:, 0]))
+                    ) * percent
+            else:
+                self._offset = self.parameters["offset_residues"]
+        if (
+            not self.parameters["range_residues"]
+            and not self.parameters["offset_residues"]
+        ):
+            self._offset = (
+                abs(max(self.residues))
+                + abs(min(self.residues)) * self.factor
             )
-        else:
-            self.amplitude_residues = max(self.residues) + abs(
-                min(self.residues)
-            )
+        print("Raw", self._offset)
         self.axes.plot(
             self.dataset.data.axes[0].values,
-            self.residues - self.factor * self.amplitude_residues,
+            self.residues - self._offset,
             color="steelblue",
             alpha=0.6,
         )
 
     def _set_maxima(self):
-        annotation = aspecd.annotation.Text()
-        maxima = self.get_maxima()
-        print(f"Maxima at {maxima} ppm")
-        annotation.parameters["xpositions"] = [n + 2 for n in maxima]
-        annotation.parameters["ypositions"] = (
-            self.amplitude_residues * -2.2 * self.factor
-        )
-        annotation.parameters["texts"] = [f"{max_:.0f}" for max_ in maxima]
-        self.annotate(annotation)
+        if self.indicator_maxima:
+            pass
+        else:
+            self.indicator_maxima = True
+            annotation = aspecd.annotation.Text()
+            maxima = self.get_maxima()
+            print(f"Maxima at {maxima} ppm")
+            annotation.parameters["xpositions"] = [n + 2 for n in maxima]
+            annotation.parameters["ypositions"] = -(
+                self._offset * 3 * self.factor
+            )
+            annotation.parameters["texts"] = [
+                f"{max_:.0f}" for max_ in maxima
+            ]
+            self.annotate(annotation)
