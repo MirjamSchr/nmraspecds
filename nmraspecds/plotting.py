@@ -568,6 +568,15 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     attr : :class:`None`
         Short description
 
+    parameters['range_residues'] : :class: `list`
+        The range in which the residuals are accounted for in terms of their
+        offset and RMSD calculation.
+
+    parameters['offset_residues'] : :class: `str` or `float`
+        Gives the offset of the residues either as number or in terms of
+        percentage of the residuals' amplitude. The positive number results
+        in a negative offset.
+
     Raises
     ------
     exception
@@ -644,12 +653,16 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.residues = (
             self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
         )
-        if self.parameters["range_residues"]:
+        if not self.parameters["range_residues"]:
+            self.parameters["range_residues"] = self.axes.get_xlim()
+        elif self.parameters["range_residues"] == [0, 0]:
+            self.parameters["range_residues"] = None
+        else:
             upper, lower = self.parameters["range_residues"]
             print(upper, lower)
             x_1 = np.where(self.dataset.data.axes[0].values > upper)[0][-1]
             x_2 = np.where(self.dataset.data.axes[0].values < lower)[0][0]
-            print(x_2, x_1)
+            # print(x_2, x_1)
             self._offset = abs(max(self.residues[x_1:x_2])) + abs(
                 min(self.residues[x_1:x_2])
             )
@@ -682,7 +695,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
                 abs(max(self.residues))
                 + abs(min(self.residues)) * self.factor
             )
-        print("Raw", self._offset)
+        # print("Raw", self._offset)
         self.axes.plot(
             self.dataset.data.axes[0].values,
             self.residues - self._offset,
