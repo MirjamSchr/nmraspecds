@@ -654,15 +654,13 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
         )
         if not self.parameters["range_residues"]:
-            self.parameters["range_residues"] = self.axes.get_xlim()
+            self._get_dataset_ranges_in_figure()
         elif self.parameters["range_residues"] == [0, 0]:
             self.parameters["range_residues"] = None
-        else:
+        if self.parameters["range_residues"]:
             upper, lower = self.parameters["range_residues"]
-            print(upper, lower)
-            x_1 = np.where(self.dataset.data.axes[0].values > upper)[0][-1]
-            x_2 = np.where(self.dataset.data.axes[0].values < lower)[0][0]
-            # print(x_2, x_1)
+            x_1 = np.where(self.dataset.data.axes[0].values >= upper)[0][-1]
+            x_2 = np.where(self.dataset.data.axes[0].values <= lower)[0][0]
             self._offset = abs(max(self.residues[x_1:x_2])) + abs(
                 min(self.residues[x_1:x_2])
             )
@@ -677,7 +675,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
                     )
                     / 100
                 )
-                print(percent)
                 if self._offset:
                     self._offset *= percent
                 else:
@@ -702,6 +699,22 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             color="steelblue",
             alpha=0.6,
         )
+
+    def _get_dataset_ranges_in_figure(self):
+        range_figure = sorted(self.axes.get_xlim())[::-1]
+        range_data = (
+            self.dataset.data.axes[0].values[0],
+            self.dataset.data.axes[0].values[-1],
+        )
+        if range_figure[0] > range_data[0]:
+            upper = range_data[0]
+        else:
+            upper = range_figure[0]
+        if range_figure[-1] < range_data[-1]:
+            lower = range_data[-1]
+        else:
+            lower = range_figure[-1]
+        self.parameters["range_residues"] = [upper, lower]
 
     def _set_maxima(self):
         if self.indicator_maxima:

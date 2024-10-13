@@ -3,6 +3,7 @@ io module of the nmraspecds package.
 """
 import glob
 import os.path
+import re
 
 import aspecd.io
 import linecache
@@ -161,6 +162,10 @@ class BrukerImporter(aspecd.io.DatasetImporter):
 
     def _add_axis_metadata(self):
         nucleus = self.dataset.metadata.experiment.nuclei[0].type
+        match = re.match(r"(\d+)([A-Za-z]+)", nucleus)
+        number = match.group(1)
+        letters = match.group(2)
+        nucleus = f"{{{number}}}{letters}"
 
         self.dataset.data.axes[0].unit = "ppm"
         self.dataset.data.axes[0].quantity = f"^{nucleus} chemical shift"

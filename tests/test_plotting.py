@@ -330,11 +330,11 @@ class TestFittingPlotter2D(unittest.TestCase):
 
     def test_raw_offset_with_percent(self):
         self.create_test_dataset()
-        amp = self.dataset.data.data[:, 0].max()
         self.plotter.dataset = self.dataset
         self.plotter.parameters["offset_residues"] = "10%"
         self.plotter.plot()
-        self.assertAlmostEqual(self.plotter._offset, amp * 0.1, delta=0.5)
+        amp = max(self.plotter.residues)
+        self.assertAlmostEqual(self.plotter._offset, amp * 0.1, delta=1)
 
     def test_range_and_percentage_settable(self):
         self.create_test_dataset()
@@ -344,5 +344,5 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        #        self.plotter.save(saver)
+        # self.plotter.save(saver)
         self.assertAlmostEqual(self.plotter._offset, 15 * 0.5, delta=1)

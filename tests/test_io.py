@@ -187,7 +187,15 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(
-            "^1H chemical shift", self.dataset.data.axes[0].quantity
+            "^{1}H chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
+
+    def test_set_axis_quantity_with_13C(self):
+        self.bruker_importer.source = "testdata/Adamantane/2/pdata/1"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(
+            "^{13}C chemical shift", self.dataset.data.axes[0].quantity
         )
         self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
 
