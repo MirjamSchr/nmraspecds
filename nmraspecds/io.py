@@ -127,6 +127,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self._create_axes()
         self._get_spectrometer_frequency()
         self._add_nuclei()
+        self._add_axis_metadata()
         self._import_metadata()
 
     def _import_metadata(self):
@@ -158,8 +159,11 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
         self.dataset.data.axes[0].values = unit_converter.ppm_scale()
 
+    def _add_axis_metadata(self):
+        nucleus = self.dataset.metadata.experiment.nuclei[0].type
+
         self.dataset.data.axes[0].unit = "ppm"
-        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[0].quantity = f"^{nucleus} chemical shift"
         self.dataset.data.axes[1].quantity = "intensity"
 
     def _read_data(self):
@@ -276,7 +280,7 @@ class FittingImporter(aspecd.io.DatasetImporter):
     The data then follows in the columns. As only the frequency is available as
     metadata, most NMR specific processing steps cannot be performed. The
     data can then be plotted with the special plotter
-    :class:`nmraspecds.plotting.FittingPlotter2D` which povides a color
+    :class:`nmraspecds.plotting.FittingPlotter2D` which provides a color
     scheme that explains the single peaks.
 
 
@@ -298,7 +302,7 @@ class FittingImporter(aspecd.io.DatasetImporter):
             id: fit-data
             label: My Fitted Data
         tasks:
-          - kind: Singleplot
+          - kind: singleplot
             type: FittingPlotter2D
             properties:
               filename: output.pdf

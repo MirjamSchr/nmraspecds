@@ -186,8 +186,10 @@ class TestBrukerImporter(unittest.TestCase):
     def test_set_axis_quantity(self):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(self.bruker_importer)
-        self.assertEqual(self.dataset.data.axes[0].quantity, "chemical shift")
-        self.assertEqual(self.dataset.data.axes[1].quantity, "intensity")
+        self.assertEqual(
+            "^1H chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
 
     def test_nucleus_is_in_metadata(self):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
