@@ -562,12 +562,13 @@ class FittingPlotter2D(SinglePlotter2DStacked):
 
     Providing a colormap changes the default colors of the plot.
 
+    The offset of the residues can be defined as absolute value or as
+    percentage of the offset's amplitude. If one or both values were not
+    given, it is tried to set the values as good as possible.
+
 
     Attributes
     ----------
-    attr : :class:`None`
-        Short description
-
     parameters['range_residues'] : :class: `list`
         The range in which the residuals are accounted for in terms of their
         offset and RMSD calculation.

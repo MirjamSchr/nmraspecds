@@ -111,6 +111,9 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             id: data
             label: My Data
 
+
+    .. versionchanged:: 0.2
+        Type of nucleus is added to axis quantity
     """
 
     def __init__(self, source=None):

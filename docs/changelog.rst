@@ -11,6 +11,8 @@ Version 0.2.0
 
 Not yet released.
 
+* Add type of nucleus to quantity of first axis
+
 
 
 Version 0.1.0
