@@ -295,6 +295,16 @@ class TestFittingPlotter2D(unittest.TestCase):
         saver.filename = "test.pdf"
         # self.plotter.save(saver)
 
+    def test_no_residue_parameter_given_runs(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        offset = self.dataset.data.data[:, 0].max() * 0.07
+        self.plotter.plot()
+        self.assertAlmostEqual(self.plotter._offset, offset, delta=0.2)
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        # self.plotter.save(saver)
+
     def test_maxima_with_annotation_object(self):
         source = "testdata/fitting-data.asc"
         importer = nmraspecds.io.FittingImporter(source=source)
@@ -330,10 +340,10 @@ class TestFittingPlotter2D(unittest.TestCase):
 
     def test_raw_offset_with_percent(self):
         self.create_test_dataset()
+        amp = self.dataset.data.data[:, 0].max()
         self.plotter.dataset = self.dataset
         self.plotter.parameters["offset_residues"] = "10%"
         self.plotter.plot()
-        amp = max(self.plotter.residues)
         self.assertAlmostEqual(self.plotter._offset, amp * 0.1, delta=1)
 
     def test_range_and_percentage_settable(self):

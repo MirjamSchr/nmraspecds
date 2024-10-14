@@ -563,7 +563,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
     Providing a colormap changes the default colors of the plot.
 
     The offset of the residues can be defined as absolute value or as
-    percentage of the offset's amplitude. If one or both values were not
+    percentage of the amplitude of the data. If one or both values were not
     given, it is tried to set the values as good as possible.
 
 
@@ -602,7 +602,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["offset_residues"] = None
         self.parameters["range_residues"] = None
         self.residues = None
-        self.factor = 0.7
+        self.factor = 0.07
         self.indicator_maxima = False
         self._offset = None
 
@@ -654,6 +654,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.residues = (
             self.dataset.data.data[:, 0] - self.dataset.data.data[:, 1]
         )
+        data = self.dataset.data.data[:, 0]
         if not self.parameters["range_residues"]:
             self._get_dataset_ranges_in_figure()
         elif self.parameters["range_residues"] == [0, 0]:
@@ -662,12 +663,10 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             upper, lower = self.parameters["range_residues"]
             x_1 = np.where(self.dataset.data.axes[0].values >= upper)[0][-1]
             x_2 = np.where(self.dataset.data.axes[0].values <= lower)[0][0]
-            self._offset = abs(max(self.residues[x_1:x_2])) + abs(
-                min(self.residues[x_1:x_2])
-            )
+            self._offset = abs(max(data[x_1:x_2])) + abs(min(data[x_1:x_2]))
         if self.parameters["offset_residues"]:
-            _residues_ofset = self.parameters["offset_residues"]
-            if isinstance(_residues_ofset, str) and "%" in _residues_ofset:
+            _residues_offset = self.parameters["offset_residues"]
+            if isinstance(_residues_offset, str) and "%" in _residues_offset:
                 percent = (
                     float(
                         re.sub(
@@ -685,15 +684,10 @@ class FittingPlotter2D(SinglePlotter2DStacked):
                     ) * percent
             else:
                 self._offset = self.parameters["offset_residues"]
-        if (
-            not self.parameters["range_residues"]
-            and not self.parameters["offset_residues"]
-        ):
-            self._offset = (
-                abs(max(self.residues))
-                + abs(min(self.residues)) * self.factor
-            )
-        # print("Raw", self._offset)
+        elif self.parameters["range_residues"]:
+            self._offset *= self.factor
+        else:  # (not self.parameters["range_residues"] and not self.parameters["offset_residues"]):
+            self._offset = abs(max(data)) + abs(min(data)) * self.factor
         self.axes.plot(
             self.dataset.data.axes[0].values,
             self.residues - self._offset,
@@ -726,9 +720,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             maxima = self.get_maxima()
             print(f"Maxima at {maxima} ppm")
             annotation.parameters["xpositions"] = [n + 2 for n in maxima]
-            annotation.parameters["ypositions"] = -(
-                self._offset * 3 * self.factor
-            )
+            annotation.parameters["ypositions"] = -(self._offset * 2)
             annotation.parameters["texts"] = [
                 f"{max_:.0f}" for max_ in maxima
             ]
