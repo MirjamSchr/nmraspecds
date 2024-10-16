@@ -2,7 +2,6 @@ import unittest
 
 import aspecd.plotting
 import matplotlib
-import scipy.signal.windows
 
 import nmraspecds.io
 from nmraspecds import plotting, dataset
@@ -217,8 +216,6 @@ class TestFittingPlotter2D(unittest.TestCase):
     def setUp(self):
         self.plotter = plotting.FittingPlotter2D()
         self.dataset = dataset.ExperimentalDataset()
-
-        self.create_test_dataset()
 
     def create_test_dataset(self):
         def gaussian(amp, fwhm, mean):
