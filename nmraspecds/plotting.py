@@ -233,7 +233,7 @@ class SinglePlotter2D(aspecd.plotting.SinglePlotter2D, PlotterExtensions):
 
     def __init__(self):
         super().__init__()
-        self.properties.axes.invert = "x"
+        self.properties.axes.invert = ["x", "y"]
 
     def _create_plot(self):
         super()._create_plot()
@@ -630,7 +630,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             setattr(self.properties.drawings[nr], "linestyle", linestyle_[nr])
             setattr(self.properties.drawings[nr], "alpha", alpha_[nr])
 
-    # TODO: Account for stacking dimension
+    # TODO: Account for stacking _dimension
 
     def get_maxima(self):
         max_ppm = []

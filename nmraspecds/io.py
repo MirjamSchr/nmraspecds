@@ -7,6 +7,8 @@ import re
 
 import aspecd.io
 import linecache
+
+import matplotlib.pyplot as plt
 import nmrglue
 import numpy as np
 
@@ -121,7 +123,9 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         self.parameters["type"] = "proc"
         self.parameters["processing_number"] = 1
         self._parameters = None
+        self._raw_parameters = None
         self._data = None
+        self._dimension = None
 
     def _import(self):
         self._check_for_type()
@@ -158,30 +162,74 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             self._parameters
         )["procs"]["SF"]
 
-    def _create_axes(self):
+    def _create_axes_2(self):
         unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
         unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
         self.dataset.data.axes[0].values = unit_converter.ppm_scale()
+        if self._dimension == 2:
+            print(self._parameters)
+            unit_converter_second_axis = nmrglue.pipe.make_uc(
+                self._parameters, self._data, dim=0
+            )
+            print(unit_converter_second_axis.ppm_scale())
+
+    def _create_axes(self):
+        unified_dict = nmrglue.bruker.guess_udic(
+            self._parameters, self._data, strip_fake=False
+        )
+        for dim in np.arange(0, unified_dict["ndim"]):
+            # Invert axes dimension in 2D
+            new_dim = unified_dict["ndim"] - dim - 1
+            # unified_dict = self._do_referencing_manually(unified_dict, dim)
+            uc = nmrglue.convert.fileiobase.uc_from_udic(unified_dict, dim)
+            ppmsc = uc.ppm_scale()
+            self.dataset.data.axes[new_dim].values = ppmsc
+
+    def _do_referencing_manually(self, unified_dict, dim):
+        # TODO: Diese Referenzierung ist noch sehr komisch und funktioniert
+        #  nicht richtig. Eigentlich müsste man an die Daten aus proc2s ran,
+        #  aber die werden nicht eingelesen?
+        # nmrglue appears to stumble with referencing for data produced using newer versions of TopSpin
+        # These two lines set the referencing manually by referring to the processed data dictionary
+        print(
+            "Carrier",
+            unified_dict[0]["car"],
+            unified_dict[1]["car"],
+        )
+        # unified_dict[dim]["obs"] = self._parameters['procs']['SF']
+        unified_dict[dim]["car"] = (
+            self._raw_parameters["acqus"]["SFO1"] - unified_dict[dim]["obs"]
+        ) * 1e6
+        print(
+            "Carrier2",
+            unified_dict[dim]["car"],
+            unified_dict[dim]["car"] / unified_dict[dim]["obs"],
+        )
+        return unified_dict
 
     def _add_axis_metadata(self):
-        nucleus = self.dataset.metadata.experiment.nuclei[0].type
-        match = re.match(r"(\d+)([A-Za-z]+)", nucleus)
-        number = match.group(1)
-        letters = match.group(2)
-        nucleus = f"{{{number}}}{letters}"
-
-        self.dataset.data.axes[0].unit = "ppm"
-        self.dataset.data.axes[0].quantity = f"^{nucleus} chemical shift"
-        self.dataset.data.axes[1].quantity = "intensity"
+        for nr, nucleus in enumerate(self.dataset.metadata.experiment.nuclei):
+            if nr > self._dimension:
+                pass
+            match = re.match(r"(\d+)([A-Za-z]+)", nucleus.type)
+            number = match.group(1)
+            letters = match.group(2)
+            nucleus = f"{{{number}}}{letters}"
+            self.dataset.data.axes[nr].unit = "ppm"
+            self.dataset.data.axes[nr].quantity = f"^{nucleus} chemical shift"
+        self.dataset.data.axes[-1].quantity = "intensity"
 
     def _read_data(self):
         if "pdata" in self.source:
             self._parameters, self._data = nmrglue.bruker.read_pdata(
                 self.source
             )
+            self._raw_parameters, _ = nmrglue.bruker.read_pdata(self.source)
         else:
             self._parameters, self._data = nmrglue.bruker.read(self.source)
-
+        self._dimension = self._data.ndim
+        if self._dimension == 2:
+            self._data = self._data.T
         self.dataset.data.data = self._data
 
     def _check_for_type(self):
@@ -326,6 +374,7 @@ class FittingImporter(aspecd.io.DatasetImporter):
                 self.source += ".asc"
 
         data = np.loadtxt(self.source, skiprows=3)
+        # data = self._sort_data_maximum(data)
         self.dataset.data.data = data[:, 1:]
         frequency = float(linecache.getline(self.source, 2).strip("##freq "))
         self.dataset.data.axes[0].values = data[:, 0] / frequency
@@ -337,3 +386,14 @@ class FittingImporter(aspecd.io.DatasetImporter):
             frequency
         )
         self.dataset.metadata.experiment.spectrometer_frequency.unit = "MHz"
+
+    def _sort_data_maximum(self, data):
+        axis = data[:, 0]
+        print(data.shape)
+        data_small = data[:, 2:]
+        max_ = np.argmax(data_small, axis=1).astype(int)
+        sorted_max = np.argsort(max_)[::-1]
+        print(sorted_max)
+        data[:, 2:] = data_small[sorted_max]
+        print(data.shape)
+        return data

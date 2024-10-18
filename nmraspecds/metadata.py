@@ -162,7 +162,7 @@ class Experiment(aspecd.metadata.Metadata):
         Current spectrometer frequency of the dataset.
 
         Current spectrometer frequency ("SF" in Bruker's Topspin) of the
-        dataset. Is different from the transmitter frequency (and independend of
+        dataset. Is different from the transmitter frequency (and independent of
         it) depending on the axis. The value is obtained after referencing
         the measurement.
 
