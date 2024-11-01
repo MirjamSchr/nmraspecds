@@ -605,6 +605,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.factor = 0.07
         self.indicator_maxima = False
         self._offset = None
+        self._exclude_from_to_dict.append("residues")
 
     def _create_plot(self):
         super()._create_plot()
@@ -688,6 +689,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             self._offset *= self.factor
         else:  # (not self.parameters["range_residues"] and not self.parameters["offset_residues"]):
             self._offset = abs(max(data)) + abs(min(data)) * self.factor
+        self.parameters["offset_residues"] = self._offset
         self.axes.plot(
             self.dataset.data.axes[0].values,
             self.residues - self._offset,
