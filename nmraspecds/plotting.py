@@ -609,7 +609,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
 
     def _create_plot(self):
         self._sanitize_data()
-        print(self.dataset.data.data.shape)
         super()._create_plot()
         self._change_line_properties()
 
@@ -622,7 +621,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             self.dataset.data.axes[0].values[-1]
             > self.dataset.data.axes[0].values[0]
         ):
-            print("HERE")
             self.dataset.data.axes[0].values = self.dataset.data.axes[
                 0
             ].values[::-1]
@@ -678,7 +676,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             upper, lower = self.parameters["range_residues"]
             x_1 = np.where(self.dataset.data.axes[0].values >= upper)[0][-1]
             x_2 = np.where(self.dataset.data.axes[0].values <= lower)[0][0]
-            print(x_1, x_2)
             self._offset = abs(max(data[x_1:x_2])) + abs(min(data[x_1:x_2]))
         if self.parameters["offset_residues"]:
             _residues_offset = self.parameters["offset_residues"]
@@ -739,11 +736,11 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             annotation.parameters["xpositions"] = [n + 2 for n in maxima]
             self._font_size = mpl.rcParams["font.size"]
             fig_height_inches = self.fig.get_figheight()
-            print(fig_height_inches)
+            # print(fig_height_inches)
             self._font_offset = (
                 self._font_size / 72 / fig_height_inches * self.fig.dpi
             )
-            print(self._font_offset)
+            # print(self._font_offset)
             annotation.parameters["ypositions"] = -(
                 self._offset * 2
             )  # + self._font_offset)
