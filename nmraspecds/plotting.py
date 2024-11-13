@@ -608,12 +608,26 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self._exclude_from_to_dict.append("residues")
 
     def _create_plot(self):
+        self._sanitize_data()
+        print(self.dataset.data.data.shape)
         super()._create_plot()
         self._change_line_properties()
 
         self._insert_residues()
         self._set_maxima()
         # self.print_rmsd_in_spectrum(residues)
+
+    def _sanitize_data(self):
+        if (
+            self.dataset.data.axes[0].values[-1]
+            > self.dataset.data.axes[0].values[0]
+        ):
+            print("HERE")
+            self.dataset.data.axes[0].values = self.dataset.data.axes[
+                0
+            ].values[::-1]
+            print()
+            self.dataset.data.data = self.dataset.data.data[::-1, :]
 
     def print_rmsd_in_spectrum(self, residues, x_1, x_2):
         x_1 = np.where(self.dataset.data.axes[0].values > 100)[0][-1]
@@ -664,6 +678,7 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             upper, lower = self.parameters["range_residues"]
             x_1 = np.where(self.dataset.data.axes[0].values >= upper)[0][-1]
             x_2 = np.where(self.dataset.data.axes[0].values <= lower)[0][0]
+            print(x_1, x_2)
             self._offset = abs(max(data[x_1:x_2])) + abs(min(data[x_1:x_2]))
         if self.parameters["offset_residues"]:
             _residues_offset = self.parameters["offset_residues"]

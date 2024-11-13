@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 import aspecd.plotting
@@ -353,6 +354,15 @@ class TestFittingPlotter2D(unittest.TestCase):
         saver.filename = "test.pdf"
         # self.plotter.save(saver)
         self.assertAlmostEqual(self.plotter._offset, 15 * 0.5, delta=1)
+
+    def test_axis_has_decreasing_values(self):
+        self.create_test_dataset()
+        xvalues = np.linspace(1, 50, num=200)
+        self.dataset.data.axes[0].values = xvalues
+        self.plotter.dataset = self.dataset
+        data = copy.deepcopy(self.dataset.data.data)
+        self.plotter.plot()
+        np.testing.assert_array_equal(self.dataset.data.data, data[::-1, :])
 
     def test_fontsize_changed(self):
         matplotlib.rcParams["font.size"] = 11
