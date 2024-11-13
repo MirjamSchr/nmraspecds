@@ -722,7 +722,16 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             maxima = self.get_maxima()
             print(f"Maxima at {maxima} ppm")
             annotation.parameters["xpositions"] = [n + 2 for n in maxima]
-            annotation.parameters["ypositions"] = -(self._offset * 2)
+            self._font_size = mpl.rcParams["font.size"]
+            fig_height_inches = self.fig.get_figheight()
+            print(fig_height_inches)
+            self._font_offset = (
+                self._font_size / 72 / fig_height_inches * self.fig.dpi
+            )
+            print(self._font_offset)
+            annotation.parameters["ypositions"] = -(
+                self._offset * 2
+            )  # + self._font_offset)
             annotation.parameters["texts"] = [
                 f"{max_:.0f}" for max_ in maxima
             ]

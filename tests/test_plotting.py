@@ -353,3 +353,23 @@ class TestFittingPlotter2D(unittest.TestCase):
         saver.filename = "test.pdf"
         # self.plotter.save(saver)
         self.assertAlmostEqual(self.plotter._offset, 15 * 0.5, delta=1)
+
+    def test_fontsize_changed(self):
+        matplotlib.rcParams["font.size"] = 11
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        self.assertEqual(self.plotter._font_size, 11)
+        matplotlib.rcParams["font.size"] = 10
+
+    @unittest.skip
+    def test_offset_depends_on_fontsize(self):
+        self.create_test_dataset()
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        # print(self.plotter._offset)
+        self.assertNotEqual(self.plotter._offset, 5)
+        self.assertAlmostEqual(self.plotter._font_offset, 4.121, 3)
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        # self.plotter.save(saver)
