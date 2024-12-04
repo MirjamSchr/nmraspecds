@@ -154,7 +154,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
         for key, value in self._parameters["acqus"].items():
             if key.startswith("NUC") and value != "off" and value != 0:
                 nuclei[key] = value
-        for key in sorted(nuclei.keys()):
+        for key in reversed(sorted(nuclei.keys())):
             self._add_nucleus(key)
 
     def _get_spectrometer_frequency(self):
@@ -162,28 +162,15 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             self._parameters
         )["procs"]["SF"]
 
-    def _create_axes_2(self):
-        unified_dict = nmrglue.bruker.guess_udic(self._parameters, self._data)
-        unit_converter = nmrglue.bruker.fileiobase.uc_from_udic(unified_dict)
-        self.dataset.data.axes[0].values = unit_converter.ppm_scale()
-        if self._dimension == 2:
-            print(self._parameters)
-            unit_converter_second_axis = nmrglue.pipe.make_uc(
-                self._parameters, self._data, dim=0
-            )
-            print(unit_converter_second_axis.ppm_scale())
-
     def _create_axes(self):
         unified_dict = nmrglue.bruker.guess_udic(
             self._parameters, self._data, strip_fake=False
         )
         for dim in np.arange(0, unified_dict["ndim"]):
-            # Invert axes dimension in 2D
-            new_dim = unified_dict["ndim"] - dim - 1
             # unified_dict = self._do_referencing_manually(unified_dict, dim)
             uc = nmrglue.convert.fileiobase.uc_from_udic(unified_dict, dim)
             ppmsc = uc.ppm_scale()
-            self.dataset.data.axes[new_dim].values = ppmsc
+            self.dataset.data.axes[dim].values = ppmsc
 
     def _do_referencing_manually(self, unified_dict, dim):
         # TODO: Diese Referenzierung ist noch sehr komisch und funktioniert
@@ -229,7 +216,7 @@ class BrukerImporter(aspecd.io.DatasetImporter):
             self._parameters, self._data = nmrglue.bruker.read(self.source)
         self._dimension = self._data.ndim
         if self._dimension == 2:
-            self._data = self._data.T
+            self._data = self._data
         self.dataset.data.data = self._data
 
     def _check_for_type(self):

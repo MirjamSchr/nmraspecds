@@ -234,6 +234,7 @@ class SinglePlotter2D(aspecd.plotting.SinglePlotter2D, PlotterExtensions):
     def __init__(self):
         super().__init__()
         self.properties.axes.invert = ["x", "y"]
+        self.parameters["switch_axes"] = True
 
     def _create_plot(self):
         super()._create_plot()
