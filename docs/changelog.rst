@@ -11,7 +11,15 @@ Version 0.2.0
 
 Not yet released.
 
+New features
+------------
+
 * Add type of nucleus to quantity of first axis
+
+Fixes
+-----
+
+* Fix conversion of frequency-axis.
 
 
 

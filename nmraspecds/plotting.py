@@ -58,9 +58,9 @@ class PlotterExtensions:
             )
 
         freq_axis = self.ax.secondary_xaxis(
-            "top", functions=(backward, forward)
+            "top", functions=(forward, backward)
         )
-        freq_axis.set_xlabel(r"$\Delta \nu\ $kHz")
+        freq_axis.set_xlabel(r"$\Delta \nu\ $ / kHz")
 
 
 class SinglePlotter1D(aspecd.plotting.SinglePlotter1D, PlotterExtensions):
@@ -72,7 +72,7 @@ class SinglePlotter1D(aspecd.plotting.SinglePlotter1D, PlotterExtensions):
     ASpecD documentation of the :class:`aspecd.plotting.SinglePlotter1D`
     class for details.
 
-    Furthermore, the class inhertis all functionality from
+    Furthermore, the class inherits all functionality from
     :class:`PlotterExtensions`. See there for additional details.
 
 
