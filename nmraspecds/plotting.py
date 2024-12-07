@@ -742,10 +742,10 @@ class FittingPlotter2D(SinglePlotter2DStacked):
                 self._font_size / 72 / fig_height_inches * self.fig.dpi
             )
             # print(self._font_offset)
-            annotation.parameters["ypositions"] = -(
-                self._offset * 2
-            )  # + self._font_offset)
+            annotation_offset = -(self._offset * 2 + self._font_offset)
+            annotation.parameters["ypositions"] = annotation_offset
             annotation.parameters["texts"] = [
                 f"{max_:.0f}" for max_ in maxima
             ]
             self.annotate(annotation)
+            self.axes.set_ylim(bottom=annotation_offset)

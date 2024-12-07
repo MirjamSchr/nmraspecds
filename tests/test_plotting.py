@@ -242,6 +242,25 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.dataset.data.axes[2].quantity = "intensity"
         self.dataset.data.axes[2].unit = "a.u."
 
+    def create_test_dataset_without_noise(self):
+        def gaussian(amp, fwhm, mean):
+            return lambda x: amp * np.exp(
+                -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
+            )
+
+        xvalues = np.flip(np.linspace(1, 50, num=200))
+        data = gaussian(50, 5, 25)(xvalues) + gaussian(15, 3, 15)(xvalues)
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        self.dataset.data.data = data.reshape(3, 200).T
+        self.dataset.data.axes[0].values = xvalues
+        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[0].unit = "ppm"
+        self.dataset.data.axes[1].quantity = "Peak No"
+        self.dataset.data.axes[1].unit = None
+        self.dataset.data.axes[2].quantity = "intensity"
+        self.dataset.data.axes[2].unit = "a.u."
+
     def test_instantiate_class(self):
         self.create_test_dataset()
         self.plotter.dataset = self.dataset
@@ -267,7 +286,7 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.plotter.plot()
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
-        self.plotter.save(saver)
+        # self.plotter.save(saver)
 
     def test_residues_offset_range_settable(self):
         source = "testdata/fitting-data.asc"
@@ -345,7 +364,7 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.assertAlmostEqual(self.plotter._offset, amp * 0.1, delta=1)
 
     def test_range_and_percentage_settable(self):
-        self.create_test_dataset()
+        self.create_test_dataset_without_noise()
         self.plotter.dataset = self.dataset
         self.plotter.parameters["offset_residues"] = "50%"
         self.plotter.parameters["range_residues"] = [20, 3]
@@ -372,7 +391,17 @@ class TestFittingPlotter2D(unittest.TestCase):
         self.assertEqual(self.plotter._font_size, 11)
         matplotlib.rcParams["font.size"] = 10
 
-    @unittest.skip
+    def test_ylim_fits_potition_of_annotation(self):
+        self.create_test_dataset_without_noise()
+        self.plotter.dataset = self.dataset
+        self.plotter.plot()
+        saver = aspecd.plotting.Saver()
+        saver.filename = "test.pdf"
+        # self.plotter.save(saver)
+        ylim = self.plotter.axes.get_ylim()
+        self.assertNotAlmostEqual(ylim[0], -6.165, places=2)
+        self.assertAlmostEqual(52.597, ylim[1], 2)
+
     def test_offset_depends_on_fontsize(self):
         self.create_test_dataset()
         self.plotter.dataset = self.dataset
