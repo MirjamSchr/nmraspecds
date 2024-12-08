@@ -743,8 +743,14 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self._annotation.parameters["texts"] = [
             f"{max_:.0f}" for max_ in maxima
         ]
-        self.annotate(self._annotation)
         self.axes.set_ylim(bottom=annotation_offset)
+        for annotation in self.annotations:
+            if (
+                annotation.parameters["texts"]
+                == self._annotation.parameters["texts"]
+            ):
+                return
+        self.annotate(self._annotation)
 
     def _get_font_y_offset(self):
         self._font_size = mpl.rcParams["font.size"]
@@ -757,5 +763,6 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         ax_extent_pix = ax_pixels[1][1] - ax_pixels[0][1]
         top_percent = font_size_pixels / ax_extent_pix
         ylim = self.ax.get_ylim()
+        print(ylim)
         font_size_data = (ylim[1] - ylim[0]) * top_percent
         self._font_offset = font_size_data
