@@ -3,6 +3,8 @@ import unittest
 
 import aspecd.plotting
 import matplotlib
+import matplotlib.pyplot
+from docutils.nodes import figure
 
 import nmraspecds.io
 from nmraspecds import plotting, dataset
@@ -401,6 +403,29 @@ class TestFittingPlotter2D(unittest.TestCase):
         ylim = self.plotter.axes.get_ylim()
         self.assertNotAlmostEqual(ylim[0], -6.165, places=2)
         self.assertAlmostEqual(52.597, ylim[1], 2)
+
+    def test_ylim_fits_position_of_annotation2(self):
+        self.create_test_dataset_without_noise()
+
+        # for figsize
+        # with self.subTest(key=key):
+        # self.plotter.properties.figure.size((6,4))
+        figure_sizes = ((6, 4), (4, 6), (1, 1))
+        for figure_size in figure_sizes:
+            with self.subTest(figure_size=figure_size):
+                plotter = plotting.FittingPlotter2D()
+                plotter.dataset = self.dataset
+                plotter.properties.figure.size = figure_size
+                plotter.plot()
+                # print(plotter.fig.get_figheight())
+                saver = aspecd.plotting.Saver()
+                saver.filename = "test.pdf"
+                # self.plotter.save(saver)
+                ylim = plotter.axes.get_ylim()
+                self.assertNotAlmostEqual(ylim[0], -6.165, places=2)
+                self.assertAlmostEqual(52.597, ylim[1], 2)
+
+                matplotlib.pyplot.close("all")
 
     def test_offset_depends_on_fontsize(self):
         self.create_test_dataset()

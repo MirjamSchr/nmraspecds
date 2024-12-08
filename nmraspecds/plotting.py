@@ -599,12 +599,14 @@ class FittingPlotter2D(SinglePlotter2DStacked):
 
     def __init__(self):
         super().__init__()
+        self.description = "2D Stacked Plot for fitted datasets"
         self.parameters["offset"] = 0
         self.parameters["offset_residues"] = None
         self.parameters["range_residues"] = None
         self.residues = None
         self.factor = 0.07
         self.indicator_maxima = False
+        self._annotation = None
         self._offset = None
         self._exclude_from_to_dict.append("residues")
 
@@ -679,8 +681,11 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             x_2 = np.where(self.dataset.data.axes[0].values <= lower)[0][0]
             self._offset = abs(max(data[x_1:x_2])) + abs(min(data[x_1:x_2]))
         if self.parameters["offset_residues"]:
-            _residues_offset = self.parameters["offset_residues"]
-            if isinstance(_residues_offset, str) and "%" in _residues_offset:
+            self._residues_offset = self.parameters["offset_residues"]
+            if (
+                isinstance(self._residues_offset, str)
+                and "%" in self._residues_offset
+            ):
                 percent = (
                     float(
                         re.sub(
@@ -727,25 +732,30 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         self.parameters["range_residues"] = [upper, lower]
 
     def _set_maxima(self):
-        if self.indicator_maxima:
-            pass
-        else:
-            self.indicator_maxima = True
-            annotation = aspecd.annotation.Text()
-            maxima = self.get_maxima()
-            print(f"Maxima at {maxima} ppm")
-            annotation.parameters["xpositions"] = [n + 2 for n in maxima]
-            self._font_size = mpl.rcParams["font.size"]
-            fig_height_inches = self.fig.get_figheight()
-            # print(fig_height_inches)
-            self._font_offset = (
-                self._font_size / 72 / fig_height_inches * self.fig.dpi
-            )
-            # print(self._font_offset)
-            annotation_offset = -(self._offset * 2 + self._font_offset)
-            annotation.parameters["ypositions"] = annotation_offset
-            annotation.parameters["texts"] = [
-                f"{max_:.0f}" for max_ in maxima
-            ]
-            self.annotate(annotation)
-            self.axes.set_ylim(bottom=annotation_offset)
+        if not self._annotation:
+            self._annotation = aspecd.annotation.Text()
+        maxima = self.get_maxima()
+        print(f"Maxima at {maxima} ppm")
+        self._annotation.parameters["xpositions"] = [n + 2 for n in maxima]
+        self._get_font_y_offset()
+        annotation_offset = -(self._offset * 1.5 + self._font_offset)
+        self._annotation.parameters["ypositions"] = annotation_offset
+        self._annotation.parameters["texts"] = [
+            f"{max_:.0f}" for max_ in maxima
+        ]
+        self.annotate(self._annotation)
+        self.axes.set_ylim(bottom=annotation_offset)
+
+    def _get_font_y_offset(self):
+        self._font_size = mpl.rcParams["font.size"]
+        font_size_inch = self._font_size / 72  # pt to inch in matplotlib
+        font_size_pixels = self.figure.dpi * font_size_inch
+        # if self._residues_offset:
+        #   _offset = 2*self._residues_offset
+
+        ax_pixels = self.ax.transAxes.transform([(0, 0), (0, 1)])
+        ax_extent_pix = ax_pixels[1][1] - ax_pixels[0][1]
+        top_percent = font_size_pixels / ax_extent_pix
+        ylim = self.ax.get_ylim()
+        font_size_data = (ylim[1] - ylim[0]) * top_percent
+        self._font_offset = font_size_data
