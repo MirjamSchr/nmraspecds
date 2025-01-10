@@ -736,7 +736,9 @@ class FittingPlotter2D(SinglePlotter2DStacked):
             self._annotation = aspecd.annotation.Text()
         maxima = self.get_maxima()
         print(f"Maxima at {maxima} ppm")
-        self._annotation.parameters["xpositions"] = [n + 2 for n in maxima]
+        self._annotation.parameters["xpositions"] = self._get_x_positions(
+            maxima
+        )
         self._get_font_y_offset()
         annotation_offset = -(self._offset * 1.5 + self._font_offset)
         self._annotation.parameters["ypositions"] = annotation_offset
@@ -752,6 +754,17 @@ class FittingPlotter2D(SinglePlotter2DStacked):
                 return
         self.annotate(self._annotation)
 
+    def _get_x_positions(self, maxima):
+        raw_positions = [n + 2 for n in maxima]
+        # TODO:
+        # Check the width of the annotation
+        # Compare width with delta x so see if annotation overlaps
+        # Move the first position to higher ppm, the second to lower ppm. (
+        # each half of the overlap)
+        # How to deal with new conflicts? Recursive function?
+        positions = raw_positions
+        return positions
+
     def _get_font_y_offset(self):
         self._font_size = mpl.rcParams["font.size"]
         font_size_inch = self._font_size / 72  # pt to inch in matplotlib
@@ -763,6 +776,5 @@ class FittingPlotter2D(SinglePlotter2DStacked):
         ax_extent_pix = ax_pixels[1][1] - ax_pixels[0][1]
         top_percent = font_size_pixels / ax_extent_pix
         ylim = self.ax.get_ylim()
-        print(ylim)
         font_size_data = (ylim[1] - ylim[0]) * top_percent
         self._font_offset = font_size_data
