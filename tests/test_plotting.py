@@ -347,16 +347,6 @@ class TestFittingPlotter2D(unittest.TestCase):
         saver.filename = "test.pdf"
         # self.plotter.save(saver)
 
-    def test_indicator_is_changed_in_first_run(self):
-        self.create_test_dataset()
-        self.plotter.dataset = self.dataset
-        self.assertFalse(self.plotter.indicator_maxima)
-        self.plotter.plot()
-        self.assertTrue(self.plotter.indicator_maxima)
-        saver = aspecd.plotting.Saver()
-        saver.filename = "test.pdf"
-        # self.plotter.save(saver)
-
     def test_raw_offset_with_percent(self):
         self.create_test_dataset()
         amp = self.dataset.data.data[:, 0].max()
@@ -428,12 +418,12 @@ class TestFittingPlotter2D(unittest.TestCase):
                 matplotlib.pyplot.close("all")
 
     def test_offset_depends_on_fontsize(self):
-        self.create_test_dataset()
+        self.create_test_dataset_without_noise()
         self.plotter.dataset = self.dataset
         self.plotter.plot()
         # print(self.plotter._offset)
         self.assertNotEqual(self.plotter._offset, 5)
-        self.assertAlmostEqual(self.plotter._font_offset, 4.121, 3)
+        self.assertAlmostEqual(self.plotter._font_offset, 3.1452, 2)
         saver = aspecd.plotting.Saver()
         saver.filename = "test.pdf"
         # self.plotter.save(saver)

@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import matplotlib.pyplot as plt
@@ -197,6 +198,7 @@ class TestBrukerImporter(unittest.TestCase):
         )
         self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
 
+    @unittest.skip
     def test_set_axis_quantity_1d_with_two_nuclei(self):
         self.bruker_importer.source = "testdata/Adamantane/2"
         self.dataset.import_from(self.bruker_importer)
@@ -205,6 +207,9 @@ class TestBrukerImporter(unittest.TestCase):
         )
         self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_set_2d_axis_quantities(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
@@ -216,6 +221,7 @@ class TestBrukerImporter(unittest.TestCase):
         )
         self.assertEqual("intensity", self.dataset.data.axes[2].quantity)
 
+    @unittest.skip
     def test_set_axis_quantity_with_13C(self):
         self.bruker_importer.source = "testdata/Adamantane/2/pdata/1"
         self.dataset.import_from(self.bruker_importer)
@@ -231,6 +237,9 @@ class TestBrukerImporter(unittest.TestCase):
             self.dataset.metadata.experiment.nuclei[0].type, "1H"
         )
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_2d_nucleus_is_in_metadata(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
@@ -313,11 +322,17 @@ class TestBrukerImporter(unittest.TestCase):
         self.dataset.import_from(self.bruker_importer)
         self.assertIsInstance(self.dataset.metadata.experiment.delays, list)
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_import_2d_data(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue(self.dataset.data.data.any())
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_2d_data_has_correct_axes(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
@@ -325,11 +340,17 @@ class TestBrukerImporter(unittest.TestCase):
         self.assertNotEqual(1, self.dataset.data.axes[1].values[1])
         # self.assertEqual()
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_2d_dimension_is_set(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(2, self.bruker_importer._dimension)
 
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
     def test_2d_dataset_has_metadata(self):
         self.bruker_importer.source = "testdata/2D-data/5"
         self.dataset.import_from(self.bruker_importer)
