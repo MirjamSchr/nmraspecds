@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import matplotlib.pyplot as plt
@@ -40,6 +41,38 @@ class TestDatasetImporterFactory(unittest.TestCase):
         )
         importer = importer_factory.get_importer(source=source)
         self.assertIsInstance(importer, io.FittingImporter)
+
+    def test_gets_name_from_sampleno(self):
+        source = "testdata/51/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertTrue(importer.source.endswith("/20240816_sa51/1"))
+
+    def test_source_without_asc_extension_returns_fitting_importer(self):
+        source = "testdata/fitting-data"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        importer = importer_factory.get_importer(source=source)
+        self.assertIsInstance(importer, nmraspecds.io.FittingImporter)
+
+    def test_raises_with_nonexisting_file_name(self):
+        source = "testdata/asdf/1"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        with self.assertRaises(FileNotFoundError):
+            importer_factory.get_importer(source=source)
+
+    def test_raises_with_not_recognized_file_name(self):
+        source = "test_io.py"
+        importer_factory = (
+            nmraspecds.dataset.DatasetFactory().importer_factory
+        )
+        with self.assertRaises(io.UnsupportedDataFormatError):
+            importer_factory.get_importer(source=source)
 
 
 class TestBrukerImporter(unittest.TestCase):
@@ -125,6 +158,7 @@ class TestBrukerImporter(unittest.TestCase):
     def test_with_type_raw_imports_fid(self):
         for type_ in ("raw", "fid", "horst"):
             with self.subTest(type_=type_):
+                self.dataset = nmraspecds.dataset.ExperimentalDataset()
                 self.bruker_importer.source = "testdata/Adamantane/1"
                 self.bruker_importer.parameters["type"] = type_
                 self.dataset.import_from(self.bruker_importer)
@@ -136,6 +170,11 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.parameters["processing_number"] = 2
         self.dataset.import_from(self.bruker_importer)
         self.assertTrue("pdata/2" in self.bruker_importer.source)
+
+    def test_1d_dimension_is_set(self):
+        self.bruker_importer.source = "testdata/Adamantane/2"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(1, self.bruker_importer._dimension)
 
     def test_get_ppm_axis(self):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
@@ -154,14 +193,61 @@ class TestBrukerImporter(unittest.TestCase):
     def test_set_axis_quantity(self):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(self.bruker_importer)
-        self.assertEqual(self.dataset.data.axes[0].quantity, "chemical shift")
-        self.assertEqual(self.dataset.data.axes[1].quantity, "intensity")
+        self.assertEqual(
+            "^{1}H chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
+
+    @unittest.skip
+    def test_set_axis_quantity_1d_with_two_nuclei(self):
+        self.bruker_importer.source = "testdata/Adamantane/2"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(
+            "^{13}C chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_set_2d_axis_quantities(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(
+            "^{31}P chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual(
+            "^{1}H chemical shift", self.dataset.data.axes[1].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[2].quantity)
+
+    @unittest.skip
+    def test_set_axis_quantity_with_13C(self):
+        self.bruker_importer.source = "testdata/Adamantane/2/pdata/1"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(
+            "^{13}C chemical shift", self.dataset.data.axes[0].quantity
+        )
+        self.assertEqual("intensity", self.dataset.data.axes[1].quantity)
 
     def test_nucleus_is_in_metadata(self):
         self.bruker_importer.source = "testdata/Adamantane/1/pdata/1"
         self.dataset.import_from(self.bruker_importer)
         self.assertEqual(
             self.dataset.metadata.experiment.nuclei[0].type, "1H"
+        )
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_2d_nucleus_is_in_metadata(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(
+            self.dataset.metadata.experiment.nuclei[0].type, "31P"
+        )
+        self.assertEqual(
+            self.dataset.metadata.experiment.nuclei[1].type, "1H"
         )
 
     def test_base_frequency_is_in_metadata(self):
@@ -235,6 +321,44 @@ class TestBrukerImporter(unittest.TestCase):
         self.bruker_importer.source = "testdata/Adamantane/2"
         self.dataset.import_from(self.bruker_importer)
         self.assertIsInstance(self.dataset.metadata.experiment.delays, list)
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_import_2d_data(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertTrue(self.dataset.data.data.any())
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_2d_data_has_correct_axes(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertNotEqual(0, self.dataset.data.axes[1].values[0])
+        self.assertNotEqual(1, self.dataset.data.axes[1].values[1])
+        # self.assertEqual()
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_2d_dimension_is_set(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertEqual(2, self.bruker_importer._dimension)
+
+    @unittest.skipIf(
+        not os.path.exists("testdata/2D-data/5"), "File too " "large for git"
+    )
+    def test_2d_dataset_has_metadata(self):
+        self.bruker_importer.source = "testdata/2D-data/5"
+        self.dataset.import_from(self.bruker_importer)
+        self.assertAlmostEqual(
+            162.1190167,
+            self.dataset.metadata.experiment.spectrometer_frequency.value,
+            3,
+        )
 
 
 class TestScreamImporter(unittest.TestCase):

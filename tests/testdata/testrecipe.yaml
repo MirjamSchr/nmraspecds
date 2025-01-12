@@ -1,0 +1,18 @@
+format:
+  type: ASpecD recipe
+  version: '0.2'
+settings:
+  default_package: nmraspecds
+datasets:
+- source: fitting-data
+
+tasks:
+  - kind: singleplot
+    type: FittingPlotter2D
+    properties:
+      properties:
+        axes: 
+          xlim: [100, 20]
+          ylim: [-55, 100]
+      parameters:
+        range_residues: [100, 20]

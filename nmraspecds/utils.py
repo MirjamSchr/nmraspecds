@@ -5,7 +5,7 @@ utils module of the nmraspecds package.
 
 def convert_ppm_to_delta_kHz(values, reference_frequency=None):  # noqa
     """
-    convert chemical shift values to delta frequency values with the center
+    Convert chemical shift values to delta frequency values with the center
     frequency being 0 kHz.
 
     .. important::
@@ -28,7 +28,7 @@ def convert_ppm_to_delta_kHz(values, reference_frequency=None):  # noqa
         converted values in kHz.
 
     """
-    return (values * 1e-6 * reference_frequency * 1e6) / 1e3
+    return values * reference_frequency * 1e-3
 
 
 def convert_delta_kHz_to_ppm(values, reference_frequency=None):  # noqa
@@ -56,4 +56,4 @@ def convert_delta_kHz_to_ppm(values, reference_frequency=None):  # noqa
         converted values in ppm.
 
     """
-    return (values * 1e3 / reference_frequency * 1e6) / 1e6
+    return values * 1e3 / reference_frequency

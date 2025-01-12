@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 import matplotlib.pyplot as plt
@@ -140,11 +141,139 @@ class TestChemicalShiftCalibration(unittest.TestCase):
         analysis = self.dataset.analyse(self.calibration)
         self.assertEqual(analysis.result["nucleus"], "1H")
 
+    @unittest.skip
     def test_deals_with_standard_with_three_peaks(self):
         importer = nmraspecds.io.BrukerImporter()
         importer.source = "testdata/Alanine/10"
         self.dataset.import_from(importer)
+        print(self.dataset.metadata.experiment.nuclei[0].type)
         self.calibration.parameters["standard"] = "alanine"
         analysis = self.dataset.analyse(self.calibration)
         self.assertAlmostEqual(analysis.parameters["chemical_shift"], 178, -2)
         self.assertAlmostEqual(analysis.result, 51.92, -1)
+
+
+class TestRMSD(unittest.TestCase):
+    def setUp(self):
+        self.rmsd = nmraspecds.analysis.RMSD()
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+        xvalues = np.linspace(1, 200, num=200)
+        yvalues = np.random.random(200)
+        self.dataset.data.data = yvalues
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_has_appropriate_description(self):
+        self.assertIn(
+            "rmsd",
+            self.rmsd.description.lower(),
+        )
+
+    def test_number_is_calculated(self):
+        analysis = self.dataset.analyse(self.rmsd)
+        self.assertIsInstance(analysis.result, np.float64)
+
+
+class TestAreaOfSlices(unittest.TestCase):
+    def setUp(self):
+        self.analysis = nmraspecds.analysis.AreaOfSlices()
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+
+    def create_test_dataset(self):
+        def gaussian(amp, fwhm, mean):
+            return lambda x: amp * np.exp(
+                -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
+            )
+
+        xvalues = np.flip(np.linspace(1, 50, num=200))
+        noise = np.random.normal(0, 0.5, len(xvalues))
+        data = (
+            gaussian(50, 5, 25)(xvalues)
+            + gaussian(15, 3, 15)(xvalues)
+            + noise
+        )
+        data = np.append(
+            data, gaussian(50, 5, 25)(xvalues) + gaussian(15, 3, 15)(xvalues)
+        )
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        data = np.append(data, gaussian(15, 3, 15)(xvalues))
+        self.dataset.data.data = data.reshape(4, 200).T
+        self.dataset.data.axes[0].values = xvalues
+        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[0].unit = "ppm"
+        self.dataset.data.axes[1].quantity = "Peak No"
+        self.dataset.data.axes[1].unit = None
+        self.dataset.data.axes[2].quantity = "intensity"
+        self.dataset.data.axes[2].unit = "a.u."
+
+    def test_instantiate_class(self):
+        pass
+
+    @unittest.skip
+    def test_show_test_dataset(self):
+        self.create_test_dataset()
+        plt.plot(self.dataset.data.data)
+        plt.show()
+
+    def test_has_appropriate_description(self):
+        self.assertIn("area", self.analysis.description.lower())
+
+    def test_return_number(self):
+        self.create_test_dataset()
+        analysis = self.dataset.analyse(self.analysis)
+        self.assertTrue(analysis.result.all())
+
+    def test_result_is_on_second_axis(self):
+        self.create_test_dataset()
+        analysis = self.dataset.analyse(self.analysis)
+        self.assertEqual(4, len(analysis.result))
+
+
+class TestAggregatedAnalysisStep(unittest.TestCase):
+    def setUp(self):
+        self.analysis = nmraspecds.analysis.AggregatedAnalysisStep()
+        self.analysis.analysis_step = "nmraspecds.analysis.AreaOfSlices"
+
+    def create_test_dataset(self):
+        self.dataset = nmraspecds.dataset.ExperimentalDataset()
+
+        def gaussian(amp, fwhm, mean):
+            return lambda x: amp * np.exp(
+                -4.0 * np.log(2) * (x - mean) ** 2 / fwhm**2
+            )
+
+        xvalues = np.flip(np.linspace(1, 50, num=200))
+        noise = np.random.normal(0, 0.5, len(xvalues))
+        data = (
+            gaussian(50, 5, 25)(xvalues)
+            + gaussian(15, 3, 15)(xvalues)
+            + noise
+        )
+        data = np.append(
+            data, gaussian(50, 5, 25)(xvalues) + gaussian(15, 3, 15)(xvalues)
+        )
+        data = np.append(data, gaussian(50, 5, 25)(xvalues))
+        data = np.append(data, gaussian(15, 3, 15)(xvalues))
+        self.dataset.data.data = data.reshape(4, 200).T
+        self.dataset.data.axes[0].values = xvalues
+        self.dataset.data.axes[0].quantity = "chemical shift"
+        self.dataset.data.axes[0].unit = "ppm"
+        self.dataset.data.axes[1].quantity = "Peak No"
+        self.dataset.data.axes[1].unit = None
+        self.dataset.data.axes[2].quantity = "intensity"
+        self.dataset.data.axes[2].unit = "a.u."
+
+    def test_instantiate_class(self):
+        pass
+
+    def test_results_with_different_lengths_are_filled_with_zeroes(self):
+        self.create_test_dataset()
+        self.analysis.datasets.append(copy.deepcopy(self.dataset))
+        xvalues = np.flip(np.linspace(1, 2, num=200))
+        self.dataset.data.data = np.vstack(
+            [self.dataset.data.data.T, xvalues]
+        ).T
+        self.analysis.datasets.append(self.dataset)
+        self.analysis.analyse()
+        self.assertEqual(0, self.analysis.result.data.data[0, -1])

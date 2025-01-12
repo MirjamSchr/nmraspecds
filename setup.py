@@ -23,7 +23,14 @@ setuptools.setup(
     },
     packages=setuptools.find_packages(exclude=("tests", "docs")),
     license="BSD",
-    keywords=[],
+    keywords=[
+        "spectroscopy",
+        "NMR",
+        "data processing and analysis",
+        "good scientific practice",
+        "recipe-driven data analysis",
+        "reproducible science",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",

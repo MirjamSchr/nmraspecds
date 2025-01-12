@@ -1,9 +1,12 @@
 """
 analysis module of the nmraspecds package.
 """
+import itertools
+
 import aspecd.analysis
 import numpy as np
 import scipy.signal
+from aspecd.analysis import AggregatedAnalysisStep
 
 
 class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
@@ -210,3 +213,155 @@ class ChemicalShiftCalibration(aspecd.analysis.SingleAnalysisStep):
                 "offset": self._offset,
                 "nucleus": self.parameters["nucleus"],
             }
+
+
+class RMSD(aspecd.analysis.SingleAnalysisStep):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = RMSD()
+        ...
+
+
+    .. versionadded:: 0.2
+
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.description = "Determine RMSD of data"
+
+    def _sanitise_parameters(self):
+        pass
+
+    def _perform_task(self):
+        data = self.dataset.data.data
+        rmsd = np.sqrt(1 / len(data) * np.mean(data**2))
+        self.result = rmsd
+
+
+class AreaOfSlices(aspecd.analysis.SingleAnalysisStep):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = AreaOfSlices()
+        ...
+
+
+    .. versionadded:: 0.2
+
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.description = "Determine area of chosen slices"
+
+    def _sanitise_parameters(self):
+        pass
+
+    def _perform_task(self):
+        result = np.sum(self.dataset.data.data, axis=0)
+        self.result = result
+
+
+class AggregatedAnalysisStep(AggregatedAnalysisStep):
+    """
+    One sentence (on one line) describing the class.
+
+    More description comes here...
+
+
+    Attributes
+    ----------
+    attr : :class:`None`
+        Short description
+
+    Raises
+    ------
+    exception
+        Short description when and why raised
+
+
+    Examples
+    --------
+    It is always nice to give some examples how to use the class. Best to do
+    that with code examples:
+
+    .. code-block::
+
+        obj = AggregatedAnalysisStep()
+        ...
+
+
+    .. versionadded:: 0.2
+
+
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def analyse(self):
+        super()._check_and_prepare()
+        index = []
+        result = []
+        for dataset in self.datasets:
+            analysis_done = dataset.analyse(self._analysis_object)
+            result.append(analysis_done.result)
+            index.append(dataset.label)
+
+        def resize(row, size):
+            new = np.array(row)
+            new.resize(size)
+            return new
+
+        # find longest row length
+        row_length = max(result, key=len).__len__()
+        result_ = np.array([resize(row, row_length) for row in result])
+        # print(result_)
+        self.result.data.data = result_
+        self._assign_origdata_in_dataset()

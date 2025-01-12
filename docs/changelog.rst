@@ -5,6 +5,34 @@ Changelog
 This page contains a summary of changes between the official nmraspecds releases. Only the biggest changes are listed here. A complete and detailed log of all changes is available through the `GitHub Repository Browser <https://github.com/MirjamSchr/nmraspecds/commits/master>`_.
 
 
+
+Version 0.2.0
+=============
+
+Released on 2025-01-12.
+
+New features
+------------
+
+* Add type of nucleus to quantity of first axis
+
+* Bruker importer for 2D datasets (work in progress)
+
+* Basic RMSD analysis step
+
+Changes
+-------
+
+* FittingPlotter: Font size is taken into account
+
+
+Fixes
+-----
+
+* Fix conversion of frequency-axis.
+
+
+
 Version 0.1.0
 =============
 
