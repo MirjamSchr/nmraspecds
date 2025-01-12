@@ -16,6 +16,16 @@ New features
 
 * Add type of nucleus to quantity of first axis
 
+* Bruker importer for 2D datasets (work in progress)
+
+* Basic RMSD analysis step
+
+Changes
+-------
+
+* FittingPlotter: Font size is taken into account
+
+
 Fixes
 -----
 
